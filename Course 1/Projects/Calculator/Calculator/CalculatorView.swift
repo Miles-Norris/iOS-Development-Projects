@@ -168,7 +168,7 @@ struct CalculatorView: View {
                             numberOfDigits += 1
                         }
                         if numberOfDigits > 12 {
-                            let result = calculator.currentValue.formatted(.number.notation(.scientific).precision(.fractionLength(0...10)))
+                            let result = calculator.currentValue.formatted(.number.notation(.scientific).precision(.fractionLength(0...8)))
                             for digit in result {
                                 if digit == "," {
                                     continue
@@ -176,7 +176,7 @@ struct CalculatorView: View {
                                 currentOperations.append(String(digit))
                             }
                         } else {
-                            let result = calculator.currentValue.formatted(.number.precision(.fractionLength(0...10)))
+                            let result = calculator.currentValue.formatted(.number.precision(.fractionLength(0...8)))
                             for digit in result {
                                 if digit == "," {
                                     continue
@@ -574,7 +574,7 @@ struct CalculatorView: View {
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
-                            .frame(width: 81, height: 50)
+                            .frame(width: 81 , height: 50)
                             .foregroundStyle(Color(.white))
                             .shadow(radius: 4)
                         
@@ -598,25 +598,49 @@ struct CalculatorView: View {
     //The format function takes in the result of the calculation as a Double, and then checks to see how many digits are in the result using a for loop. then it will either format the number with scientific notation if it's more than 12 non-fraction digits long, or format normally with up to 10 decimals of it isn't more than 12 digits. it will also get rid of any commas, and then it will add each digit of the formatted result to currentOperations.
     func format(result: Double) {
         var currentNumberOfDigits: Int = 0
-        let resultAsInt = Int(result)
-        for _ in String(resultAsInt) {
-            currentNumberOfDigits += 1
-        }
-        if currentNumberOfDigits > 12 {
-            currentOperations = []
-            for digit in result.formatted(.number.notation(.scientific).precision(.fractionLength(0...10))) {
-                if digit == "," {
-                    continue
+        let resultAsInt: Int
+        if result > Double(Int.max) {
+            for _ in String(result) {
+                currentNumberOfDigits += 1
+            }
+            if currentNumberOfDigits > 12 {
+                currentOperations = []
+                for digit in result.formatted(.number.notation(.scientific).precision(.fractionLength(0...8))) {
+                    if digit == "," {
+                        continue
+                    }
+                    currentOperations.append(String(digit))
                 }
-                currentOperations.append(String(digit))
+            } else {
+                currentOperations = []
+                for digit in result.formatted(.number.precision(.fractionLength(0...8))) {
+                    if digit == "," {
+                        continue
+                    }
+                    currentOperations.append(String(digit))
+                }
             }
         } else {
-            currentOperations = []
-            for digit in result.formatted(.number.precision(.fractionLength(0...10))) {
-                if digit == "," {
-                    continue
+            resultAsInt = Int(result)
+            for _ in String(resultAsInt) {
+                currentNumberOfDigits += 1
+            }
+            if currentNumberOfDigits > 12 {
+                currentOperations = []
+                for digit in result.formatted(.number.notation(.scientific).precision(.fractionLength(0...8))) {
+                    if digit == "," {
+                        continue
+                    }
+                    currentOperations.append(String(digit))
                 }
-                currentOperations.append(String(digit))
+            } else {
+                currentOperations = []
+                for digit in result.formatted(.number.precision(.fractionLength(0...8))) {
+                    if digit == "," {
+                        continue
+                    }
+                    currentOperations.append(String(digit))
+                }
             }
         }
     }
