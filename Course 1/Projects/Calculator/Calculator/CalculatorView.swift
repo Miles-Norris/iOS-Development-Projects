@@ -164,24 +164,26 @@ struct CalculatorView: View {
                         
                         //Here I run similar code to the format() func below, but with a few tweaks to make it work as desired.
                         var numberOfDigits: Int = 0
-                        for _ in String(calculator.currentValue) {
-                            numberOfDigits += 1
-                        }
-                        if numberOfDigits > 12 {
-                            let result = calculator.currentValue.formatted(.number.notation(.scientific).precision(.fractionLength(0...8)))
-                            for digit in result {
-                                if digit == "," {
-                                    continue
-                                }
-                                currentOperations.append(String(digit))
+                        if let validNumber = numberInMemory {
+                            for _ in String(validNumber) {
+                                numberOfDigits += 1
                             }
-                        } else {
-                            let result = calculator.currentValue.formatted(.number.precision(.fractionLength(0...8)))
-                            for digit in result {
-                                if digit == "," {
-                                    continue
+                            if numberOfDigits > 12 {
+                                let result = validNumber.formatted(.number.notation(.scientific).precision(.fractionLength(0...8)))
+                                for digit in result {
+                                    if digit == "," {
+                                        continue
+                                    }
+                                    currentOperations.append(String(digit))
                                 }
-                                currentOperations.append(String(digit))
+                            } else {
+                                let result = validNumber.formatted(.number.precision(.fractionLength(0...8)))
+                                for digit in result {
+                                    if digit == "," {
+                                        continue
+                                    }
+                                    currentOperations.append(String(digit))
+                                }
                             }
                         }
                     }
@@ -243,9 +245,6 @@ struct CalculatorView: View {
                             }
                         }
                     }
-                    print(numbersToBeCommited)
-                    print(currentOperations)
-                    print(calculator.currentWorkingValues)
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
