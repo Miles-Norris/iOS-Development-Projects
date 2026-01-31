@@ -216,9 +216,15 @@ struct CalculatorView: View {
                     //The delete button will delete the last digit from all places, first it will check if there is a value to remove from currentOperations, and from numbersToBeCommited, and if so removes the last element. then it checks in currentWorkingValues in the Calculator struct to see if the last element is a number or operator. if it's an operator, it gets removed. if it's a number it pulls it out of currentWorkingValues and dissects it into numbersToBeCommited. If the number it pulls out is a round Double (eg: 68.0) it removes the last value three times to remove the 0, ., and 1 (eg: [6, 8, ., 0])
                     if !currentOperations.isEmpty {
                         currentOperations.removeLast()
+                        if currentOperations[currentOperations.count - 1] == "E" {
+                            currentOperations.removeLast()
+                        }
                     }
                     if !numbersToBeCommited.isEmpty {
                         numbersToBeCommited.removeLast()
+                        if numbersToBeCommited[numbersToBeCommited.count - 1] == "E" {
+                            numbersToBeCommited.removeLast()
+                        }
                     } else if calculator.currentWorkingValues[calculator.currentWorkingValues.count - 1] as? Inputs != nil {
                         calculator.currentWorkingValues.removeLast()
                     } else if calculator.currentWorkingValues[calculator.currentWorkingValues.count - 1] as? Double != nil {
@@ -237,6 +243,9 @@ struct CalculatorView: View {
                             }
                         }
                     }
+                    print(numbersToBeCommited)
+                    print(currentOperations)
+                    print(calculator.currentWorkingValues)
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
