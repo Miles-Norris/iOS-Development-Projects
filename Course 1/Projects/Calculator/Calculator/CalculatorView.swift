@@ -61,7 +61,7 @@ struct CalculatorView: View {
                     .bold()
                     .padding(.horizontal, 25)
                     .lineLimit(1)
-                    .minimumScaleFactor(0.5)
+                    .minimumScaleFactor(0.3)
             }
             //These HStacks hold all the buttons. I thought about trying to use a grid, but I gave up and decided to just stick to what I know well.
             HStack {
@@ -153,7 +153,7 @@ struct CalculatorView: View {
                     //MR will first run code to check if there is currently a number at the end of the operation, and if so, replace that number with the number in memory by first looping through the numberInMemory, and then adding each digit to numbersToBeCommited. And then it will add itself to the currentOperations
                     if numberInMemory != nil {
                         numbersToBeCommited.removeAll()
-                        while !currentOperations.isEmpty && Double(currentOperations[currentOperations.count - 1]) != nil {
+                        while (!currentOperations.isEmpty && Double(currentOperations[currentOperations.count - 1]) != nil) || (!currentOperations.isEmpty && currentOperations[currentOperations.count - 1] == ".") {
                             currentOperations.removeLast()
                         }
                         if let validNumber = numberInMemory {
