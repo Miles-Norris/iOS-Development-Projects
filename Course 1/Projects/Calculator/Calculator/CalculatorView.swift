@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-//Extension of type Double to check if a Double is a round double (eg: 78.0 vs 78.).
+//Extension of type Double to check if a Double is a round double (eg: 78.0 vs 78.1).
 extension Double {
     var isRound: Bool {
         return self.truncatingRemainder(dividingBy: 1) == 0
@@ -157,6 +157,7 @@ struct CalculatorView: View {
                             currentOperations.removeLast()
                         }
                         if let validNumber = numberInMemory {
+                            checksForNeededMultiplier()
                             for digit in String(validNumber) {
                                 numbersToBeCommited.append(digit)
                             }
@@ -311,7 +312,8 @@ struct CalculatorView: View {
             }
             HStack {
                 Button {
-                    //The number buttons simply add the number as a string to numbersToBeCommited and currentOperations.
+                    //The number buttons simply add the number as a string to numbersToBeCommited and currentOperations. they will also run the checkForNeedMultiplier func which checks if there is an operator directly before the inputted number that would assume any number after would be mulitiplying the result (eg: √/％), and if so first appendes .multiply to currentWorkingValues and "x" to currentOperations.
+                    checksForNeededMultiplier()
                     numbersToBeCommited += ["7"]
                     currentOperations += ["7"]
                 } label: {
@@ -327,6 +329,7 @@ struct CalculatorView: View {
                 }
                 Button {
                     //See 7
+                    checksForNeededMultiplier()
                     numbersToBeCommited += ["8"]
                     currentOperations += ["8"]
                 } label: {
@@ -342,6 +345,7 @@ struct CalculatorView: View {
                 }
                 Button {
                     //See 7
+                    checksForNeededMultiplier()
                     numbersToBeCommited += ["9"]
                     currentOperations += ["9"]
                 } label: {
@@ -377,6 +381,7 @@ struct CalculatorView: View {
             HStack {
                 Button {
                     //See 7
+                    checksForNeededMultiplier()
                     numbersToBeCommited += ["4"]
                     currentOperations += ["4"]
                 } label: {
@@ -392,6 +397,7 @@ struct CalculatorView: View {
                 }
                 Button {
                     //See 7
+                    checksForNeededMultiplier()
                     numbersToBeCommited += ["5"]
                     currentOperations += ["5"]
                 } label: {
@@ -407,6 +413,7 @@ struct CalculatorView: View {
                 }
                 Button {
                     //See 7
+                    checksForNeededMultiplier()
                     numbersToBeCommited += ["6"]
                     currentOperations += ["6"]
                 } label: {
@@ -442,6 +449,7 @@ struct CalculatorView: View {
             HStack {
                 Button {
                     //See 7
+                    checksForNeededMultiplier()
                     numbersToBeCommited += ["1"]
                     currentOperations += ["1"]
                 } label: {
@@ -457,6 +465,7 @@ struct CalculatorView: View {
                 }
                 Button {
                     //See 2
+                    checksForNeededMultiplier()
                     numbersToBeCommited += ["2"]
                     currentOperations += ["2"]
                 } label: {
@@ -472,6 +481,7 @@ struct CalculatorView: View {
                 }
                 Button {
                     //See 7
+                    checksForNeededMultiplier()
                     numbersToBeCommited += ["3"]
                     currentOperations += ["3"]
                 } label: {
@@ -534,6 +544,7 @@ struct CalculatorView: View {
                 }
                 Button {
                     //See 7
+                    checksForNeededMultiplier()
                     numbersToBeCommited += ["0"]
                     currentOperations += ["0"]
                 } label: {
@@ -550,6 +561,7 @@ struct CalculatorView: View {
                 Button {
                     //This funtions the same as all the other numbers even though its not technically a number.
                     if !numbersToBeCommited.contains(".") {
+                        checksForNeededMultiplier()
                         numbersToBeCommited += ["."]
                         currentOperations += ["."]
                     }
@@ -649,6 +661,15 @@ struct CalculatorView: View {
                     }
                     currentOperations.append(String(digit))
                 }
+            }
+        }
+    }
+    //This is a function that runs whenever a number gets inputted. see number "7" for more details.
+    func checksForNeededMultiplier() {
+        if !currentOperations.isEmpty {
+            if currentOperations[currentOperations.count - 1] == "%" || currentOperations[currentOperations.count - 1] == "√" {
+                calculator.currentWorkingValues.append(Inputs.multiply)
+                currentOperations.append("×")
             }
         }
     }
