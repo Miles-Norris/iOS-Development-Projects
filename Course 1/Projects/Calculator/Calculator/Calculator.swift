@@ -8,7 +8,7 @@
 import Foundation
 //List of mutating functions on the calculator
 enum Inputs {
-    case plus, minus, multiply, divide, squareRoot, exponent, signChange, percentage
+    case plus, minus, multiply, divide, squareRoot, exponent, signChange, percentage, openParen, closeParen
 }
 
 struct Calculator {
@@ -79,6 +79,8 @@ struct Calculator {
                     }
                 case .percentage:
                     total /= 100
+                default:
+                    continue
                 }
             }
         }

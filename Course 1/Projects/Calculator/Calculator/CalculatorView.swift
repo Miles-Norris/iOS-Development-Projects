@@ -31,12 +31,12 @@ struct CalculatorView: View {
     @State var currentOperationText: String = "0" {
         willSet {
             if newValue == "0" {
-                numbersToBeCommited = []
+                numbersToBeCommited = ["0"]
             }
         }
     }
     @State var calculator = Calculator()
-    //numbersToBeCommited holds a list of Characters that will represent one number. It holds the number in a stasis so that you can edit the number and update what shows on screen without acutally adding each digit of the number to the operation.
+    //numbersToBeCommited holds a list of Characters that will represent one number. It holds the number in a stasis so that you can edit the number and update what shows on screen without actually adding each digit of the number to the operation.
     @State var numbersToBeCommited: [Character] = []
     @State var mrButtonColor: Color = .white
     //numberInMemory holds an optional Double that will be set by pressing the M+ or M- buttons. this also changes the MR button color if there is a value stored in memory
@@ -65,8 +65,11 @@ struct CalculatorView: View {
             }
             //These HStacks hold all the buttons. I thought about trying to use a grid, but I gave up and decided to just stick to what I know well.
             HStack {
-                //Every operator button will first commit all numbers that need to be added to the operation by checking for numbers that need to be commited and then calling commitNumbers. The operator buttons will then add itself to the operation in currentOperations, as well as currentWorkinValues in the Calculator struct.
+                //Every operator button expect open paren will check to make sure the button pressed directly before it wasn't an operator button(with the exclusion of square root and percantage) by running the isPreviousInvalidOperator func, and then commit all numbers that need to be added to the operation by checking for numbers that need to be commited and then calling commitNumbers. The operator buttons will then add itself to the operation in currentOperations, as well as currentWorkinValues in the Calculator struct.
                 Button {
+                    guard !isPreviousInvalidOperator() else {
+                        return
+                    }
                     if !numbersToBeCommited.isEmpty {
                         commitNumbers()
                     }
@@ -75,7 +78,7 @@ struct CalculatorView: View {
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
-                            .frame(width: 171, height: 50)
+                            .frame(width: 81, height: 50)
                             .foregroundStyle(Color(.white))
                             .shadow(radius: 4)
                         
@@ -83,11 +86,16 @@ struct CalculatorView: View {
                         Text("^")
                             .padding(.top, 10)
                             .font(.title)
+                            .bold()
                             .foregroundStyle(Color(.black))
                     }
                 }
                 //Another operator button, see ^
-                Button {if !numbersToBeCommited.isEmpty {
+                Button {
+                    guard !isPreviousInvalidOperator() else {
+                        return
+                    }
+                    if !numbersToBeCommited.isEmpty {
                     commitNumbers()
                 }
                     calculator.currentWorkingValues.append(Inputs.squareRoot)
@@ -95,12 +103,63 @@ struct CalculatorView: View {
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
-                            .frame(width: 171, height: 50)
+                            .frame(width: 81, height: 50)
                             .foregroundStyle(Color(.white))
                             .shadow(radius: 4)
                         
                         Image(systemName: "squareroot")
                             .foregroundStyle(Color(.black))
+                            .bold()
+                    }
+                }
+                Button {
+                    //The open paren button is unique in that when pressed in runs code to see if the previous inputted value is a number or anything that would need an inferred "x" similar to the checkForNeededMultiplier func, but changed a bit because it needs to check for numbers as well.
+                    if !numbersToBeCommited.isEmpty {
+                        commitNumbers()
+                    }
+                    
+                    let last = currentOperations.last
+                    let isOperatorOrOpenParenOrStart = last == "^" || last == "(" || last == "÷" || last == "×" || last == "-" || last == "+" || currentOperations.isEmpty
+
+                    if !isOperatorOrOpenParenOrStart {
+                        calculator.currentWorkingValues.append(Inputs.multiply)
+                        currentOperations.append("×")
+                    }
+                    
+                    calculator.currentWorkingValues.append(Inputs.openParen)
+                    currentOperations.append("(")
+                } label: {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 20)
+                            .frame(width: 81, height: 50)
+                            .foregroundStyle(Color(.white))
+                            .shadow(radius: 4)
+                        
+                        Text("(")
+                            .foregroundStyle(Color(.black))
+                            .bold()
+                    }
+                }
+                Button {
+                    //Another operator button, see ^
+                    guard !isPreviousInvalidOperator() else {
+                        return
+                    }
+                    if !numbersToBeCommited.isEmpty {
+                        commitNumbers()
+                    }
+                    calculator.currentWorkingValues.append(Inputs.closeParen)
+                    currentOperations.append(")")
+                } label: {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 20)
+                            .frame(width: 81, height: 50)
+                            .foregroundStyle(Color(.white))
+                            .shadow(radius: 4)
+                        
+                        Text(")")
+                            .foregroundStyle(Color(.black))
+                            .bold()
                     }
                 }
             }
@@ -125,6 +184,7 @@ struct CalculatorView: View {
                         
                         Text("M+")
                             .foregroundStyle(Color(.black))
+                            .bold()
                     }
                 }
                 Button {
@@ -147,6 +207,7 @@ struct CalculatorView: View {
                         
                         Text("M-")
                             .foregroundStyle(Color(.black))
+                            .bold()
                     }
                 }
                 Button {
@@ -197,6 +258,7 @@ struct CalculatorView: View {
                         
                         Text("MR")
                             .foregroundStyle(Color(.black))
+                            .bold()
                     }
                 }
                 Button {
@@ -211,22 +273,27 @@ struct CalculatorView: View {
                         
                         Text("MC")
                             .foregroundStyle(Color(.black))
+                            .bold()
                     }
                 }
             }
             HStack {
                 Button {
-                    //The delete button will delete the last digit from all places, first it will check if there is a value to remove from currentOperations, and from numbersToBeCommited, and if so removes the last element. then it checks in currentWorkingValues in the Calculator struct to see if the last element is a number or operator. if it's an operator, it gets removed. if it's a number it pulls it out of currentWorkingValues and dissects it into numbersToBeCommited. If the number it pulls out is a round Double (eg: 68.0) it removes the last value three times to remove the 0, ., and 1 (eg: [6, 8, ., 0])
+                    //The delete button will delete the last digit from all places, first it will check if there is a value to remove from currentOperations, and from numbersToBeCommited, and if so removes the last element. if removing the last number would leave an empty "E" at the end of the equation which would cause an error, it will also remove that. then it checks in currentWorkingValues in the Calculator struct to see if the last element is a number or operator. if it's an operator, it gets removed. if it's a number it pulls it out of currentWorkingValues and dissects it into numbersToBeCommited. If the number it pulls out is a round Double (eg: 68.0) it removes the last value three times to remove the 0, ., and 1 (eg: [6, 8, ., 0])
                     if !currentOperations.isEmpty {
                         currentOperations.removeLast()
-                        if currentOperations[currentOperations.count - 1] == "E" {
-                            currentOperations.removeLast()
+                        if !currentOperations.isEmpty {
+                            if currentOperations[currentOperations.count - 1] == "E" {
+                                currentOperations.removeLast()
+                            }
                         }
                     }
                     if !numbersToBeCommited.isEmpty {
                         numbersToBeCommited.removeLast()
-                        if numbersToBeCommited[numbersToBeCommited.count - 1] == "E" {
-                            numbersToBeCommited.removeLast()
+                        if !numbersToBeCommited.isEmpty {
+                            if numbersToBeCommited[numbersToBeCommited.count - 1] == "E" {
+                                numbersToBeCommited.removeLast()
+                            }
                         }
                     } else if calculator.currentWorkingValues[calculator.currentWorkingValues.count - 1] as? Inputs != nil {
                         calculator.currentWorkingValues.removeLast()
@@ -255,6 +322,7 @@ struct CalculatorView: View {
                         
                         Image(systemName: "delete.left")
                             .foregroundStyle(Color(.black))
+                            .bold()
                     }
                 }
                 Button {
@@ -262,6 +330,9 @@ struct CalculatorView: View {
                     numbersToBeCommited.removeAll()
                     calculator.currentWorkingValues.removeAll()
                     currentOperations.removeAll()
+                    print(calculator.currentWorkingValues)
+                    print(numbersToBeCommited)
+                    print(currentOperations)
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
@@ -271,13 +342,18 @@ struct CalculatorView: View {
                         
                         Text("AC")
                             .foregroundStyle(Color(.black))
+                            .bold()
                     }
                 }
                 Button {
                     //Another operator button, see ^
+                    guard !isPreviousInvalidOperator() else {
+                        return
+                    }
                     if !numbersToBeCommited.isEmpty {
                         commitNumbers()
                     }
+                    checksForDefault0()
                     calculator.currentWorkingValues.append(Inputs.percentage)
                     currentOperations.append("%")
                 } label: {
@@ -289,13 +365,18 @@ struct CalculatorView: View {
                         
                         Image(systemName: "percent")
                             .foregroundStyle(Color(.black))
+                            .bold()
                     }
                 }
                 Button {
                     //Another operator button, see ^
+                    guard !isPreviousInvalidOperator() else {
+                        return
+                    }
                     if !numbersToBeCommited.isEmpty {
                         commitNumbers()
                     }
+                    checksForDefault0()
                     calculator.currentWorkingValues.append(Inputs.divide)
                     currentOperations.append("÷")
                 } label: {
@@ -307,6 +388,7 @@ struct CalculatorView: View {
                         
                         Image(systemName: "divide")
                             .foregroundStyle(Color(.black))
+                            .bold()
                     }
                 }
             }
@@ -325,6 +407,7 @@ struct CalculatorView: View {
                         
                         Text("7")
                             .foregroundStyle(Color(.black))
+                            .bold()
                     }
                 }
                 Button {
@@ -341,6 +424,7 @@ struct CalculatorView: View {
                         
                         Text("8")
                             .foregroundStyle(Color(.black))
+                            .bold()
                     }
                 }
                 Button {
@@ -357,13 +441,18 @@ struct CalculatorView: View {
                         
                         Text("9")
                             .foregroundStyle(Color(.black))
+                            .bold()
                     }
                 }
                 Button {
                     //Another operator button, see ^
+                    guard !isPreviousInvalidOperator() else {
+                        return
+                    }
                     if !numbersToBeCommited.isEmpty {
                         commitNumbers()
                     }
+                    checksForDefault0()
                     calculator.currentWorkingValues.append(Inputs.multiply)
                     currentOperations.append("×")
                 } label: {
@@ -375,6 +464,7 @@ struct CalculatorView: View {
                         
                         Image(systemName: "multiply")
                             .foregroundStyle(Color(.black))
+                            .bold()
                     }
                 }
             }
@@ -393,6 +483,7 @@ struct CalculatorView: View {
                         
                         Text("4")
                             .foregroundStyle(Color(.black))
+                            .bold()
                     }
                 }
                 Button {
@@ -409,6 +500,7 @@ struct CalculatorView: View {
                         
                         Text("5")
                             .foregroundStyle(Color(.black))
+                            .bold()
                     }
                 }
                 Button {
@@ -425,10 +517,20 @@ struct CalculatorView: View {
                         
                         Text("6")
                             .foregroundStyle(Color(.black))
+                            .bold()
                     }
                 }
                 Button {
-                    //Another operator button, see ^
+                    //This button has a unique feature where instead of just running the isPreviousInvaildOperator func it will let you input a number as a negative number if there is an invalid operator directly before it.
+                    let last = currentOperations.last
+                    guard last != "-" else {
+                        return
+                    }
+                    guard last != "^" || last != "(" || last != "÷" || last != "×" || last != "+" else {
+                        numbersToBeCommited.append("-")
+                        currentOperations.append("-")
+                        return
+                    }
                     if !numbersToBeCommited.isEmpty {
                         commitNumbers()
                     }
@@ -443,6 +545,7 @@ struct CalculatorView: View {
                         
                         Image(systemName: "minus")
                             .foregroundStyle(Color(.black))
+                            .bold()
                     }
                 }
             }
@@ -461,6 +564,7 @@ struct CalculatorView: View {
                         
                         Text("1")
                             .foregroundStyle(Color(.black))
+                            .bold()
                     }
                 }
                 Button {
@@ -477,6 +581,7 @@ struct CalculatorView: View {
                         
                         Text("2")
                             .foregroundStyle(Color(.black))
+                            .bold()
                     }
                 }
                 Button {
@@ -493,13 +598,18 @@ struct CalculatorView: View {
                         
                         Text("3")
                             .foregroundStyle(Color(.black))
+                            .bold()
                     }
                 }
                 Button {
                     //Another operator button, see ^
+                    guard !isPreviousInvalidOperator() else {
+                        return
+                    }
                     if !numbersToBeCommited.isEmpty {
                         commitNumbers()
                     }
+                    checksForDefault0()
                     calculator.currentWorkingValues.append(Inputs.plus)
                     currentOperations.append("+")
                 } label: {
@@ -511,6 +621,7 @@ struct CalculatorView: View {
                         
                         Image(systemName: "plus")
                             .foregroundStyle(Color(.black))
+                            .bold()
                     }
                 }
             }
@@ -540,6 +651,7 @@ struct CalculatorView: View {
                         
                         Image(systemName: "plus.forwardslash.minus")
                             .foregroundStyle(Color(.black))
+                            .bold()
                     }
                 }
                 Button {
@@ -556,12 +668,14 @@ struct CalculatorView: View {
                         
                         Text("0")
                             .foregroundStyle(Color(.black))
+                            .bold()
                     }
                 }
                 Button {
                     //This funtions the same as all the other numbers even though its not technically a number.
                     if !numbersToBeCommited.contains(".") {
                         checksForNeededMultiplier()
+                        checksForDefault0()
                         numbersToBeCommited += ["."]
                         currentOperations += ["."]
                     }
@@ -574,6 +688,7 @@ struct CalculatorView: View {
                         
                         Text(".")
                             .foregroundStyle(Color(.black))
+                            .bold()
                     }
                 }
                 Button {
@@ -600,6 +715,7 @@ struct CalculatorView: View {
                         
                         Image(systemName: "equal")
                             .foregroundStyle(Color(.black))
+                            .bold()
                     }
                 }
             }
@@ -615,6 +731,7 @@ struct CalculatorView: View {
         calculator.currentWorkingValues.append(Double(numberAsString)!)
         numbersToBeCommited = []
     }
+    
     //The format function takes in the result of the calculation as a Double, and then checks to see how many digits are in the result using a for loop. then it will either format the number with scientific notation if it's more than 12 non-fraction digits long, or format normally with up to 10 decimals of it isn't more than 12 digits. it will also get rid of any commas, and then it will add each digit of the formatted result to currentOperations.
     func format(result: Double) {
         var currentNumberOfDigits: Int = 0
@@ -664,18 +781,29 @@ struct CalculatorView: View {
             }
         }
     }
+    
     //This is a function that runs whenever a number gets inputted. see number "7" for more details.
     func checksForNeededMultiplier() {
         if !currentOperations.isEmpty {
-            if currentOperations[currentOperations.count - 1] == "%" || currentOperations[currentOperations.count - 1] == "√" {
+            if currentOperations[currentOperations.count - 1] == "%" || currentOperations[currentOperations.count - 1] == "√" || currentOperations[currentOperations.count - 1] == ")" {
                 calculator.currentWorkingValues.append(Inputs.multiply)
                 currentOperations.append("×")
             }
         }
     }
+    func checksForDefault0() {
+        if currentOperations.isEmpty {
+            numbersToBeCommited += ["0"]
+            currentOperations += ["0"]
+        }
+    }
+    func isPreviousInvalidOperator() -> Bool {
+        let last = currentOperations.last
+        let invalid = last == "^" || last == "(" || last == "÷" || last == "×" || last == "-" || last == "+"
+        return invalid
+    }
 }
 
 #Preview {
     CalculatorView()
-    
 }
