@@ -61,7 +61,8 @@ struct CalculatorView: View {
                     .bold()
                     .padding(.horizontal, 25)
                     .lineLimit(1)
-                    .minimumScaleFactor(0.3)
+                    .truncationMode(.head)
+                    .minimumScaleFactor(0.4)
             }
             //These HStacks hold all the buttons. I thought about trying to use a grid, but I gave up and decided to just stick to what I know well.
             HStack {
@@ -74,6 +75,7 @@ struct CalculatorView: View {
                         commitNumbers()
                     }
                     calculator.currentWorkingValues.append(Inputs.exponent)
+                    calculator.currentWorkingValuesBackup.append(Inputs.exponent)
                     currentOperations.append("^")
                 } label: {
                     ZStack {
@@ -99,6 +101,7 @@ struct CalculatorView: View {
                     commitNumbers()
                 }
                     calculator.currentWorkingValues.append(Inputs.squareRoot)
+                    calculator.currentWorkingValuesBackup.append(Inputs.squareRoot)
                     currentOperations.append("√")
                 } label: {
                     ZStack {
@@ -123,10 +126,12 @@ struct CalculatorView: View {
 
                     if !isOperatorOrOpenParenOrStart {
                         calculator.currentWorkingValues.append(Inputs.multiply)
+                        calculator.currentWorkingValuesBackup.append(Inputs.multiply)
                         currentOperations.append("×")
                     }
                     
                     calculator.currentWorkingValues.append(Inputs.openParen)
+                    calculator.currentWorkingValuesBackup.append(Inputs.openParen)
                     currentOperations.append("(")
                 } label: {
                     ZStack {
@@ -149,6 +154,7 @@ struct CalculatorView: View {
                         commitNumbers()
                     }
                     calculator.currentWorkingValues.append(Inputs.closeParen)
+                    calculator.currentWorkingValuesBackup.append(Inputs.closeParen)
                     currentOperations.append(")")
                 } label: {
                     ZStack {
@@ -297,7 +303,9 @@ struct CalculatorView: View {
                         }
                     } else if calculator.currentWorkingValues[calculator.currentWorkingValues.count - 1] as? Inputs != nil {
                         calculator.currentWorkingValues.removeLast()
+                        calculator.currentWorkingValuesBackup.removeLast()
                     } else if calculator.currentWorkingValues[calculator.currentWorkingValues.count - 1] as? Double != nil {
+                        calculator.currentWorkingValuesBackup.removeLast()
                         let removedValue = calculator.currentWorkingValues.removeLast() as! Double
                         
                         for value in String(removedValue) {
@@ -329,10 +337,8 @@ struct CalculatorView: View {
                     //AC simply removes all values from every array
                     numbersToBeCommited.removeAll()
                     calculator.currentWorkingValues.removeAll()
+                    calculator.currentWorkingValuesBackup.removeAll()
                     currentOperations.removeAll()
-                    print(calculator.currentWorkingValues)
-                    print(numbersToBeCommited)
-                    print(currentOperations)
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
@@ -355,6 +361,7 @@ struct CalculatorView: View {
                     }
                     checksForDefault0()
                     calculator.currentWorkingValues.append(Inputs.percentage)
+                    calculator.currentWorkingValuesBackup.append(Inputs.percentage)
                     currentOperations.append("%")
                 } label: {
                     ZStack {
@@ -378,6 +385,7 @@ struct CalculatorView: View {
                     }
                     checksForDefault0()
                     calculator.currentWorkingValues.append(Inputs.divide)
+                    calculator.currentWorkingValuesBackup.append(Inputs.divide)
                     currentOperations.append("÷")
                 } label: {
                     ZStack {
@@ -454,6 +462,7 @@ struct CalculatorView: View {
                     }
                     checksForDefault0()
                     calculator.currentWorkingValues.append(Inputs.multiply)
+                    calculator.currentWorkingValuesBackup.append(Inputs.multiply)
                     currentOperations.append("×")
                 } label: {
                     ZStack {
@@ -535,6 +544,7 @@ struct CalculatorView: View {
                         commitNumbers()
                     }
                     calculator.currentWorkingValues.append(Inputs.minus)
+                    calculator.currentWorkingValuesBackup.append(Inputs.minus)
                     currentOperations.append("-")
                 } label: {
                     ZStack {
@@ -611,6 +621,7 @@ struct CalculatorView: View {
                     }
                     checksForDefault0()
                     calculator.currentWorkingValues.append(Inputs.plus)
+                    calculator.currentWorkingValuesBackup.append(Inputs.plus)
                     currentOperations.append("+")
                 } label: {
                     ZStack {
@@ -632,6 +643,7 @@ struct CalculatorView: View {
                         commitNumbers()
                     }
                     calculator.currentWorkingValues.append(Inputs.signChange)
+                    calculator.currentWorkingValuesBackup.append(Inputs.signChange)
                     calculator.calculate()
                     format(result: calculator.currentValue)
                     if Double(currentOperations[0]) != nil {
@@ -729,6 +741,7 @@ struct CalculatorView: View {
             numberAsString += String(digit)
         }
         calculator.currentWorkingValues.append(Double(numberAsString)!)
+        calculator.currentWorkingValuesBackup.append(Double(numberAsString)!)
         numbersToBeCommited = []
     }
     
@@ -787,6 +800,7 @@ struct CalculatorView: View {
         if !currentOperations.isEmpty {
             if currentOperations[currentOperations.count - 1] == "%" || currentOperations[currentOperations.count - 1] == "√" || currentOperations[currentOperations.count - 1] == ")" {
                 calculator.currentWorkingValues.append(Inputs.multiply)
+                calculator.currentWorkingValuesBackup.append(Inputs.multiply)
                 currentOperations.append("×")
             }
         }
