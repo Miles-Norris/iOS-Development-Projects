@@ -21,14 +21,6 @@ struct Calculator {
             }
         }
     }
-    //This is used as a backup for currentWorkingValues when they need to be compared while calculating parenthesis
-    var currentWorkingValuesBackup: [Any] = [0.0] {
-        didSet {
-            if currentWorkingValues.isEmpty {
-                currentWorkingValues = [0.0]
-            }
-        }
-    }
 
     //Takes an operation as an array with the items in the array in order of operations
     mutating func calculate() {
@@ -134,18 +126,25 @@ struct Calculator {
         currentWorkingValues = [currentValue]
         
     }
+    //This is the function to calculate the parenthesis in the equation. it's super cringe and writing it made me want to jump into incoming traffic. Even reading it breaks my brain, but it works so trust the process.
     mutating func calculateParenthesis() {
+        //indexToReplaceStart and End pinpoint the beginning and end of the parenthesis. We use these later to know what values in the original equation we need to replace with the result of the parenthesis.
         var indexToReplaceStart: Int?
         var indexToReplaceEnd: Int?
+        //This is used to check wether the parenthesis are emebedded inside of more parenthesis, so we know to unwrap/unembbed them.
         var areParensEmbedded = false
+        //We copy the original equation so that we can use currentWorkingValues during this function.
         var temporaryWorkingValues = currentWorkingValues
+        //We copy every value between the parenthesis to this unwrappedArray. We then run calculate() on this to get calculate the parenthesis and then pass the result back into the main equation.
         var unwrappedArray: [Any] = []
         var hasParens = true
         
+        //This checks to see if the parenthesis are embedded, and if so it will run the correct code to unwrap that code into the unwrappedArray. if the parenthesis were embedded it will then repeat the loop, checking to see if they are still embedded and repeating this process until the equation is done.
         repeat {
             var parensOpen = false
             areParensEmbedded = false
             
+            //This for loop will check to see if any parenthesis pairs are opened while there is currently a pair opened, and if there is, it knows the parenthesis are embedded. this also assigns the position of the first open parenthesis as indexToReplaceStart.
             for (i, value) in temporaryWorkingValues.enumerated() {
                 if value as? Inputs == .openParen {
                     if parensOpen == false {
@@ -162,16 +161,20 @@ struct Calculator {
                 }
             }
             
+            //If the parenthesis are embedded, this is the code it will run to unwrap them.
             if areParensEmbedded {
                 var numberOfParenPairs = 0
                 var haveParensStarted = false
+                //First we go through and check how many pairs of parenthesis are in the equation.
                 for value in temporaryWorkingValues {
                     if value as? Inputs == .openParen {
                         numberOfParenPairs += 1
                     }
                 }
                 
+                //This will loop through all of the values and once it hits the first open parenthesis, it will start adding each value to unwrappedArray until it finds the end of all the parenthesis.
                 for (i, value) in temporaryWorkingValues.enumerated() {
+                    //Every time it hits a close parenthesis it minuses 1 from numberOfParenPairs until it closes every pair.
                     if value as? Inputs == .closeParen {
                         numberOfParenPairs -= 1
                         if numberOfParenPairs == 0 {
@@ -188,8 +191,10 @@ struct Calculator {
                     }
                 }
                 
+                //Now we assign unwrappedArray to currentWorkingValues and calculate it. Note that at this point we still have parenthesis in the equation, so when we calculate now, it will see the parenthesis and run calculateParenthesis again it will continue this until it runs of parenthesis to calculate. Once it doesn't see any embedded parenthesis it will use the code below to calculate them insted of this loop.
                 currentWorkingValues = unwrappedArray
                 calculate()
+                //after it's done calculating, it will use the 2 index found previously to remove all the values within the parenthesis and then replace that will the value gotten from the calculation.
                 for _ in (indexToReplaceStart! + 1)...(indexToReplaceEnd! - 1) {
                     temporaryWorkingValues.remove(at: indexToReplaceStart! + 1)
                 }
@@ -197,9 +202,11 @@ struct Calculator {
             }
         } while areParensEmbedded
         
+        //This is the code that runs when there aren't any embedded parenthesis.
         while hasParens {
             var haveParensStarted = false
             
+            //This is very similar to the previous loop, but this time it will only go until it finishes one pair.
             for (i, value) in temporaryWorkingValues.enumerated() {
                 if value as? Inputs == .closeParen {
                     indexToReplaceEnd = i
@@ -214,6 +221,7 @@ struct Calculator {
                     haveParensStarted = true
                 }
             }
+            //This is the same as before, it will calculate the first pair of parenthesis, replace that pair in the original equation with the result, and then repeat the process until all pairs have been calculated.
             currentWorkingValues = unwrappedArray
             calculate()
             for _ in (indexToReplaceStart!)...(indexToReplaceEnd!) {
@@ -229,6 +237,7 @@ struct Calculator {
             }
             
         }
+        //Finally it assigns the new equation to currentWorkingValues and calculate it one more time for the final result.
         currentWorkingValues = temporaryWorkingValues
         calculate()
     }
