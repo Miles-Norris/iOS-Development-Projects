@@ -7,11 +7,12 @@
 
 import Foundation
 //List of mutating functions on the calculator
-enum Inputs {
+enum Operators {
     case plus, minus, multiply, divide, squareRoot, exponent, signChange, percentage, openParen, closeParen
 }
 
 struct Calculator {
+    var isMiniCalc = false
     var currentValue: Double = 0
     //currentWorkingValues has all of the values that will be used in the operation. this includes type Inputs, and Double for this program. it also has a didSet that ensures it will never be empty because on a calculator the default value will always be 0.
     var currentWorkingValues: [Any] = [0.0] {
@@ -27,12 +28,15 @@ struct Calculator {
         //Total will be updated after every part of the operation
         var total: Double = 0
         //This is used to check what the current operator is that needs to be used for the operation
-        var lastEnteredOperator: Inputs?
-        //Checks for parenthesis
-        var hasParens: Bool = false
+        var lastEnteredOperator: Operators?
+        //Checks for parenthesis, Exponents/Sqrts, and Multiplication/Divison.
+        var hasParens = false
+        var hasExponentOrSqrt = false
+        var hasMuliplyOrDivide = false
         
-        if currentWorkingValues.contains(where: { ($0 as? Inputs) == .openParen }) ||
-           currentWorkingValues.contains(where: { ($0 as? Inputs) == .closeParen }) {
+        //In order to follow order of operations. the next chunck of code checks for their respective operator type and then performs the respective calculate operator function.
+        if currentWorkingValues.contains(where: { ($0 as? Operators) == .openParen }) ||
+           currentWorkingValues.contains(where: { ($0 as? Operators) == .closeParen }) {
             hasParens = true
         }
         
@@ -43,10 +47,10 @@ struct Calculator {
                var removeIndexes: Set<Int> = []
 
                for (i, token) in tokens.enumerated() {
-                   if token as? Inputs == Inputs.openParen {
+                   if token as? Operators == Operators.openParen {
                        stack.append(i)
                    }
-                   else if token as? Inputs == Inputs.closeParen {
+                   else if token as? Operators == Operators.closeParen {
                        if stack.popLast() != nil {
                            //valid pair, do nothing
                        } else {
@@ -64,7 +68,26 @@ struct Calculator {
                currentWorkingValues = tokens.enumerated()
                    .filter { !removeIndexes.contains($0.offset) }
                    .map { $0.element }
+            //Once the parenthesis are clean, it will run the calculateParenthesis function to calculate them.
             calculateParenthesis()
+        }
+        
+        if currentWorkingValues.contains(where: { ($0 as? Operators) == .exponent }) ||
+            currentWorkingValues.contains(where: { ($0 as? Operators) == .squareRoot }) {
+            hasExponentOrSqrt = true
+        }
+        
+        if hasExponentOrSqrt && !isMiniCalc {
+            calculateExponentsAndSqrts()
+        }
+        
+        if currentWorkingValues.contains(where: { ($0 as? Operators) == .multiply }) ||
+           currentWorkingValues.contains(where: { ($0 as? Operators) == .divide }) {
+            hasMuliplyOrDivide = true
+        }
+        
+        if hasMuliplyOrDivide && !isMiniCalc {
+            calculateMultiplyAndDivide()
         }
 
         //Loops all of the values in the currentWorkingValuesArray in order.
@@ -93,7 +116,7 @@ struct Calculator {
                 }
             }
             //This will check if the currentWorkingValue is an Input on the list of enum Inputs.
-            if let currentInput = currentWorkingValue as? Inputs {
+            if let currentInput = currentWorkingValue as? Operators {
                 //If there is currently a number to mutate, this will either store an operator to lastEnteredOperator or if it's an operator that only uses one value, it will perform the operation and update the total.
                 switch currentInput {
                 case .plus:
@@ -146,7 +169,7 @@ struct Calculator {
             
             //This for loop will check to see if any parenthesis pairs are opened while there is currently a pair opened, and if there is, it knows the parenthesis are embedded. this also assigns the position of the first open parenthesis as indexToReplaceStart.
             for (i, value) in temporaryWorkingValues.enumerated() {
-                if value as? Inputs == .openParen {
+                if value as? Operators == .openParen {
                     if parensOpen == false {
                         indexToReplaceStart = i
                         parensOpen = true
@@ -156,7 +179,7 @@ struct Calculator {
                         break
                     }
                 }
-                if value as? Inputs == .closeParen {
+                if value as? Operators == .closeParen {
                     parensOpen = false
                 }
             }
@@ -167,7 +190,7 @@ struct Calculator {
                 var haveParensStarted = false
                 //First we go through and check how many pairs of parenthesis are in the equation.
                 for value in temporaryWorkingValues {
-                    if value as? Inputs == .openParen {
+                    if value as? Operators == .openParen {
                         numberOfParenPairs += 1
                     }
                 }
@@ -175,7 +198,7 @@ struct Calculator {
                 //This will loop through all of the values and once it hits the first open parenthesis, it will start adding each value to unwrappedArray until it finds the end of all the parenthesis.
                 for (i, value) in temporaryWorkingValues.enumerated() {
                     //Every time it hits a close parenthesis it minuses 1 from numberOfParenPairs until it closes every pair.
-                    if value as? Inputs == .closeParen {
+                    if value as? Operators == .closeParen {
                         numberOfParenPairs -= 1
                         if numberOfParenPairs == 0 {
                             indexToReplaceEnd = i
@@ -186,7 +209,7 @@ struct Calculator {
                     if haveParensStarted {
                         unwrappedArray.append(value)
                     }
-                    if value as? Inputs == .openParen {
+                    if value as? Operators == .openParen {
                         haveParensStarted = true
                     }
                 }
@@ -208,7 +231,7 @@ struct Calculator {
             
             //This is very similar to the previous loop, but this time it will only go until it finishes one pair.
             for (i, value) in temporaryWorkingValues.enumerated() {
-                if value as? Inputs == .closeParen {
+                if value as? Operators == .closeParen {
                     indexToReplaceEnd = i
                     haveParensStarted = false
                     break
@@ -216,7 +239,7 @@ struct Calculator {
                 if haveParensStarted {
                     unwrappedArray.append(value)
                 }
-                if value as? Inputs == .openParen {
+                if value as? Operators == .openParen {
                     indexToReplaceStart = i
                     haveParensStarted = true
                 }
@@ -229,8 +252,8 @@ struct Calculator {
             }
             temporaryWorkingValues.insert(currentValue, at: indexToReplaceStart!)
             
-            if temporaryWorkingValues.contains(where: { ($0 as? Inputs) == .openParen }) ||
-               temporaryWorkingValues.contains(where: { ($0 as? Inputs) == .closeParen }) {
+            if temporaryWorkingValues.contains(where: { ($0 as? Operators) == .openParen }) ||
+               temporaryWorkingValues.contains(where: { ($0 as? Operators) == .closeParen }) {
                 hasParens = true
             } else {
                 hasParens = false
@@ -241,6 +264,91 @@ struct Calculator {
         currentWorkingValues = temporaryWorkingValues
         calculate()
     }
+    
+    //This functions almost the same of the previous one, just more simple.
+    mutating func calculateExponentsAndSqrts() {
+        var arrayForCalculation: [Any] = []
+        var hasExponentOrSqrt = true
+        var temporaryWorkingValues = currentWorkingValues
+        var indexToInsertAt: Int?
+        var numberOfRemovals = 0
+        while hasExponentOrSqrt {
+            for (i, value) in temporaryWorkingValues.enumerated() {
+                if value as? Operators == .squareRoot {
+                    indexToInsertAt = i - 1
+                    numberOfRemovals = 2
+                    if temporaryWorkingValues[indexToInsertAt!] as? Double != nil {
+                        arrayForCalculation.append(temporaryWorkingValues[indexToInsertAt!])
+                        arrayForCalculation.append(value)
+                        break
+                    }
+                }
+                if value as? Operators == .exponent {
+                    indexToInsertAt = i - 1
+                    numberOfRemovals = 3
+                    if temporaryWorkingValues[indexToInsertAt!] as? Double != nil && temporaryWorkingValues[indexToInsertAt! + 2] as? Double != nil {
+                        arrayForCalculation.append(temporaryWorkingValues[indexToInsertAt!])
+                        arrayForCalculation.append(value)
+                        arrayForCalculation.append(temporaryWorkingValues[indexToInsertAt! + 2])
+                        break
+                    }
+                }
+            }
+            currentWorkingValues = arrayForCalculation
+            isMiniCalc = true
+            calculate()
+            isMiniCalc = false
+            for _ in 1...numberOfRemovals {
+                temporaryWorkingValues.remove(at: indexToInsertAt!)
+            }
+            temporaryWorkingValues.insert(currentValue, at: indexToInsertAt!)
+            currentWorkingValues = temporaryWorkingValues
+            
+            if currentWorkingValues.contains(where: { ($0 as? Operators) == .exponent }) ||
+                currentWorkingValues.contains(where: { ($0 as? Operators) == .squareRoot }) {
+                hasExponentOrSqrt = true
+            } else {
+                hasExponentOrSqrt = false
+            }
+        }
+    }
+    //Again, almost the same function, expect this one doesn't have to differ between the two it checks for.
+    mutating func calculateMultiplyAndDivide() {
+        var arrayForCalculation: [Any] = []
+        var hasMulitplyOrDivide = true
+        var temporaryWorkingValues = currentWorkingValues
+        var indexToInsertAt: Int?
+        while hasMulitplyOrDivide {
+            for (i, value) in temporaryWorkingValues.enumerated() {
+                if value as? Operators == .multiply || value as? Operators == .divide {
+                    indexToInsertAt = i - 1
+                    if temporaryWorkingValues[indexToInsertAt!] as? Double != nil && temporaryWorkingValues[indexToInsertAt! + 2] as? Double != nil {
+                        arrayForCalculation.append(temporaryWorkingValues[indexToInsertAt!])
+                        arrayForCalculation.append(value)
+                        arrayForCalculation.append(temporaryWorkingValues[indexToInsertAt! + 2])
+                        break
+                    }
+                }
+            }
+            currentWorkingValues = arrayForCalculation
+            isMiniCalc = true
+            calculate()
+            isMiniCalc = false
+            for _ in 1...3 {
+                temporaryWorkingValues.remove(at: indexToInsertAt!)
+            }
+            temporaryWorkingValues.insert(currentValue, at: indexToInsertAt!)
+            currentWorkingValues = temporaryWorkingValues
+            
+            if currentWorkingValues.contains(where: { ($0 as? Operators) == .multiply }) ||
+                currentWorkingValues.contains(where: { ($0 as? Operators) == .divide }) {
+                hasMulitplyOrDivide = true
+            } else {
+                hasMulitplyOrDivide = false
+            }
+        }
+    }
 }
+
 
 

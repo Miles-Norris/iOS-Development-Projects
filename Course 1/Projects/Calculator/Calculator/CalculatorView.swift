@@ -13,6 +13,12 @@ extension Double {
         return self.truncatingRemainder(dividingBy: 1) == 0
     }
 }
+extension String {
+    func indexFromEnd(offset: Int) -> String.Index {
+        guard offset > 0 else { return endIndex }
+        return index(endIndex, offsetBy: -min(offset, count))
+    }
+}
 
 struct CalculatorView: View {
     //This is a list of all of everything that should be displayed on the screen, it will usually be similar to what is in the currentWorkingValues list that is in the calculator, but not always.
@@ -20,14 +26,21 @@ struct CalculatorView: View {
         didSet {
             currentOperationText = ""
             for character in currentOperations {
-                currentOperationText += character
+                if character == "√" {
+                    if !currentOperationText.isEmpty {
+                        let index = currentOperationText.indexFromEnd(offset: numbersToBeCommited.count)
+                        currentOperationText.insert(contentsOf: character, at: index)
+                    }
+                } else {
+                    currentOperationText += character
+                }
             }
             if currentOperationText == "" {
                 currentOperationText = "0"
             }
         }
     }
-    //This holds a single String and is what the Text obeject is using to display the text. it updates whenever currentOperations is changed.
+    //This holds a single String and is what the Text obeject is using to display the text. it updates whenever currentOperations is changed. if the character inputted is specifically "√" it will be inserted before the number in is operating on.
     @State var currentOperationText: String = "0" {
         willSet {
             if newValue == "0" {
@@ -74,7 +87,7 @@ struct CalculatorView: View {
                     if !numbersToBeCommited.isEmpty {
                         commitNumbers()
                     }
-                    calculator.currentWorkingValues.append(Inputs.exponent)
+                    calculator.currentWorkingValues.append(Operators.exponent)
                     currentOperations.append("^")
                 } label: {
                     ZStack {
@@ -96,11 +109,12 @@ struct CalculatorView: View {
                     guard !isPreviousInvalidOperator() else {
                         return
                     }
+                    currentOperations.append("√")
                     if !numbersToBeCommited.isEmpty {
                     commitNumbers()
                 }
-                    calculator.currentWorkingValues.append(Inputs.squareRoot)
-                    currentOperations.append("√")
+                    checksForDefault0()
+                    calculator.currentWorkingValues.append(Operators.squareRoot)
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
@@ -123,11 +137,11 @@ struct CalculatorView: View {
                     let isOperatorOrOpenParenOrStart = last == "^" || last == "(" || last == "÷" || last == "×" || last == "-" || last == "+" || currentOperations.isEmpty
 
                     if !isOperatorOrOpenParenOrStart {
-                        calculator.currentWorkingValues.append(Inputs.multiply)
+                        calculator.currentWorkingValues.append(Operators.multiply)
                         currentOperations.append("×")
                     }
                     
-                    calculator.currentWorkingValues.append(Inputs.openParen)
+                    calculator.currentWorkingValues.append(Operators.openParen)
                     currentOperations.append("(")
                 } label: {
                     ZStack {
@@ -149,7 +163,7 @@ struct CalculatorView: View {
                     if !numbersToBeCommited.isEmpty {
                         commitNumbers()
                     }
-                    calculator.currentWorkingValues.append(Inputs.closeParen)
+                    calculator.currentWorkingValues.append(Operators.closeParen)
                     currentOperations.append(")")
                 } label: {
                     ZStack {
@@ -296,7 +310,7 @@ struct CalculatorView: View {
                                 numbersToBeCommited.removeLast()
                             }
                         }
-                    } else if calculator.currentWorkingValues[calculator.currentWorkingValues.count - 1] as? Inputs != nil {
+                    } else if calculator.currentWorkingValues[calculator.currentWorkingValues.count - 1] as? Operators != nil {
                         calculator.currentWorkingValues.removeLast()
                     } else if calculator.currentWorkingValues[calculator.currentWorkingValues.count - 1] as? Double != nil {
                         let removedValue = calculator.currentWorkingValues.removeLast() as! Double
@@ -352,7 +366,7 @@ struct CalculatorView: View {
                         commitNumbers()
                     }
                     checksForDefault0()
-                    calculator.currentWorkingValues.append(Inputs.percentage)
+                    calculator.currentWorkingValues.append(Operators.percentage)
                     currentOperations.append("%")
                 } label: {
                     ZStack {
@@ -375,7 +389,7 @@ struct CalculatorView: View {
                         commitNumbers()
                     }
                     checksForDefault0()
-                    calculator.currentWorkingValues.append(Inputs.divide)
+                    calculator.currentWorkingValues.append(Operators.divide)
                     currentOperations.append("÷")
                 } label: {
                     ZStack {
@@ -451,7 +465,7 @@ struct CalculatorView: View {
                         commitNumbers()
                     }
                     checksForDefault0()
-                    calculator.currentWorkingValues.append(Inputs.multiply)
+                    calculator.currentWorkingValues.append(Operators.multiply)
                     currentOperations.append("×")
                 } label: {
                     ZStack {
@@ -532,7 +546,7 @@ struct CalculatorView: View {
                     if !numbersToBeCommited.isEmpty {
                         commitNumbers()
                     }
-                    calculator.currentWorkingValues.append(Inputs.minus)
+                    calculator.currentWorkingValues.append(Operators.minus)
                     currentOperations.append("-")
                 } label: {
                     ZStack {
@@ -608,7 +622,7 @@ struct CalculatorView: View {
                         commitNumbers()
                     }
                     checksForDefault0()
-                    calculator.currentWorkingValues.append(Inputs.plus)
+                    calculator.currentWorkingValues.append(Operators.plus)
                     currentOperations.append("+")
                 } label: {
                     ZStack {
@@ -629,7 +643,7 @@ struct CalculatorView: View {
                     if !numbersToBeCommited.isEmpty {
                         commitNumbers()
                     }
-                    calculator.currentWorkingValues.append(Inputs.signChange)
+                    calculator.currentWorkingValues.append(Operators.signChange)
                     calculator.calculate()
                     format(result: calculator.currentValue)
                     if Double(currentOperations[0]) != nil {
@@ -784,17 +798,19 @@ struct CalculatorView: View {
     func checksForNeededMultiplier() {
         if !currentOperations.isEmpty {
             if currentOperations[currentOperations.count - 1] == "%" || currentOperations[currentOperations.count - 1] == "√" || currentOperations[currentOperations.count - 1] == ")" {
-                calculator.currentWorkingValues.append(Inputs.multiply)
+                calculator.currentWorkingValues.append(Operators.multiply)
                 currentOperations.append("×")
             }
         }
     }
+    //This function runs on operators when there is nothing currently in currentOperations. it will just add 0 to as a default base value.
     func checksForDefault0() {
         if currentOperations.isEmpty {
             numbersToBeCommited += ["0"]
             currentOperations += ["0"]
         }
     }
+    //This function runs on most operators and will check to make sure that the previously entered value is one that can be mutated by that operator.
     func isPreviousInvalidOperator() -> Bool {
         let last = currentOperations.last
         let invalid = last == "^" || last == "(" || last == "÷" || last == "×" || last == "-" || last == "+"
