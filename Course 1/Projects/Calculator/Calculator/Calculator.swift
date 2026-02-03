@@ -92,7 +92,7 @@ struct Calculator {
 
         //Loops all of the values in the currentWorkingValuesArray in order.
         for currentWorkingValue in currentWorkingValues {
-            //Checks to see if currentWorkingValue is a Double, and if it is, then checking to see if there is currently a number to mutate, and if that is true as well, then it looks at the lastEnteredOperator to see what operation to perform.
+            //Checks to see if currentWorkingValue is a Double, and if it is, it then it looks at the lastEnteredOperator to see what operation to perform.
             if let currentNumber = currentWorkingValue as? Double {
                 switch lastEnteredOperator {
                 case .plus:

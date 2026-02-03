@@ -13,12 +13,6 @@ extension Double {
         return self.truncatingRemainder(dividingBy: 1) == 0
     }
 }
-extension String {
-    func indexFromEnd(offset: Int) -> String.Index {
-        guard offset > 0 else { return endIndex }
-        return index(endIndex, offsetBy: -min(offset, count))
-    }
-}
 
 struct CalculatorView: View {
     //This is a list of all of everything that should be displayed on the screen, it will usually be similar to what is in the currentWorkingValues list that is in the calculator, but not always.
@@ -26,21 +20,14 @@ struct CalculatorView: View {
         didSet {
             currentOperationText = ""
             for character in currentOperations {
-                if character == "√" {
-                    if !currentOperationText.isEmpty {
-                        let index = currentOperationText.indexFromEnd(offset: numbersToBeCommited.count)
-                        currentOperationText.insert(contentsOf: character, at: index)
-                    }
-                } else {
-                    currentOperationText += character
-                }
+                currentOperationText += character
             }
             if currentOperationText == "" {
                 currentOperationText = "0"
             }
         }
     }
-    //This holds a single String and is what the Text obeject is using to display the text. it updates whenever currentOperations is changed. if the character inputted is specifically "√" it will be inserted before the number in is operating on.
+    //This holds a single String and is what the Text object is using to display the text. it updates whenever currentOperations is changed. if the character inputted is specifically "√" it will be inserted before the number in is operating on.
     @State var currentOperationText: String = "0" {
         willSet {
             if newValue == "0" {
@@ -106,14 +93,11 @@ struct CalculatorView: View {
                 }
                 //Another operator button, see ^
                 Button {
-                    guard !isPreviousInvalidOperator() else {
-                        return
-                    }
-                    currentOperations.append("√")
                     if !numbersToBeCommited.isEmpty {
                     commitNumbers()
                 }
                     checksForDefault0()
+                    currentOperations.append("√")
                     calculator.currentWorkingValues.append(Operators.squareRoot)
                 } label: {
                     ZStack {
