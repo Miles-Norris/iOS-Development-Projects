@@ -69,7 +69,15 @@ struct Calculator {
                    .filter { !removeIndexes.contains($0.offset) }
                    .map { $0.element }
             //Once the parenthesis are clean, it will run the calculateParenthesis function to calculate them.
-            calculateParenthesis()
+            if currentWorkingValues.contains(where: { ($0 as? Operators) == .openParen }) ||
+               currentWorkingValues.contains(where: { ($0 as? Operators) == .closeParen }) {
+                hasParens = true
+            } else {
+                hasParens = false
+            }
+            if hasParens {
+                calculateParenthesis()
+            }
         }
         
         if currentWorkingValues.contains(where: { ($0 as? Operators) == .exponent }) ||

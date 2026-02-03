@@ -624,6 +624,7 @@ struct CalculatorView: View {
             HStack {
                 Button {
                     //This first runs the same as all the other operators, but this is treated as an alternate "=" button, it commits the numbersToBeCommited and then runs calculate() after passing in the operation. it then runs the format func on the result, as well as added the result to numbersToBeCommited.
+                    guard currentOperations.last != "(" && currentOperations.last != "÷" && currentOperations.last != "×" && currentOperations.last != "-" && currentOperations.last != "+" && currentOperations.last != "^" else { return }
                     if !numbersToBeCommited.isEmpty {
                         commitNumbers()
                     }
@@ -733,6 +734,11 @@ struct CalculatorView: View {
     func format(result: Double) {
         var currentNumberOfDigits: Int = 0
         let resultAsInt: Int
+        if result.isNaN {
+            currentOperations = ["NaN"]
+            numbersToBeCommited.removeAll()
+            return
+        }
         if result > Double(Int.max) {
             for _ in String(result) {
                 currentNumberOfDigits += 1
