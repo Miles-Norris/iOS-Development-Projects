@@ -689,6 +689,7 @@ struct CalculatorView: View {
                 }
                 Button {
                     //This finalizes the operation by commiting all numbers that need to be commited, and then runs calculate(). it then call the format func using the result of the calculation, and then adds each digit of the result to numbersToBeCommited ignoring ",".
+                    guard currentOperations.last != "(" && currentOperations.last != "÷" && currentOperations.last != "×" && currentOperations.last != "-" && currentOperations.last != "+" && currentOperations.last != "^" else { return }
                     if !numbersToBeCommited.isEmpty {
                         commitNumbers()
                     }

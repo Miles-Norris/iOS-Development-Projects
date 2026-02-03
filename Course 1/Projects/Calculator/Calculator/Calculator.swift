@@ -14,7 +14,7 @@ enum Operators {
 struct Calculator {
     var isMiniCalc = false
     var currentValue: Double = 0
-    //currentWorkingValues has all of the values that will be used in the operation. this includes type Inputs, and Double for this program. it also has a didSet that ensures it will never be empty because on a calculator the default value will always be 0.
+    //currentWorkingValues has all of the values that will be used in the operation. this includes type Operators, and Double for this program. it also has a didSet that ensures it will never be empty because on a calculator the default value will always be 0.
     var currentWorkingValues: [Any] = [0.0] {
         didSet {
             if currentWorkingValues.isEmpty {
