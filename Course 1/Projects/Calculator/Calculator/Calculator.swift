@@ -33,6 +33,7 @@ struct Calculator {
         var hasParens = false
         var hasExponentOrSqrt = false
         var hasMuliplyOrDivide = false
+        var isSqrt = false
         
         //In order to follow order of operations. the next chunck of code checks for their respective operator type and then performs the respective calculate operator function.
         if currentWorkingValues.contains(where: { ($0 as? Operators) == .openParen }) ||
@@ -104,29 +105,64 @@ struct Calculator {
             if let currentNumber = currentWorkingValue as? Double {
                 switch lastEnteredOperator {
                 case .plus:
+                    if isSqrt {
+                        total = (total + currentNumber.squareRoot())
+                        isSqrt = false
+                        lastEnteredOperator = nil
+                        continue
+                    }
                     total = (total + currentNumber)
                     lastEnteredOperator = nil
                 case .minus:
+                    if isSqrt {
+                        total = (total - currentNumber.squareRoot())
+                        isSqrt = false
+                        lastEnteredOperator = nil
+                        continue
+                    }
                     total = (total - currentNumber)
                     lastEnteredOperator = nil
                 case .multiply:
+                    if isSqrt {
+                        total = (total * currentNumber.squareRoot())
+                        isSqrt = false
+                        lastEnteredOperator = nil
+                        continue
+                    }
                     total = (total * currentNumber)
                     lastEnteredOperator = nil
                 case .divide:
+                    if isSqrt {
+                        total = (total / currentNumber.squareRoot())
+                        isSqrt = false
+                        lastEnteredOperator = nil
+                        continue
+                    }
                     total = (total / currentNumber)
                     lastEnteredOperator = nil
                 case .exponent:
+                    if isSqrt {
+                        total = pow(total, currentNumber.squareRoot())
+                        isSqrt = false
+                        lastEnteredOperator = nil
+                        continue
+                    }
                     total = pow(total, currentNumber)
                     lastEnteredOperator = nil
                 default:
+                    if isSqrt {
+                        total = currentNumber.squareRoot()
+                        isSqrt = false
+                        continue
+                    }
                     total = currentNumber
                     continue
                 }
             }
-            //This will check if the currentWorkingValue is an Input on the list of enum Inputs.
-            if let currentInput = currentWorkingValue as? Operators {
-                //If there is currently a number to mutate, this will either store an operator to lastEnteredOperator or if it's an operator that only uses one value, it will perform the operation and update the total.
-                switch currentInput {
+            //This will check if the currentWorkingValue is an Operator on the list of enum Operators.
+            if let currentOperator = currentWorkingValue as? Operators {
+                //This will either store an operator to lastEnteredOperator or if it's an operator that only uses one value, it will perform the operation and update the total.
+                switch currentOperator {
                 case .plus:
                     lastEnteredOperator = .plus
                 case .minus:
@@ -138,7 +174,7 @@ struct Calculator {
                 case .exponent:
                     lastEnteredOperator = .exponent
                 case .squareRoot:
-                    total = sqrt(total)
+                    isSqrt = true
                 case .signChange:
                     if total > 0 {
                         total -= 2 * total
@@ -283,11 +319,11 @@ struct Calculator {
         while hasExponentOrSqrt {
             for (i, value) in temporaryWorkingValues.enumerated() {
                 if value as? Operators == .squareRoot {
-                    indexToInsertAt = i - 1
+                    indexToInsertAt = i
                     numberOfRemovals = 2
-                    if temporaryWorkingValues[indexToInsertAt!] as? Double != nil {
-                        arrayForCalculation.append(temporaryWorkingValues[indexToInsertAt!])
+                    if temporaryWorkingValues[indexToInsertAt! + 1] as? Double != nil {
                         arrayForCalculation.append(value)
+                        arrayForCalculation.append(temporaryWorkingValues[indexToInsertAt! + 1])
                         break
                     }
                 }

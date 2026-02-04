@@ -8,7 +8,7 @@ enum Operators {
 struct Calculator {
     var isMiniCalc = false
     var currentValue: Double = 0
-    //currentWorkingValues has all of the values that will be used in the operation. this includes type Inputs, and Double for this program. it also has a didSet that ensures it will never be empty because on a calculator the default value will always be 0.
+    //currentWorkingValues has all of the values that will be used in the operation. this includes type Operators, and Double for this program. it also has a didSet that ensures it will never be empty because on a calculator the default value will always be 0.
     var currentWorkingValues: [Any] = [0.0] {
         didSet {
             if currentWorkingValues.isEmpty {
@@ -23,22 +23,16 @@ struct Calculator {
         var total: Double = 0
         //This is used to check what the current operator is that needs to be used for the operation
         var lastEnteredOperator: Operators?
-        //Checks for parenthesis
+        //Checks for parenthesis, Exponents/Sqrts, and Multiplication/Divison.
         var hasParens = false
         var hasExponentOrSqrt = false
         var hasMuliplyOrDivide = false
+        var isSqrt = false
         
+        //In order to follow order of operations. the next chunck of code checks for their respective operator type and then performs the respective calculate operator function.
         if currentWorkingValues.contains(where: { ($0 as? Operators) == .openParen }) ||
            currentWorkingValues.contains(where: { ($0 as? Operators) == .closeParen }) {
             hasParens = true
-        }
-        if currentWorkingValues.contains(where: { ($0 as? Operators) == .exponent }) ||
-            currentWorkingValues.contains(where: { ($0 as? Operators) == .squareRoot }) {
-            hasExponentOrSqrt = true
-        }
-        if currentWorkingValues.contains(where: { ($0 as? Operators) == .multiply }) ||
-           currentWorkingValues.contains(where: { ($0 as? Operators) == .divide }) {
-            hasMuliplyOrDivide = true
         }
         
         //Cleans Parens in case invalid parens were inputted
@@ -70,44 +64,99 @@ struct Calculator {
                    .filter { !removeIndexes.contains($0.offset) }
                    .map { $0.element }
             //Once the parenthesis are clean, it will run the calculateParenthesis function to calculate them.
-            calculateParenthesis()
+            if currentWorkingValues.contains(where: { ($0 as? Operators) == .openParen }) ||
+               currentWorkingValues.contains(where: { ($0 as? Operators) == .closeParen }) {
+                hasParens = true
+            } else {
+                hasParens = false
+            }
+            if hasParens {
+                calculateParenthesis()
+            }
         }
+        
+        if currentWorkingValues.contains(where: { ($0 as? Operators) == .exponent }) ||
+            currentWorkingValues.contains(where: { ($0 as? Operators) == .squareRoot }) {
+            hasExponentOrSqrt = true
+        }
+        
         if hasExponentOrSqrt && !isMiniCalc {
             calculateExponentsAndSqrts()
         }
+        
+        if currentWorkingValues.contains(where: { ($0 as? Operators) == .multiply }) ||
+           currentWorkingValues.contains(where: { ($0 as? Operators) == .divide }) {
+            hasMuliplyOrDivide = true
+        }
+        
         if hasMuliplyOrDivide && !isMiniCalc {
             calculateMultiplyAndDivide()
         }
 
         //Loops all of the values in the currentWorkingValuesArray in order.
         for currentWorkingValue in currentWorkingValues {
-            //Checks to see if currentWorkingValue is a Double, and if it is, then checking to see if there is currently a number to mutate, and if that is true as well, then it looks at the lastEnteredOperator to see what operation to perform.
+            //Checks to see if currentWorkingValue is a Double, and if it is, it then it looks at the lastEnteredOperator to see what operation to perform.
             if let currentNumber = currentWorkingValue as? Double {
                 switch lastEnteredOperator {
                 case .plus:
+                    if isSqrt {
+                        total = (total + currentNumber.squareRoot())
+                        isSqrt = false
+                        lastEnteredOperator = nil
+                        continue
+                    }
                     total = (total + currentNumber)
                     lastEnteredOperator = nil
                 case .minus:
+                    if isSqrt {
+                        total = (total - currentNumber.squareRoot())
+                        isSqrt = false
+                        lastEnteredOperator = nil
+                        continue
+                    }
                     total = (total - currentNumber)
                     lastEnteredOperator = nil
                 case .multiply:
+                    if isSqrt {
+                        total = (total * currentNumber.squareRoot())
+                        isSqrt = false
+                        lastEnteredOperator = nil
+                        continue
+                    }
                     total = (total * currentNumber)
                     lastEnteredOperator = nil
                 case .divide:
+                    if isSqrt {
+                        total = (total / currentNumber.squareRoot())
+                        isSqrt = false
+                        lastEnteredOperator = nil
+                        continue
+                    }
                     total = (total / currentNumber)
                     lastEnteredOperator = nil
                 case .exponent:
+                    if isSqrt {
+                        total = pow(total, currentNumber.squareRoot())
+                        isSqrt = false
+                        lastEnteredOperator = nil
+                        continue
+                    }
                     total = pow(total, currentNumber)
                     lastEnteredOperator = nil
                 default:
+                    if isSqrt {
+                        total = currentNumber.squareRoot()
+                        isSqrt = false
+                        continue
+                    }
                     total = currentNumber
                     continue
                 }
             }
-            //This will check if the currentWorkingValue is an Input on the list of enum Inputs.
-            if let currentInput = currentWorkingValue as? Operators {
-                //If there is currently a number to mutate, this will either store an operator to lastEnteredOperator or if it's an operator that only uses one value, it will perform the operation and update the total.
-                switch currentInput {
+            //This will check if the currentWorkingValue is an Operator on the list of enum Operators.
+            if let currentOperator = currentWorkingValue as? Operators {
+                //This will either store an operator to lastEnteredOperator or if it's an operator that only uses one value, it will perform the operation and update the total.
+                switch currentOperator {
                 case .plus:
                     lastEnteredOperator = .plus
                 case .minus:
@@ -119,7 +168,7 @@ struct Calculator {
                 case .exponent:
                     lastEnteredOperator = .exponent
                 case .squareRoot:
-                    total = sqrt(total)
+                    isSqrt = true
                 case .signChange:
                     if total > 0 {
                         total -= 2 * total
@@ -253,6 +302,8 @@ struct Calculator {
         currentWorkingValues = temporaryWorkingValues
         calculate()
     }
+    
+    //This functions almost the same of the previous one, just more simple.
     mutating func calculateExponentsAndSqrts() {
         var arrayForCalculation: [Any] = []
         var hasExponentOrSqrt = true
@@ -262,11 +313,11 @@ struct Calculator {
         while hasExponentOrSqrt {
             for (i, value) in temporaryWorkingValues.enumerated() {
                 if value as? Operators == .squareRoot {
-                    indexToInsertAt = i - 1
+                    indexToInsertAt = i
                     numberOfRemovals = 2
-                    if temporaryWorkingValues[indexToInsertAt!] as? Double != nil {
-                        arrayForCalculation.append(temporaryWorkingValues[indexToInsertAt!])
+                    if temporaryWorkingValues[indexToInsertAt! + 1] as? Double != nil {
                         arrayForCalculation.append(value)
+                        arrayForCalculation.append(temporaryWorkingValues[indexToInsertAt! + 1])
                         break
                     }
                 }
@@ -299,6 +350,7 @@ struct Calculator {
             }
         }
     }
+    //Again, almost the same function, expect this one doesn't have to differ between the two it checks for.
     mutating func calculateMultiplyAndDivide() {
         var arrayForCalculation: [Any] = []
         var hasMulitplyOrDivide = true
@@ -337,7 +389,7 @@ struct Calculator {
 }
 var calculator = Calculator()
 
-calculator.currentWorkingValues = [2.0, Operators.plus, 2.0, Operators.multiply, 2.0]
+calculator.currentWorkingValues = [5.0, Operators.multiply, Operators.squareRoot, Operators.openParen, 8.0, Operators.closeParen]
 
 calculator.calculate()
 

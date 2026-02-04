@@ -74,6 +74,7 @@ struct CalculatorView: View {
                     if !numbersToBeCommited.isEmpty {
                         commitNumbers()
                     }
+                    checksForDefault0()
                     calculator.currentWorkingValues.append(Operators.exponent)
                     currentOperations.append("^")
                 } label: {
@@ -96,9 +97,19 @@ struct CalculatorView: View {
                     if !numbersToBeCommited.isEmpty {
                     commitNumbers()
                 }
-                    checksForDefault0()
+                    
+                    let last = currentOperations.last
+                    let isOperatorOrOpenParenOrStart = last == "^" || last == "(" || last == "÷" || last == "×" || last == "-" || last == "+" || last == "√" || currentOperations.isEmpty
+
+                    if !isOperatorOrOpenParenOrStart {
+                        calculator.currentWorkingValues.append(Operators.multiply)
+                        currentOperations.append("×")
+                    }
+                    
                     currentOperations.append("√")
                     calculator.currentWorkingValues.append(Operators.squareRoot)
+                    calculator.currentWorkingValues.append(Operators.openParen)
+                    currentOperations.append("(")
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
@@ -118,7 +129,7 @@ struct CalculatorView: View {
                     }
                     
                     let last = currentOperations.last
-                    let isOperatorOrOpenParenOrStart = last == "^" || last == "(" || last == "÷" || last == "×" || last == "-" || last == "+" || currentOperations.isEmpty
+                    let isOperatorOrOpenParenOrStart = last == "^" || last == "(" || last == "÷" || last == "×" || last == "-" || last == "+" || last == "√" || currentOperations.isEmpty
 
                     if !isOperatorOrOpenParenOrStart {
                         calculator.currentWorkingValues.append(Operators.multiply)
