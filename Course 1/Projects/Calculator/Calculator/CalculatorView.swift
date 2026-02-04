@@ -349,7 +349,7 @@ struct CalculatorView: View {
                         Image(systemName: "delete.left")
                             .foregroundStyle(Color(.black))
                             .bold()
-                            .font(.custom("BodoniSvtyTwoITCTT-Bold", size: 17))
+                            .font(.custom("BodoniSvtyTwoITCTT-Bold", size: 16))
                     }
                 }
                 Button {
@@ -386,10 +386,10 @@ struct CalculatorView: View {
                             .foregroundStyle(Color(.white))
                             .shadow(radius: 4)
                         
-                        Image(systemName: "percent")
+                        Text("%")
                             .foregroundStyle(Color(.black))
                             .bold()
-                            .font(.custom("BodoniSvtyTwoITCTT-Bold", size: 17))
+                            .font(.custom("BodoniSvtyTwoITCTT-Bold", size: 22))
                     }
                 }
                 Button {
