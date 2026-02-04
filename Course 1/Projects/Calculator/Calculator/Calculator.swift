@@ -32,7 +32,7 @@ struct Calculator {
         //Checks for parenthesis, Exponents/Sqrts, and Multiplication/Divison.
         var hasParens = false
         var hasExponentOrSqrt = false
-        var hasMuliplyOrDivide = false
+        var hasMuliplyOrDivideOrPercentage = false
         var isSqrt = false
         
         //In order to follow order of operations. the next chunck of code checks for their respective operator type and then performs the respective calculate operator function.
@@ -91,12 +91,13 @@ struct Calculator {
         }
         
         if currentWorkingValues.contains(where: { ($0 as? Operators) == .multiply }) ||
-           currentWorkingValues.contains(where: { ($0 as? Operators) == .divide }) {
-            hasMuliplyOrDivide = true
+           currentWorkingValues.contains(where: { ($0 as? Operators) == .divide }) ||
+            currentWorkingValues.contains(where: { ($0 as? Operators) == .percentage }){
+            hasMuliplyOrDivideOrPercentage = true
         }
         
-        if hasMuliplyOrDivide && !isMiniCalc {
-            calculateMultiplyAndDivide()
+        if hasMuliplyOrDivideOrPercentage && !isMiniCalc {
+            calculateMultiplyAndDivideAndPercentage()
         }
 
         //Loops all of the values in the currentWorkingValuesArray in order.
@@ -357,19 +358,30 @@ struct Calculator {
         }
     }
     //Again, almost the same function, expect this one doesn't have to differ between the two it checks for.
-    mutating func calculateMultiplyAndDivide() {
+    mutating func calculateMultiplyAndDivideAndPercentage() {
         var arrayForCalculation: [Any] = []
-        var hasMulitplyOrDivide = true
+        var hasMulitplyOrDivideOrPercentage = true
         var temporaryWorkingValues = currentWorkingValues
         var indexToInsertAt: Int?
-        while hasMulitplyOrDivide {
+        var numberOfRemovals = 0
+        while hasMulitplyOrDivideOrPercentage {
             for (i, value) in temporaryWorkingValues.enumerated() {
                 if value as? Operators == .multiply || value as? Operators == .divide {
                     indexToInsertAt = i - 1
+                    numberOfRemovals = 3
                     if temporaryWorkingValues[indexToInsertAt!] as? Double != nil && temporaryWorkingValues[indexToInsertAt! + 2] as? Double != nil {
                         arrayForCalculation.append(temporaryWorkingValues[indexToInsertAt!])
                         arrayForCalculation.append(value)
                         arrayForCalculation.append(temporaryWorkingValues[indexToInsertAt! + 2])
+                        break
+                    }
+                }
+                if value as? Operators == .percentage {
+                    indexToInsertAt = i - 1
+                    numberOfRemovals = 2
+                    if temporaryWorkingValues[indexToInsertAt!] as? Double != nil {
+                        arrayForCalculation.append(temporaryWorkingValues[indexToInsertAt!])
+                        arrayForCalculation.append(value)
                         break
                     }
                 }
@@ -378,17 +390,18 @@ struct Calculator {
             isMiniCalc = true
             calculate()
             isMiniCalc = false
-            for _ in 1...3 {
+            for _ in 1...numberOfRemovals {
                 temporaryWorkingValues.remove(at: indexToInsertAt!)
             }
             temporaryWorkingValues.insert(currentValue, at: indexToInsertAt!)
             currentWorkingValues = temporaryWorkingValues
             
             if currentWorkingValues.contains(where: { ($0 as? Operators) == .multiply }) ||
-                currentWorkingValues.contains(where: { ($0 as? Operators) == .divide }) {
-                hasMulitplyOrDivide = true
+                currentWorkingValues.contains(where: { ($0 as? Operators) == .divide }) ||
+                currentWorkingValues.contains(where: { ($0 as? Operators) == .percentage }) {
+                hasMulitplyOrDivideOrPercentage = true
             } else {
-                hasMulitplyOrDivide = false
+                hasMulitplyOrDivideOrPercentage = false
             }
         }
     }

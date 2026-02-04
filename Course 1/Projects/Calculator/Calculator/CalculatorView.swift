@@ -37,7 +37,13 @@ struct CalculatorView: View {
     }
     @State var calculator = Calculator()
     //numbersToBeCommited holds a list of Characters that will represent one number. It holds the number in a stasis so that you can edit the number and update what shows on screen without actually adding each digit of the number to the operation.
-    @State var numbersToBeCommited: [Character] = []
+    @State var numbersToBeCommited: [Character] = [] {
+        didSet {
+            if numbersToBeCommited == ["0", "0"] {
+                numbersToBeCommited = ["0"]
+            }
+        }
+    }
     @State var mrButtonColor: Color = .white
     //numberInMemory holds an optional Double that will be set by pressing the M+ or M- buttons. this also changes the MR button color if there is a value stored in memory
     @State var numberInMemory: Double? = nil {
@@ -258,6 +264,9 @@ struct CalculatorView: View {
                                 }
                             }
                         }
+                        if currentOperations == ["0"] {
+                            allClear()
+                        }
                     }
                 } label: {
                     ZStack {
@@ -337,9 +346,7 @@ struct CalculatorView: View {
                 }
                 Button {
                     //AC simply removes all values from every array
-                    numbersToBeCommited.removeAll()
-                    calculator.currentWorkingValues.removeAll()
-                    currentOperations.removeAll()
+                    allClear()
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
@@ -650,6 +657,9 @@ struct CalculatorView: View {
                             numbersToBeCommited.append(contentsOf: digit)
                         }
                     }
+                    if currentOperations == ["0"] {
+                        allClear()
+                    }
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
@@ -714,6 +724,9 @@ struct CalculatorView: View {
                             }
                             numbersToBeCommited.append(contentsOf: digit)
                         }
+                    }
+                    if currentOperations == ["0"] {
+                        allClear()
                     }
                 } label: {
                     ZStack {
@@ -817,6 +830,12 @@ struct CalculatorView: View {
         let last = currentOperations.last
         let invalid = last == "^" || last == "(" || last == "÷" || last == "×" || last == "-" || last == "+"
         return invalid
+    }
+    
+    func allClear() {
+        numbersToBeCommited.removeAll()
+        calculator.currentWorkingValues.removeAll()
+        currentOperations.removeAll()
     }
 }
 
