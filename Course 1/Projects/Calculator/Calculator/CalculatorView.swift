@@ -93,7 +93,7 @@ struct CalculatorView: View {
                         
                         Text("^")
                             .padding(.top, 9)
-                            .font(.system(size: 22))
+                            .font(.custom("BodoniSvtyTwoITCTT-Bold", size: 22))
                             .bold()
                             .foregroundStyle(Color(.black))
                     }
@@ -123,10 +123,10 @@ struct CalculatorView: View {
                             .foregroundStyle(Color(.white))
                             .shadow(radius: 4)
                         
-                        Image(systemName: "squareroot")
+                        Text("√")
                             .foregroundStyle(Color(.black))
                             .bold()
-                            .font(.custom("BodoniSvtyTwoITCTT-Bold", size: 16))
+                            .font(.custom("BodoniSvtyTwoITCTT-Bold", size: 21))
                     }
                 }
                 Button {
