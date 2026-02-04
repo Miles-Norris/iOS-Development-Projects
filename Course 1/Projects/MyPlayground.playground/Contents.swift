@@ -389,7 +389,7 @@ struct Calculator {
 }
 var calculator = Calculator()
 
-calculator.currentWorkingValues = [5.0, Operators.multiply, Operators.squareRoot, Operators.openParen, 8.0, Operators.closeParen]
+calculator.currentWorkingValues = [5.0, Operators.multiply, -8.0]
 
 calculator.calculate()
 

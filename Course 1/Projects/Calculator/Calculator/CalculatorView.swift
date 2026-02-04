@@ -533,7 +533,7 @@ struct CalculatorView: View {
                     guard last != "-" else {
                         return
                     }
-                    guard last != "^" || last != "(" || last != "÷" || last != "×" || last != "+" else {
+                    guard last != "^" && last != "(" && last != "÷" && last != "×" && last != "+" else {
                         numbersToBeCommited.append("-")
                         currentOperations.append("-")
                         return
@@ -799,7 +799,7 @@ struct CalculatorView: View {
     //This is a function that runs whenever a number gets inputted. see number "7" for more details.
     func checksForNeededMultiplier() {
         if !currentOperations.isEmpty {
-            if currentOperations[currentOperations.count - 1] == "%" || currentOperations[currentOperations.count - 1] == "√" || currentOperations[currentOperations.count - 1] == ")" {
+            if currentOperations[currentOperations.count - 1] == "%" || currentOperations[currentOperations.count - 1] == ")" {
                 calculator.currentWorkingValues.append(Operators.multiply)
                 currentOperations.append("×")
             }
