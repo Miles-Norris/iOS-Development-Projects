@@ -63,8 +63,8 @@ struct CalculatorView: View {
             HStack {
                 Spacer()
                 Text(currentOperationText)
-                    .font(.system(size: 75))
                     .bold()
+                    .font(.custom("BodoniSvtyTwoITCTT-Bold", size: 75))
                     .padding(.horizontal, 25)
                     .lineLimit(1)
                     .truncationMode(.head)
@@ -92,8 +92,8 @@ struct CalculatorView: View {
                         
                         
                         Text("^")
-                            .padding(.top, 10)
-                            .font(.title)
+                            .padding(.top, 9)
+                            .font(.system(size: 22))
                             .bold()
                             .foregroundStyle(Color(.black))
                     }
@@ -126,6 +126,7 @@ struct CalculatorView: View {
                         Image(systemName: "squareroot")
                             .foregroundStyle(Color(.black))
                             .bold()
+                            .font(.custom("BodoniSvtyTwoITCTT-Bold", size: 16))
                     }
                 }
                 Button {
@@ -154,6 +155,7 @@ struct CalculatorView: View {
                         Text("(")
                             .foregroundStyle(Color(.black))
                             .bold()
+                            .font(.custom("BodoniSvtyTwoITCTT-Bold", size: 21))
                     }
                 }
                 Button {
@@ -176,6 +178,7 @@ struct CalculatorView: View {
                         Text(")")
                             .foregroundStyle(Color(.black))
                             .bold()
+                            .font(.custom("BodoniSvtyTwoITCTT-Bold", size: 21))
                     }
                 }
             }
@@ -201,6 +204,7 @@ struct CalculatorView: View {
                         Text("M+")
                             .foregroundStyle(Color(.black))
                             .bold()
+                            .font(.custom("BodoniSvtyTwoITCTT-Bold", size: 18))
                     }
                 }
                 Button {
@@ -224,6 +228,7 @@ struct CalculatorView: View {
                         Text("M-")
                             .foregroundStyle(Color(.black))
                             .bold()
+                            .font(.custom("BodoniSvtyTwoITCTT-Bold", size: 18))
                     }
                 }
                 Button {
@@ -278,6 +283,7 @@ struct CalculatorView: View {
                         Text("MR")
                             .foregroundStyle(Color(.black))
                             .bold()
+                            .font(.custom("BodoniSvtyTwoITCTT-Bold", size: 18))
                     }
                 }
                 Button {
@@ -293,6 +299,7 @@ struct CalculatorView: View {
                         Text("MC")
                             .foregroundStyle(Color(.black))
                             .bold()
+                            .font(.custom("BodoniSvtyTwoITCTT-Bold", size: 18))
                     }
                 }
             }
@@ -342,6 +349,7 @@ struct CalculatorView: View {
                         Image(systemName: "delete.left")
                             .foregroundStyle(Color(.black))
                             .bold()
+                            .font(.custom("BodoniSvtyTwoITCTT-Bold", size: 17))
                     }
                 }
                 Button {
@@ -357,6 +365,7 @@ struct CalculatorView: View {
                         Text("AC")
                             .foregroundStyle(Color(.black))
                             .bold()
+                            .font(.custom("BodoniSvtyTwoITCTT-Bold", size: 18))
                     }
                 }
                 Button {
@@ -380,6 +389,7 @@ struct CalculatorView: View {
                         Image(systemName: "percent")
                             .foregroundStyle(Color(.black))
                             .bold()
+                            .font(.custom("BodoniSvtyTwoITCTT-Bold", size: 17))
                     }
                 }
                 Button {
@@ -403,6 +413,7 @@ struct CalculatorView: View {
                         Image(systemName: "divide")
                             .foregroundStyle(Color(.black))
                             .bold()
+                            .font(.custom("BodoniSvtyTwoITCTT-Bold", size: 18))
                     }
                 }
             }
@@ -422,6 +433,7 @@ struct CalculatorView: View {
                         Text("7")
                             .foregroundStyle(Color(.black))
                             .bold()
+                            .font(.custom("BodoniSvtyTwoITCTT-Bold", size: 21))
                     }
                 }
                 Button {
@@ -439,6 +451,7 @@ struct CalculatorView: View {
                         Text("8")
                             .foregroundStyle(Color(.black))
                             .bold()
+                            .font(.custom("BodoniSvtyTwoITCTT-Bold", size: 21))
                     }
                 }
                 Button {
@@ -456,6 +469,7 @@ struct CalculatorView: View {
                         Text("9")
                             .foregroundStyle(Color(.black))
                             .bold()
+                            .font(.custom("BodoniSvtyTwoITCTT-Bold", size: 21))
                     }
                 }
                 Button {
@@ -479,6 +493,7 @@ struct CalculatorView: View {
                         Image(systemName: "multiply")
                             .foregroundStyle(Color(.black))
                             .bold()
+                            .font(.custom("BodoniSvtyTwoITCTT-Bold", size: 18))
                     }
                 }
             }
@@ -498,6 +513,7 @@ struct CalculatorView: View {
                         Text("4")
                             .foregroundStyle(Color(.black))
                             .bold()
+                            .font(.custom("BodoniSvtyTwoITCTT-Bold", size: 21))
                     }
                 }
                 Button {
@@ -515,6 +531,7 @@ struct CalculatorView: View {
                         Text("5")
                             .foregroundStyle(Color(.black))
                             .bold()
+                            .font(.custom("BodoniSvtyTwoITCTT-Bold", size: 21))
                     }
                 }
                 Button {
@@ -532,6 +549,7 @@ struct CalculatorView: View {
                         Text("6")
                             .foregroundStyle(Color(.black))
                             .bold()
+                            .font(.custom("BodoniSvtyTwoITCTT-Bold", size: 21))
                     }
                 }
                 Button {
@@ -560,6 +578,7 @@ struct CalculatorView: View {
                         Image(systemName: "minus")
                             .foregroundStyle(Color(.black))
                             .bold()
+                            .font(.custom("BodoniSvtyTwoITCTT-Bold", size: 17))
                     }
                 }
             }
@@ -579,6 +598,7 @@ struct CalculatorView: View {
                         Text("1")
                             .foregroundStyle(Color(.black))
                             .bold()
+                            .font(.custom("BodoniSvtyTwoITCTT-Bold", size: 21))
                     }
                 }
                 Button {
@@ -596,6 +616,7 @@ struct CalculatorView: View {
                         Text("2")
                             .foregroundStyle(Color(.black))
                             .bold()
+                            .font(.custom("BodoniSvtyTwoITCTT-Bold", size: 21))
                     }
                 }
                 Button {
@@ -613,6 +634,7 @@ struct CalculatorView: View {
                         Text("3")
                             .foregroundStyle(Color(.black))
                             .bold()
+                            .font(.custom("BodoniSvtyTwoITCTT-Bold", size: 21))
                     }
                 }
                 Button {
@@ -636,6 +658,7 @@ struct CalculatorView: View {
                         Image(systemName: "plus")
                             .foregroundStyle(Color(.black))
                             .bold()
+                            .font(.custom("BodoniSvtyTwoITCTT-Bold", size: 17))
                     }
                 }
             }
@@ -670,6 +693,7 @@ struct CalculatorView: View {
                         Image(systemName: "plus.forwardslash.minus")
                             .foregroundStyle(Color(.black))
                             .bold()
+                            .font(.custom("BodoniSvtyTwoITCTT-Bold", size: 18))
                     }
                 }
                 Button {
@@ -687,6 +711,7 @@ struct CalculatorView: View {
                         Text("0")
                             .foregroundStyle(Color(.black))
                             .bold()
+                            .font(.custom("BodoniSvtyTwoITCTT-Bold", size: 21))
                     }
                 }
                 Button {
@@ -707,6 +732,7 @@ struct CalculatorView: View {
                         Text(".")
                             .foregroundStyle(Color(.black))
                             .bold()
+                            .font(.custom("BodoniSvtyTwoITCTT-Bold", size: 21))
                     }
                 }
                 Button {
@@ -738,6 +764,7 @@ struct CalculatorView: View {
                         Image(systemName: "equal")
                             .foregroundStyle(Color(.black))
                             .bold()
+                            .font(.custom("BodoniSvtyTwoITCTT-Bold", size: 18))
                     }
                 }
             }
