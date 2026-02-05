@@ -69,15 +69,7 @@ struct CalculatorView: View {
             HStack {
                 //Every operator button expect open paren will check to make sure the button pressed directly before it wasn't an operator button(with the exclusion of square root and percantage) by running the isPreviousInvalidOperator func, and then commit all numbers that need to be added to the operation by checking for numbers that need to be commited and then calling commitNumbers. The operator buttons will then add itself to the operation in currentOperations, as well as currentWorkinValues in the Calculator struct.
                 Button {
-                    guard !isPreviousInvalidOperator() else {
-                        return
-                    }
-                    if !numbersToBeCommited.isEmpty {
-                        commitNumbers()
-                    }
-                    checksForDefault0()
-                    calculator.currentWorkingValues.append(Operators.exponent)
-                    currentOperations.append("^")
+                   exponentButton()
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
@@ -95,22 +87,7 @@ struct CalculatorView: View {
                 }
                 //Another operator button, see ^
                 Button {
-                    if !numbersToBeCommited.isEmpty {
-                    commitNumbers()
-                }
-                    
-                    let last = currentOperations.last
-                    let isOperatorOrOpenParenOrStart = last == "^" || last == "(" || last == "÷" || last == "×" || last == "-" || last == "+" || last == "√" || currentOperations.isEmpty
-
-                    if !isOperatorOrOpenParenOrStart {
-                        calculator.currentWorkingValues.append(Operators.multiply)
-                        currentOperations.append("×")
-                    }
-                    
-                    currentOperations.append("√")
-                    calculator.currentWorkingValues.append(Operators.squareRoot)
-                    calculator.currentWorkingValues.append(Operators.openParen)
-                    currentOperations.append("(")
+                    sqrtButton()
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
@@ -126,20 +103,7 @@ struct CalculatorView: View {
                 }
                 Button {
                     //The open paren button is unique in that when pressed in runs code to see if the previous inputted value is a number or anything that would need an inferred "x" similar to the checkForNeededMultiplier func, but changed a bit because it needs to check for numbers as well.
-                    if !numbersToBeCommited.isEmpty {
-                        commitNumbers()
-                    }
-                    
-                    let last = currentOperations.last
-                    let isOperatorOrOpenParenOrStart = last == "^" || last == "(" || last == "÷" || last == "×" || last == "-" || last == "+" || last == "√" || currentOperations.isEmpty
-
-                    if !isOperatorOrOpenParenOrStart {
-                        calculator.currentWorkingValues.append(Operators.multiply)
-                        currentOperations.append("×")
-                    }
-                    
-                    calculator.currentWorkingValues.append(Operators.openParen)
-                    currentOperations.append("(")
+                    openParenButton()
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
@@ -155,14 +119,7 @@ struct CalculatorView: View {
                 }
                 Button {
                     //Another operator button, see ^
-                    guard !isPreviousInvalidOperator() else {
-                        return
-                    }
-                    if !numbersToBeCommited.isEmpty {
-                        commitNumbers()
-                    }
-                    calculator.currentWorkingValues.append(Operators.closeParen)
-                    currentOperations.append(")")
+                    closeParenButton()
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
@@ -179,16 +136,8 @@ struct CalculatorView: View {
             }
             HStack {
                 Button {
-                    if !numbersToBeCommited.isEmpty {
-                        commitNumbers()
-                    }
                     //M+ and M- will perform the calculation without actually displaying it, and then save that result to the numberInMemory
-                    calculator.calculate()
-                    if numberInMemory == nil {
-                        numberInMemory = 0 + calculator.currentValue
-                    } else {
-                        numberInMemory! += calculator.currentValue
-                    }
+                    memoryAddButton()
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
@@ -203,16 +152,8 @@ struct CalculatorView: View {
                     }
                 }
                 Button {
-                    if !numbersToBeCommited.isEmpty {
-                        commitNumbers()
-                    }
                     //See M+
-                    calculator.calculate()
-                    if numberInMemory == nil {
-                        numberInMemory = 0 - calculator.currentValue
-                    } else {
-                        numberInMemory! -= calculator.currentValue
-                    }
+                    memorySubtractButton()
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
@@ -228,46 +169,7 @@ struct CalculatorView: View {
                 }
                 Button {
                     //MR will first run code to check if there is currently a number at the end of the operation, and if so, replace that number with the number in memory by first looping through the numberInMemory, and then adding each digit to numbersToBeCommited. And then it will add itself to the currentOperations
-                    if numberInMemory != nil {
-                        numbersToBeCommited.removeAll()
-                        while (!currentOperations.isEmpty && Double(currentOperations[currentOperations.count - 1]) != nil) || (!currentOperations.isEmpty && currentOperations[currentOperations.count - 1] == ".") {
-                            currentOperations.removeLast()
-                        }
-                        if let validNumber = numberInMemory {
-                            checksForNeededMultiplier()
-                            for digit in String(validNumber) {
-                                numbersToBeCommited.append(digit)
-                            }
-                        }
-                        
-                        //Here I run similar code to the format() func below, but with a few tweaks to make it work as desired.
-                        var numberOfDigits: Int = 0
-                        if let validNumber = numberInMemory {
-                            for _ in String(validNumber) {
-                                numberOfDigits += 1
-                            }
-                            if numberOfDigits > 12 {
-                                let result = validNumber.formatted(.number.notation(.scientific).precision(.fractionLength(0...8)))
-                                for digit in result {
-                                    if digit == "," {
-                                        continue
-                                    }
-                                    currentOperations.append(String(digit))
-                                }
-                            } else {
-                                let result = validNumber.formatted(.number.precision(.fractionLength(0...8)))
-                                for digit in result {
-                                    if digit == "," {
-                                        continue
-                                    }
-                                    currentOperations.append(String(digit))
-                                }
-                            }
-                        }
-                        if currentOperations == ["0"] {
-                            allClear()
-                        }
-                    }
+                   memoryRecallButton()
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
@@ -301,39 +203,7 @@ struct CalculatorView: View {
             HStack {
                 Button {
                     //The delete button will delete the last digit from all places, first it will check if there is a value to remove from currentOperations, and from numbersToBeCommited, and if so removes the last element. if removing the last number would leave an empty "E" at the end of the equation which would cause an error, it will also remove that. then it checks in currentWorkingValues in the Calculator struct to see if the last element is a number or operator. if it's an operator, it gets removed. if it's a number it pulls it out of currentWorkingValues and dissects it into numbersToBeCommited. If the number it pulls out is a round Double (eg: 68.0) it removes the last value three times to remove the 0, ., and 1 (eg: [6, 8, ., 0])
-                    if !currentOperations.isEmpty {
-                        currentOperations.removeLast()
-                        if !currentOperations.isEmpty {
-                            if currentOperations[currentOperations.count - 1] == "E" {
-                                currentOperations.removeLast()
-                            }
-                        }
-                    }
-                    if !numbersToBeCommited.isEmpty {
-                        numbersToBeCommited.removeLast()
-                        if !numbersToBeCommited.isEmpty {
-                            if numbersToBeCommited[numbersToBeCommited.count - 1] == "E" {
-                                numbersToBeCommited.removeLast()
-                            }
-                        }
-                    } else if calculator.currentWorkingValues[calculator.currentWorkingValues.count - 1] as? Operators != nil {
-                        calculator.currentWorkingValues.removeLast()
-                    } else if calculator.currentWorkingValues[calculator.currentWorkingValues.count - 1] as? Double != nil {
-                        let removedValue = calculator.currentWorkingValues.removeLast() as! Double
-                        
-                        for value in String(removedValue) {
-                            numbersToBeCommited.append(value)
-                        }
-                        if !numbersToBeCommited.isEmpty {
-                            if removedValue.isRound {
-                                for _ in 1...3 {
-                                    numbersToBeCommited.removeLast()
-                                }
-                            } else {
-                                numbersToBeCommited.removeLast()
-                            }
-                        }
-                    }
+                    backspaceButton()
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
@@ -365,15 +235,7 @@ struct CalculatorView: View {
                 }
                 Button {
                     //Another operator button, see ^
-                    guard !isPreviousInvalidOperator() else {
-                        return
-                    }
-                    if !numbersToBeCommited.isEmpty {
-                        commitNumbers()
-                    }
-                    checksForDefault0()
-                    calculator.currentWorkingValues.append(Operators.percentage)
-                    currentOperations.append("%")
+                    percentageButton()
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
@@ -389,15 +251,7 @@ struct CalculatorView: View {
                 }
                 Button {
                     //Another operator button, see ^
-                    guard !isPreviousInvalidOperator() else {
-                        return
-                    }
-                    if !numbersToBeCommited.isEmpty {
-                        commitNumbers()
-                    }
-                    checksForDefault0()
-                    calculator.currentWorkingValues.append(Operators.divide)
-                    currentOperations.append("÷")
+                    divisionButton()
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
@@ -415,9 +269,7 @@ struct CalculatorView: View {
             HStack {
                 Button {
                     //The number buttons simply add the number as a string to numbersToBeCommited and currentOperations. they will also run the checkForNeedMultiplier func which checks if there is an operator directly before the inputted number that would assume any number after would be mulitiplying the result (eg: √/％), and if so first appendes .multiply to currentWorkingValues and "x" to currentOperations.
-                    checksForNeededMultiplier()
-                    numbersToBeCommited += ["7"]
-                    currentOperations += ["7"]
+                    positiveNumberButton("7")
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
@@ -433,9 +285,7 @@ struct CalculatorView: View {
                 }
                 Button {
                     //See 7
-                    checksForNeededMultiplier()
-                    numbersToBeCommited += ["8"]
-                    currentOperations += ["8"]
+                    positiveNumberButton("8")
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
@@ -451,9 +301,7 @@ struct CalculatorView: View {
                 }
                 Button {
                     //See 7
-                    checksForNeededMultiplier()
-                    numbersToBeCommited += ["9"]
-                    currentOperations += ["9"]
+                    positiveNumberButton("9")
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
@@ -469,15 +317,7 @@ struct CalculatorView: View {
                 }
                 Button {
                     //Another operator button, see ^
-                    guard !isPreviousInvalidOperator() else {
-                        return
-                    }
-                    if !numbersToBeCommited.isEmpty {
-                        commitNumbers()
-                    }
-                    checksForDefault0()
-                    calculator.currentWorkingValues.append(Operators.multiply)
-                    currentOperations.append("×")
+                    mulitplicationButton()
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
@@ -495,9 +335,7 @@ struct CalculatorView: View {
             HStack {
                 Button {
                     //See 7
-                    checksForNeededMultiplier()
-                    numbersToBeCommited += ["4"]
-                    currentOperations += ["4"]
+                    positiveNumberButton("4")
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
@@ -513,9 +351,7 @@ struct CalculatorView: View {
                 }
                 Button {
                     //See 7
-                    checksForNeededMultiplier()
-                    numbersToBeCommited += ["5"]
-                    currentOperations += ["5"]
+                    positiveNumberButton("5")
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
@@ -531,9 +367,7 @@ struct CalculatorView: View {
                 }
                 Button {
                     //See 7
-                    checksForNeededMultiplier()
-                    numbersToBeCommited += ["6"]
-                    currentOperations += ["6"]
+                    positiveNumberButton("6")
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
@@ -549,20 +383,7 @@ struct CalculatorView: View {
                 }
                 Button {
                     //This button has a unique feature where instead of just running the isPreviousInvaildOperator func it will let you input a number as a negative number if there is an invalid operator directly before it.
-                    let last = currentOperations.last
-                    guard last != "-" else {
-                        return
-                    }
-                    guard last != "^" && last != "(" && last != "÷" && last != "×" && last != "+" else {
-                        numbersToBeCommited.append("-")
-                        currentOperations.append("-")
-                        return
-                    }
-                    if !numbersToBeCommited.isEmpty {
-                        commitNumbers()
-                    }
-                    calculator.currentWorkingValues.append(Operators.minus)
-                    currentOperations.append("-")
+                    subtractionButton()
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
@@ -580,9 +401,7 @@ struct CalculatorView: View {
             HStack {
                 Button {
                     //See 7
-                    checksForNeededMultiplier()
-                    numbersToBeCommited += ["1"]
-                    currentOperations += ["1"]
+                    positiveNumberButton("1")
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
@@ -598,9 +417,7 @@ struct CalculatorView: View {
                 }
                 Button {
                     //See 2
-                    checksForNeededMultiplier()
-                    numbersToBeCommited += ["2"]
-                    currentOperations += ["2"]
+                    positiveNumberButton("2")
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
@@ -616,9 +433,7 @@ struct CalculatorView: View {
                 }
                 Button {
                     //See 7
-                    checksForNeededMultiplier()
-                    numbersToBeCommited += ["3"]
-                    currentOperations += ["3"]
+                    positiveNumberButton("3")
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
@@ -634,15 +449,7 @@ struct CalculatorView: View {
                 }
                 Button {
                     //Another operator button, see ^
-                    guard !isPreviousInvalidOperator() else {
-                        return
-                    }
-                    if !numbersToBeCommited.isEmpty {
-                        commitNumbers()
-                    }
-                    checksForDefault0()
-                    calculator.currentWorkingValues.append(Operators.plus)
-                    currentOperations.append("+")
+                    additionButton()
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
@@ -660,24 +467,7 @@ struct CalculatorView: View {
             HStack {
                 Button {
                     //This first runs the same as all the other operators, but this is treated as an alternate "=" button, it commits the numbersToBeCommited and then runs calculate() after passing in the operation. it then runs the format func on the result, as well as added the result to numbersToBeCommited.
-                    guard currentOperations.last != "(" && currentOperations.last != "÷" && currentOperations.last != "×" && currentOperations.last != "-" && currentOperations.last != "+" && currentOperations.last != "^" else { return }
-                    if !numbersToBeCommited.isEmpty {
-                        commitNumbers()
-                    }
-                    calculator.currentWorkingValues.append(Operators.signChange)
-                    calculator.calculate()
-                    format(result: calculator.currentValue)
-                    if Double(currentOperations[0]) != nil {
-                        for digit in currentOperations {
-                            if digit == "," {
-                                continue
-                            }
-                            numbersToBeCommited.append(contentsOf: digit)
-                        }
-                    }
-                    if currentOperations == ["0"] {
-                        allClear()
-                    }
+                   signChangeButton()
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
@@ -693,10 +483,7 @@ struct CalculatorView: View {
                 }
                 Button {
                     //The 0 button also checks to make sure that the on screen calculation doesn't only contain a 0 before doing it's thing.
-                    guard currentOperationText != "0" else { return }
-                    checksForNeededMultiplier()
-                    numbersToBeCommited += ["0"]
-                    currentOperations += ["0"]
+                    zeroButton()
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
@@ -712,12 +499,7 @@ struct CalculatorView: View {
                 }
                 Button {
                     //This funtions the same as all the other numbers even though its not technically a number.
-                    if !numbersToBeCommited.contains(".") {
-                        checksForNeededMultiplier()
-                        checksForDefault0()
-                        numbersToBeCommited += ["."]
-                        currentOperations += ["."]
-                    }
+                    decimalButton()
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
@@ -733,24 +515,7 @@ struct CalculatorView: View {
                 }
                 Button {
                     //This finalizes the operation by commiting all numbers that need to be commited, and then runs calculate(). it then call the format func using the result of the calculation, and then adds each digit of the result to numbersToBeCommited ignoring ",".
-                    guard currentOperations.last != "(" && currentOperations.last != "÷" && currentOperations.last != "×" && currentOperations.last != "-" && currentOperations.last != "+" && currentOperations.last != "^" else { return }
-                    
-                    if !numbersToBeCommited.isEmpty {
-                        commitNumbers()
-                    }
-                    calculator.calculate()
-                    format(result: calculator.currentValue)
-                    if Double(currentOperations[0]) != nil {
-                        for digit in currentOperations {
-                            if digit == "," {
-                                continue
-                            }
-                            numbersToBeCommited.append(contentsOf: digit)
-                        }
-                    }
-                    if currentOperations == ["0"] {
-                        allClear() 
-                    }
+                   equalsButton()
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
@@ -767,6 +532,284 @@ struct CalculatorView: View {
             }
         }
     }
+    //All button functions
+    func exponentButton() {
+        guard !isPreviousInvalidOperator() else {
+            return
+        }
+        if !numbersToBeCommited.isEmpty {
+            commitNumbers()
+        }
+        checksForDefault0()
+        calculator.currentWorkingValues.append(Operators.exponent)
+        currentOperations.append("^")
+    }
+    func sqrtButton() {
+        if !numbersToBeCommited.isEmpty {
+            commitNumbers()
+        }
+        let last = currentOperations.last
+        let isOperatorOrOpenParenOrStart = last == "^" || last == "(" || last == "÷" || last == "×" || last == "-" || last == "+" || last == "√" || currentOperations.isEmpty
+        
+        if !isOperatorOrOpenParenOrStart {
+            calculator.currentWorkingValues.append(Operators.multiply)
+            currentOperations.append("×")
+        }
+        
+        currentOperations.append("√")
+        calculator.currentWorkingValues.append(Operators.squareRoot)
+        calculator.currentWorkingValues.append(Operators.openParen)
+        currentOperations.append("(")
+    }
+    func openParenButton() {
+        if !numbersToBeCommited.isEmpty {
+            commitNumbers()
+        }
+        
+        let last = currentOperations.last
+        let isOperatorOrOpenParenOrStart = last == "^" || last == "(" || last == "÷" || last == "×" || last == "-" || last == "+" || last == "√" || currentOperations.isEmpty
+
+        if !isOperatorOrOpenParenOrStart {
+            calculator.currentWorkingValues.append(Operators.multiply)
+            currentOperations.append("×")
+        }
+        
+        calculator.currentWorkingValues.append(Operators.openParen)
+        currentOperations.append("(")
+    }
+    func closeParenButton() {
+        guard !isPreviousInvalidOperator() else {
+            return
+        }
+        if !numbersToBeCommited.isEmpty {
+            commitNumbers()
+        }
+        calculator.currentWorkingValues.append(Operators.closeParen)
+        currentOperations.append(")")
+    }
+    func memoryAddButton() {
+        if !numbersToBeCommited.isEmpty {
+            commitNumbers()
+        }
+        calculator.calculate()
+        if numberInMemory == nil {
+            numberInMemory = 0 + calculator.currentValue
+        } else {
+            numberInMemory! += calculator.currentValue
+        }
+    }
+    func memorySubtractButton() {
+        if !numbersToBeCommited.isEmpty {
+            commitNumbers()
+        }
+        calculator.calculate()
+        if numberInMemory == nil {
+            numberInMemory = 0 - calculator.currentValue
+        } else {
+            numberInMemory! -= calculator.currentValue
+        }
+    }
+    func memoryRecallButton() {
+        if numberInMemory != nil {
+            numbersToBeCommited.removeAll()
+            while (!currentOperations.isEmpty && Double(currentOperations[currentOperations.count - 1]) != nil) || (!currentOperations.isEmpty && currentOperations[currentOperations.count - 1] == ".") {
+                currentOperations.removeLast()
+            }
+            if let validNumber = numberInMemory {
+                checksForNeededMultiplier()
+                for digit in String(validNumber) {
+                    numbersToBeCommited.append(digit)
+                }
+            }
+            //Here I run similar code to the format() func below, but with a few tweaks to make it work as desired.
+            var numberOfDigits: Int = 0
+            if let validNumber = numberInMemory {
+                for _ in String(validNumber) {
+                    numberOfDigits += 1
+                }
+                if numberOfDigits > 12 {
+                    let result = validNumber.formatted(.number.notation(.scientific).precision(.fractionLength(0...8)))
+                    for digit in result {
+                        if digit == "," {
+                            continue
+                        }
+                        currentOperations.append(String(digit))
+                    }
+                } else {
+                    let result = validNumber.formatted(.number.precision(.fractionLength(0...8)))
+                    for digit in result {
+                        if digit == "," {
+                            continue
+                        }
+                        currentOperations.append(String(digit))
+                    }
+                }
+            }
+            if currentOperations == ["0"] {
+                allClear()
+            }
+        }
+    }
+    func backspaceButton() {
+        if !currentOperations.isEmpty {
+            currentOperations.removeLast()
+            if !currentOperations.isEmpty {
+                if currentOperations[currentOperations.count - 1] == "E" {
+                    currentOperations.removeLast()
+                }
+            }
+        }
+        if !numbersToBeCommited.isEmpty {
+            numbersToBeCommited.removeLast()
+            if !numbersToBeCommited.isEmpty {
+                if numbersToBeCommited[numbersToBeCommited.count - 1] == "E" {
+                    numbersToBeCommited.removeLast()
+                }
+            }
+        } else if calculator.currentWorkingValues[calculator.currentWorkingValues.count - 1] as? Operators != nil {
+            calculator.currentWorkingValues.removeLast()
+        } else if calculator.currentWorkingValues[calculator.currentWorkingValues.count - 1] as? Double != nil {
+            let removedValue = calculator.currentWorkingValues.removeLast() as! Double
+            
+            for value in String(removedValue) {
+                numbersToBeCommited.append(value)
+            }
+            if !numbersToBeCommited.isEmpty {
+                if removedValue.isRound {
+                    for _ in 1...3 {
+                        numbersToBeCommited.removeLast()
+                    }
+                } else {
+                    numbersToBeCommited.removeLast()
+                }
+            }
+        }
+    }
+    func allClear() {
+        numbersToBeCommited.removeAll()
+        calculator.currentWorkingValues.removeAll()
+        currentOperations.removeAll()
+    }
+    func percentageButton() {
+        guard !isPreviousInvalidOperator() else {
+            return
+        }
+        if !numbersToBeCommited.isEmpty {
+            commitNumbers()
+        }
+        checksForDefault0()
+        calculator.currentWorkingValues.append(Operators.percentage)
+        currentOperations.append("%")
+    }
+    func divisionButton() {
+        guard !isPreviousInvalidOperator() else {
+            return
+        }
+        if !numbersToBeCommited.isEmpty {
+            commitNumbers()
+        }
+        checksForDefault0()
+        calculator.currentWorkingValues.append(Operators.divide)
+        currentOperations.append("÷")
+    }
+    func mulitplicationButton() {
+        guard !isPreviousInvalidOperator() else {
+            return
+        }
+        if !numbersToBeCommited.isEmpty {
+            commitNumbers()
+        }
+        checksForDefault0()
+        calculator.currentWorkingValues.append(Operators.multiply)
+        currentOperations.append("×")
+    }
+    func subtractionButton() {
+        let last = currentOperations.last
+        guard last != "-" else {
+            return
+        }
+        guard last != "^" && last != "(" && last != "÷" && last != "×" && last != "+" else {
+            numbersToBeCommited.append("-")
+            currentOperations.append("-")
+            return
+        }
+        if !numbersToBeCommited.isEmpty {
+            commitNumbers()
+        }
+        calculator.currentWorkingValues.append(Operators.minus)
+        currentOperations.append("-")
+    }
+    func additionButton() {
+        guard !isPreviousInvalidOperator() else {
+            return
+        }
+        if !numbersToBeCommited.isEmpty {
+            commitNumbers()
+        }
+        checksForDefault0()
+        calculator.currentWorkingValues.append(Operators.plus)
+        currentOperations.append("+")
+    }
+    func signChangeButton() {
+        guard currentOperations.last != "(" && currentOperations.last != "÷" && currentOperations.last != "×" && currentOperations.last != "-" && currentOperations.last != "+" && currentOperations.last != "^" else { return }
+        if !numbersToBeCommited.isEmpty {
+            commitNumbers()
+        }
+        calculator.currentWorkingValues.append(Operators.signChange)
+        calculator.calculate()
+        format(result: calculator.currentValue)
+        if Double(currentOperations[0]) != nil {
+            for digit in currentOperations {
+                if digit == "," {
+                    continue
+                }
+                numbersToBeCommited.append(contentsOf: digit)
+            }
+        }
+        if currentOperations == ["0"] {
+            allClear()
+        }
+    }
+    func equalsButton() {
+        guard currentOperations.last != "(" && currentOperations.last != "÷" && currentOperations.last != "×" && currentOperations.last != "-" && currentOperations.last != "+" && currentOperations.last != "^" else { return }
+        
+        if !numbersToBeCommited.isEmpty {
+            commitNumbers()
+        }
+        calculator.calculate()
+        format(result: calculator.currentValue)
+        if Double(currentOperations[0]) != nil {
+            for digit in currentOperations {
+                if digit == "," {
+                    continue
+                }
+                numbersToBeCommited.append(contentsOf: digit)
+            }
+        }
+        if currentOperations == ["0"] {
+            allClear()
+        }
+    }
+    func zeroButton() {
+        guard currentOperationText != "0" else { return }
+        checksForNeededMultiplier()
+        numbersToBeCommited += ["0"]
+        currentOperations += ["0"]
+    }
+    func decimalButton() {
+        if !numbersToBeCommited.contains(".") {
+            checksForNeededMultiplier()
+            checksForDefault0()
+            numbersToBeCommited += ["."]
+            currentOperations += ["."]
+        }
+    }
+    func positiveNumberButton(_ num: String) {
+        checksForNeededMultiplier()
+        numbersToBeCommited += [Character(num)]
+        currentOperations += [num]
+    }
+    
     //The commitNumbers function makes a full string from all the charactersin numbersToBeCommited by looping through all of them in a for loop and adding them to an empty string. it then puts that string into currentWorkingValues in the calculator struct as a Double. Finally it resets numbersToBeCommited to an empty array.
     func commitNumbers() {
         var numberAsString = ""
@@ -854,12 +897,6 @@ struct CalculatorView: View {
         let last = currentOperations.last
         let invalid = last == "^" || last == "(" || last == "÷" || last == "×" || last == "-" || last == "+"
         return invalid
-    }
-    
-    func allClear() {
-        numbersToBeCommited.removeAll()
-        calculator.currentWorkingValues.removeAll()
-        currentOperations.removeAll()
     }
 }
 
