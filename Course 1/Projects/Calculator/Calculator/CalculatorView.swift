@@ -588,6 +588,8 @@ struct CalculatorView: View {
         currentOperations.append(")")
     }
     func memoryAddButton() {
+        guard currentOperations.last != "(" && currentOperations.last != "÷" && currentOperations.last != "×" && currentOperations.last != "-" && currentOperations.last != "+" && currentOperations.last != "^" else { return }
+        
         if !numbersToBeCommited.isEmpty {
             commitNumbers()
         }
@@ -599,6 +601,8 @@ struct CalculatorView: View {
         }
     }
     func memorySubtractButton() {
+        guard currentOperations.last != "(" && currentOperations.last != "÷" && currentOperations.last != "×" && currentOperations.last != "-" && currentOperations.last != "+" && currentOperations.last != "^" else { return }
+        
         if !numbersToBeCommited.isEmpty {
             commitNumbers()
         }

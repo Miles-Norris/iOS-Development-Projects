@@ -23,19 +23,19 @@ struct Calculator {
         }
     }
 
-    //Takes an operation as an array with the items in the array in order of operations
+    //Takes an operation as an array
     mutating func calculate() {
         //Total will be updated after every part of the operation
         var total: Double = 0
         //This is used to check what the current operator is that needs to be used for the operation
         var lastEnteredOperator: Operators?
-        //Checks for parenthesis, Exponents/Sqrts, and Multiplication/Divison.
+        //Checks for parenthesis, Exponents/Sqrts, and Multiplication/Divison/Percentages.
         var hasParens = false
         var hasExponentOrSqrt = false
         var hasMuliplyOrDivideOrPercentage = false
         var isSqrt = false
         
-        //In order to follow order of operations. the next chunck of code checks for their respective operator type and then performs the respective calculate operator function.
+        //In order to follow order of operations. the next 75ish lines of code checks for their respective operator type and then performs the respective calculate operator function.
         if currentWorkingValues.contains(where: { ($0 as? Operators) == .openParen }) ||
            currentWorkingValues.contains(where: { ($0 as? Operators) == .closeParen }) {
             hasParens = true
@@ -310,7 +310,7 @@ struct Calculator {
         calculate()
     }
     
-    //This functions almost the same of the previous one, just more simple.
+    //This functions almost the same of the previous one, using recursive functions to calculate just the expression it needs to, just more simple.
     mutating func calculateExponentsAndSqrts() {
         var arrayForCalculation: [Any] = []
         var hasExponentOrSqrt = true
@@ -340,6 +340,7 @@ struct Calculator {
                 }
             }
             currentWorkingValues = arrayForCalculation
+            //If we didn't have the isMiniCalc Bool here, it would infinitly loop this function because every time it would go to calculate it, it would see the operator present again and come back to this function to calculate it.
             isMiniCalc = true
             calculate()
             isMiniCalc = false
@@ -357,7 +358,7 @@ struct Calculator {
             }
         }
     }
-    //Again, almost the same function, expect this one doesn't have to differ between the two it checks for.
+    //Again, almost the same function, just with small tweaks
     mutating func calculateMultiplyAndDivideAndPercentage() {
         var arrayForCalculation: [Any] = []
         var hasMulitplyOrDivideOrPercentage = true
