@@ -28,13 +28,8 @@ struct CalculatorView: View {
         }
     }
     //This holds a single String and is what the Text object is using to display the text. it updates whenever currentOperations is changed. if the character inputted is specifically "√" it will be inserted before the number in is operating on.
-    @State var currentOperationText: String = "0" {
-        willSet {
-            if newValue == "0" {
-                numbersToBeCommited = ["0"]
-            }
-        }
-    }
+    @State var currentOperationText: String = "0"
+    
     @State var calculator = Calculator()
     //numbersToBeCommited holds a list of Characters that will represent one number. It holds the number in a stasis so that you can edit the number and update what shows on screen without actually adding each digit of the number to the operation.
     @State var numbersToBeCommited: [Character] = [] {
@@ -697,7 +692,8 @@ struct CalculatorView: View {
                     }
                 }
                 Button {
-                    //See 7
+                    //The 0 button also checks to make sure that the on screen calculation doesn't only contain a 0 before doing it's thing.
+                    guard currentOperationText != "0" else { return }
                     checksForNeededMultiplier()
                     numbersToBeCommited += ["0"]
                     currentOperations += ["0"]
@@ -738,6 +734,7 @@ struct CalculatorView: View {
                 Button {
                     //This finalizes the operation by commiting all numbers that need to be commited, and then runs calculate(). it then call the format func using the result of the calculation, and then adds each digit of the result to numbersToBeCommited ignoring ",".
                     guard currentOperations.last != "(" && currentOperations.last != "÷" && currentOperations.last != "×" && currentOperations.last != "-" && currentOperations.last != "+" && currentOperations.last != "^" else { return }
+                    
                     if !numbersToBeCommited.isEmpty {
                         commitNumbers()
                     }
@@ -752,7 +749,7 @@ struct CalculatorView: View {
                         }
                     }
                     if currentOperations == ["0"] {
-                        allClear()
+                        allClear() 
                     }
                 } label: {
                     ZStack {
