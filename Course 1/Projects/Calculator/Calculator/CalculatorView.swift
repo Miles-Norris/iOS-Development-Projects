@@ -67,7 +67,6 @@ struct CalculatorView: View {
             }
             //These HStacks hold all the buttons. I thought about trying to use a grid, but I gave up and decided to just stick to what I know well.
             HStack {
-                //Every operator button expect open paren will check to make sure the button pressed directly before it wasn't an operator button(with the exclusion of square root and percantage) by running the isPreviousInvalidOperator func, and then commit all numbers that need to be added to the operation by checking for numbers that need to be commited and then calling commitNumbers. The operator buttons will then add itself to the operation in currentOperations, as well as currentWorkinValues in the Calculator struct.
                 Button {
                    exponentButton()
                 } label: {
@@ -85,7 +84,6 @@ struct CalculatorView: View {
                             .foregroundStyle(Color(.black))
                     }
                 }
-                //Another operator button, see ^
                 Button {
                     sqrtButton()
                 } label: {
@@ -102,7 +100,6 @@ struct CalculatorView: View {
                     }
                 }
                 Button {
-                    //The open paren button is unique in that when pressed in runs code to see if the previous inputted value is a number or anything that would need an inferred "x" similar to the checkForNeededMultiplier func, but changed a bit because it needs to check for numbers as well.
                     openParenButton()
                 } label: {
                     ZStack {
@@ -118,7 +115,6 @@ struct CalculatorView: View {
                     }
                 }
                 Button {
-                    //Another operator button, see ^
                     closeParenButton()
                 } label: {
                     ZStack {
@@ -136,7 +132,6 @@ struct CalculatorView: View {
             }
             HStack {
                 Button {
-                    //M+ and M- will perform the calculation without actually displaying it, and then save that result to the numberInMemory
                     memoryAddButton()
                 } label: {
                     ZStack {
@@ -152,7 +147,6 @@ struct CalculatorView: View {
                     }
                 }
                 Button {
-                    //See M+
                     memorySubtractButton()
                 } label: {
                     ZStack {
@@ -168,7 +162,6 @@ struct CalculatorView: View {
                     }
                 }
                 Button {
-                    //MR will first run code to check if there is currently a number at the end of the operation, and if so, replace that number with the number in memory by first looping through the numberInMemory, and then adding each digit to numbersToBeCommited. And then it will add itself to the currentOperations
                    memoryRecallButton()
                 } label: {
                     ZStack {
@@ -202,7 +195,6 @@ struct CalculatorView: View {
             }
             HStack {
                 Button {
-                    //The delete button will delete the last digit from all places, first it will check if there is a value to remove from currentOperations, and from numbersToBeCommited, and if so removes the last element. if removing the last number would leave an empty "E" at the end of the equation which would cause an error, it will also remove that. then it checks in currentWorkingValues in the Calculator struct to see if the last element is a number or operator. if it's an operator, it gets removed. if it's a number it pulls it out of currentWorkingValues and dissects it into numbersToBeCommited. If the number it pulls out is a round Double (eg: 68.0) it removes the last value three times to remove the 0, ., and 1 (eg: [6, 8, ., 0])
                     backspaceButton()
                 } label: {
                     ZStack {
@@ -218,7 +210,6 @@ struct CalculatorView: View {
                     }
                 }
                 Button {
-                    //AC simply removes all values from every array
                     allClear()
                 } label: {
                     ZStack {
@@ -234,7 +225,6 @@ struct CalculatorView: View {
                     }
                 }
                 Button {
-                    //Another operator button, see ^
                     percentageButton()
                 } label: {
                     ZStack {
@@ -250,7 +240,6 @@ struct CalculatorView: View {
                     }
                 }
                 Button {
-                    //Another operator button, see ^
                     divisionButton()
                 } label: {
                     ZStack {
@@ -268,7 +257,6 @@ struct CalculatorView: View {
             }
             HStack {
                 Button {
-                    //The number buttons simply add the number as a string to numbersToBeCommited and currentOperations. they will also run the checkForNeedMultiplier func which checks if there is an operator directly before the inputted number that would assume any number after would be mulitiplying the result (eg: √/％), and if so first appendes .multiply to currentWorkingValues and "x" to currentOperations.
                     positiveNumberButton("7")
                 } label: {
                     ZStack {
@@ -284,7 +272,6 @@ struct CalculatorView: View {
                     }
                 }
                 Button {
-                    //See 7
                     positiveNumberButton("8")
                 } label: {
                     ZStack {
@@ -300,7 +287,6 @@ struct CalculatorView: View {
                     }
                 }
                 Button {
-                    //See 7
                     positiveNumberButton("9")
                 } label: {
                     ZStack {
@@ -316,7 +302,6 @@ struct CalculatorView: View {
                     }
                 }
                 Button {
-                    //Another operator button, see ^
                     mulitplicationButton()
                 } label: {
                     ZStack {
@@ -334,7 +319,6 @@ struct CalculatorView: View {
             }
             HStack {
                 Button {
-                    //See 7
                     positiveNumberButton("4")
                 } label: {
                     ZStack {
@@ -350,7 +334,6 @@ struct CalculatorView: View {
                     }
                 }
                 Button {
-                    //See 7
                     positiveNumberButton("5")
                 } label: {
                     ZStack {
@@ -366,7 +349,6 @@ struct CalculatorView: View {
                     }
                 }
                 Button {
-                    //See 7
                     positiveNumberButton("6")
                 } label: {
                     ZStack {
@@ -382,7 +364,6 @@ struct CalculatorView: View {
                     }
                 }
                 Button {
-                    //This button has a unique feature where instead of just running the isPreviousInvaildOperator func it will let you input a number as a negative number if there is an invalid operator directly before it.
                     subtractionButton()
                 } label: {
                     ZStack {
@@ -400,7 +381,6 @@ struct CalculatorView: View {
             }
             HStack {
                 Button {
-                    //See 7
                     positiveNumberButton("1")
                 } label: {
                     ZStack {
@@ -416,7 +396,6 @@ struct CalculatorView: View {
                     }
                 }
                 Button {
-                    //See 2
                     positiveNumberButton("2")
                 } label: {
                     ZStack {
@@ -432,7 +411,6 @@ struct CalculatorView: View {
                     }
                 }
                 Button {
-                    //See 7
                     positiveNumberButton("3")
                 } label: {
                     ZStack {
@@ -448,7 +426,6 @@ struct CalculatorView: View {
                     }
                 }
                 Button {
-                    //Another operator button, see ^
                     additionButton()
                 } label: {
                     ZStack {
@@ -466,7 +443,6 @@ struct CalculatorView: View {
             }
             HStack {
                 Button {
-                    //This first runs the same as all the other operators, but this is treated as an alternate "=" button, it commits the numbersToBeCommited and then runs calculate() after passing in the operation. it then runs the format func on the result, as well as added the result to numbersToBeCommited.
                    signChangeButton()
                 } label: {
                     ZStack {
@@ -482,7 +458,6 @@ struct CalculatorView: View {
                     }
                 }
                 Button {
-                    //The 0 button also checks to make sure that the on screen calculation doesn't only contain a 0 before doing it's thing.
                     zeroButton()
                 } label: {
                     ZStack {
@@ -498,7 +473,6 @@ struct CalculatorView: View {
                     }
                 }
                 Button {
-                    //This funtions the same as all the other numbers even though its not technically a number.
                     decimalButton()
                 } label: {
                     ZStack {
@@ -514,7 +488,6 @@ struct CalculatorView: View {
                     }
                 }
                 Button {
-                    //This finalizes the operation by commiting all numbers that need to be commited, and then runs calculate(). it then call the format func using the result of the calculation, and then adds each digit of the result to numbersToBeCommited ignoring ",".
                    equalsButton()
                 } label: {
                     ZStack {
@@ -532,7 +505,7 @@ struct CalculatorView: View {
             }
         }
     }
-    //All button functions
+    //All button functions. Every operator button expect open paren will check to make sure the button pressed directly before it wasn't an operator button(with the exclusion of percantage) by running the isPreviousInvalidOperator func, and then commit all numbers that need to be added to the operation by checking for numbers that need to be commited and then calling commitNumbers. The operator buttons will then add itself to the operation in currentOperations, as well as currentWorkinValues in the Calculator struct.
     func exponentButton() {
         guard !isPreviousInvalidOperator() else {
             return
@@ -544,6 +517,7 @@ struct CalculatorView: View {
         calculator.currentWorkingValues.append(Operators.exponent)
         currentOperations.append("^")
     }
+    //The sqrtButton and the openParen button will both check what the last input was. And then if necessary add an "x" to the end for implied multiplication.
     func sqrtButton() {
         if !numbersToBeCommited.isEmpty {
             commitNumbers()
@@ -587,6 +561,7 @@ struct CalculatorView: View {
         calculator.currentWorkingValues.append(Operators.closeParen)
         currentOperations.append(")")
     }
+    //M+ and M- will perform the calculation without actually displaying it, and then save that result to the numberInMemory
     func memoryAddButton() {
         guard currentOperations.last != "(" && currentOperations.last != "÷" && currentOperations.last != "×" && currentOperations.last != "-" && currentOperations.last != "+" && currentOperations.last != "^" else { return }
         
@@ -613,6 +588,7 @@ struct CalculatorView: View {
             numberInMemory! -= calculator.currentValue
         }
     }
+    //MR will first run code to check if there is currently a number at the end of the operation, and if so, replace that number with the number in memory by first looping through the numberInMemory, and then adding each digit to numbersToBeCommited. And then it will add itself to the currentOperations
     func memoryRecallButton() {
         if numberInMemory != nil {
             numbersToBeCommited.removeAll()
@@ -654,6 +630,7 @@ struct CalculatorView: View {
             }
         }
     }
+    //The delete button will delete the last digit from all places, first it will check if there is a value to remove from currentOperations, and from numbersToBeCommited, and if so removes the last element. if removing the last number would leave an empty "E" at the end of the equation which would cause an error, it will also remove that. then it checks in currentWorkingValues in the Calculator struct to see if the last element is a number or operator. if it's an operator, it gets removed. if it's a number it pulls it out of currentWorkingValues and dissects it into numbersToBeCommited. If the number it pulls out is a round Double (eg: 68.0) it removes the last value three times to remove the 0, ., and 1 (eg: [6, 8, ., 0])
     func backspaceButton() {
         if !currentOperations.isEmpty {
             currentOperations.removeLast()
@@ -689,6 +666,7 @@ struct CalculatorView: View {
             }
         }
     }
+    //Removes everything from all calculations
     func allClear() {
         numbersToBeCommited.removeAll()
         calculator.currentWorkingValues.removeAll()
@@ -727,6 +705,7 @@ struct CalculatorView: View {
         calculator.currentWorkingValues.append(Operators.multiply)
         currentOperations.append("×")
     }
+    //This button has a unique feature where instead of just running the isPreviousInvaildOperator func it will let you input a number as a negative number if there is an invalid operator directly before it.
     func subtractionButton() {
         let last = currentOperations.last
         guard last != "-" else {
@@ -754,6 +733,7 @@ struct CalculatorView: View {
         calculator.currentWorkingValues.append(Operators.plus)
         currentOperations.append("+")
     }
+    //This first runs the same as all the other operators, but this is treated as an alternate "=" button, it commits the numbersToBeCommited and then runs calculate() after passing in the operation. it then runs the format func on the result, as well as added the result to numbersToBeCommited.
     func signChangeButton() {
         guard currentOperations.last != "(" && currentOperations.last != "÷" && currentOperations.last != "×" && currentOperations.last != "-" && currentOperations.last != "+" && currentOperations.last != "^" else { return }
         if !numbersToBeCommited.isEmpty {
@@ -774,6 +754,7 @@ struct CalculatorView: View {
             allClear()
         }
     }
+    //This finalizes the operation by commiting all numbers that need to be commited, and then runs calculate(). it then call the format func using the result of the calculation, and then adds each digit of the result to numbersToBeCommited ignoring ",".
     func equalsButton() {
         guard currentOperations.last != "(" && currentOperations.last != "÷" && currentOperations.last != "×" && currentOperations.last != "-" && currentOperations.last != "+" && currentOperations.last != "^" else { return }
         
@@ -794,20 +775,22 @@ struct CalculatorView: View {
             allClear()
         }
     }
+    //The 0 button also checks to make sure that the on screen calculation doesn't only contain a 0 before doing it's thing.
     func zeroButton() {
         guard currentOperationText != "0" else { return }
         checksForNeededMultiplier()
         numbersToBeCommited += ["0"]
         currentOperations += ["0"]
     }
+    //functions similarly to all the other number buttons, but also checks to make sure you are not using more than one decimal for one number.
     func decimalButton() {
-        if !numbersToBeCommited.contains(".") {
+        guard !numbersToBeCommited.contains(".") else { return }
             checksForNeededMultiplier()
             checksForDefault0()
             numbersToBeCommited += ["."]
             currentOperations += ["."]
-        }
     }
+    //The positive number buttons simply add the number as a string to numbersToBeCommited and currentOperations. they will also run the checkForNeedMultiplier func which checks if there is an operator directly before the inputted number that would assume any number after would be mulitiplying the result (eg: √/％), and if so first appendes .multiply to currentWorkingValues and "x" to currentOperations.
     func positiveNumberButton(_ num: String) {
         checksForNeededMultiplier()
         numbersToBeCommited += [Character(num)]
