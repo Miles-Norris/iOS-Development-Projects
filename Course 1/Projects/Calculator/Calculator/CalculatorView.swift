@@ -68,7 +68,7 @@ struct CalculatorView: View {
             //These HStacks hold all the buttons. I thought about trying to use a grid, but I gave up and decided to just stick to what I know well.
             HStack {
                 Button {
-                   exponentButton()
+                    exponentButton()
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
@@ -162,7 +162,7 @@ struct CalculatorView: View {
                     }
                 }
                 Button {
-                   memoryRecallButton()
+                    memoryRecallButton()
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
@@ -443,7 +443,7 @@ struct CalculatorView: View {
             }
             HStack {
                 Button {
-                   signChangeButton()
+                    signChangeButton()
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
@@ -488,7 +488,7 @@ struct CalculatorView: View {
                     }
                 }
                 Button {
-                   equalsButton()
+                    equalsButton()
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
@@ -542,7 +542,7 @@ struct CalculatorView: View {
         
         let last = currentOperations.last
         let isOperatorOrOpenParenOrStart = last == "^" || last == "(" || last == "÷" || last == "×" || last == "-" || last == "+" || last == "√" || currentOperations.isEmpty
-
+        
         if !isOperatorOrOpenParenOrStart {
             calculator.currentWorkingValues.append(Operators.multiply)
             currentOperations.append("×")
@@ -785,10 +785,10 @@ struct CalculatorView: View {
     //functions similarly to all the other number buttons, but also checks to make sure you are not using more than one decimal for one number.
     func decimalButton() {
         guard !numbersToBeCommited.contains(".") else { return }
-            checksForNeededMultiplier()
-            checksForDefault0()
-            numbersToBeCommited += ["."]
-            currentOperations += ["."]
+        checksForNeededMultiplier()
+        checksForDefault0()
+        numbersToBeCommited += ["."]
+        currentOperations += ["."]
     }
     //The positive number buttons simply add the number as a string to numbersToBeCommited and currentOperations. they will also run the checkForNeedMultiplier func which checks if there is an operator directly before the inputted number that would assume any number after would be mulitiplying the result (eg: √/％), and if so first appendes .multiply to currentWorkingValues and "x" to currentOperations.
     func positiveNumberButton(_ num: String) {
