@@ -33,7 +33,6 @@ struct Calculator {
         var hasParens = false
         var hasExponentOrSqrt = false
         var hasMuliplyOrDivideOrPercentage = false
-        var isSqrt = false
         
         //In order to follow order of operations. the next 75ish lines of code checks for their respective operator type and then performs the respective calculate operator function.
         if currentWorkingValues.contains(where: { ($0 as? Operators) == .openParen }) ||
@@ -106,56 +105,24 @@ struct Calculator {
             if let currentNumber = currentWorkingValue as? Double {
                 switch lastEnteredOperator {
                 case .plus:
-                    if isSqrt {
-                        total = (total + currentNumber.squareRoot())
-                        isSqrt = false
-                        lastEnteredOperator = nil
-                        continue
-                    }
                     total = (total + currentNumber)
                     lastEnteredOperator = nil
                 case .minus:
-                    if isSqrt {
-                        total = (total - currentNumber.squareRoot())
-                        isSqrt = false
-                        lastEnteredOperator = nil
-                        continue
-                    }
                     total = (total - currentNumber)
                     lastEnteredOperator = nil
                 case .multiply:
-                    if isSqrt {
-                        total = (total * currentNumber.squareRoot())
-                        isSqrt = false
-                        lastEnteredOperator = nil
-                        continue
-                    }
                     total = (total * currentNumber)
                     lastEnteredOperator = nil
                 case .divide:
-                    if isSqrt {
-                        total = (total / currentNumber.squareRoot())
-                        isSqrt = false
-                        lastEnteredOperator = nil
-                        continue
-                    }
                     total = (total / currentNumber)
                     lastEnteredOperator = nil
                 case .exponent:
-                    if isSqrt {
-                        total = pow(total, currentNumber.squareRoot())
-                        isSqrt = false
-                        lastEnteredOperator = nil
-                        continue
-                    }
                     total = pow(total, currentNumber)
                     lastEnteredOperator = nil
+                case .squareRoot:
+                    total = currentNumber.squareRoot()
+                    lastEnteredOperator = nil
                 default:
-                    if isSqrt {
-                        total = currentNumber.squareRoot()
-                        isSqrt = false
-                        continue
-                    }
                     total = currentNumber
                     continue
                 }
@@ -175,7 +142,7 @@ struct Calculator {
                 case .exponent:
                     lastEnteredOperator = .exponent
                 case .squareRoot:
-                    isSqrt = true
+                    lastEnteredOperator = .squareRoot
                 case .signChange:
                     if total > 0 {
                         total -= 2 * total
@@ -312,6 +279,7 @@ struct Calculator {
         var temporaryWorkingValues = currentWorkingValues
         var indexToInsertAt: Int?
         var numberOfRemovals = 0
+        
         while hasExponentOrSqrt {
             for (i, value) in temporaryWorkingValues.enumerated() {
                 if value as? Operators == .squareRoot {
@@ -360,6 +328,7 @@ struct Calculator {
         var temporaryWorkingValues = currentWorkingValues
         var indexToInsertAt: Int?
         var numberOfRemovals = 0
+        
         while hasMulitplyOrDivideOrPercentage {
             for (i, value) in temporaryWorkingValues.enumerated() {
                 if value as? Operators == .multiply || value as? Operators == .divide {
