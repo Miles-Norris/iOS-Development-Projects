@@ -15,6 +15,7 @@ extension Double {
 }
 
 struct CalculatorView: View {
+    
     //This is a list of all of everything that should be displayed on the screen, it will usually be similar to what is in the currentWorkingValues list that is in the calculator, but not always.
     @State var currentOperations: [String] = [] {
         didSet {
@@ -27,10 +28,12 @@ struct CalculatorView: View {
             }
         }
     }
+    
     //This holds a single String and is what the Text object is using to display the text. it updates whenever currentOperations is changed. if the character inputted is specifically "√" it will be inserted before the number in is operating on.
     @State var currentOperationText: String = "0"
     
     @State var calculator = Calculator()
+    
     //numbersToBeCommited holds a list of Characters that will represent one number. It holds the number in a stasis so that you can edit the number and update what shows on screen without actually adding each digit of the number to the operation.
     @State var numbersToBeCommited: [Character] = [] {
         didSet {
@@ -39,7 +42,9 @@ struct CalculatorView: View {
             }
         }
     }
+    
     @State var mrButtonColor: Color = .white
+    
     //numberInMemory holds an optional Double that will be set by pressing the M+ or M- buttons. this also changes the MR button color if there is a value stored in memory
     @State var numberInMemory: Double? = nil {
         willSet {
@@ -507,21 +512,23 @@ struct CalculatorView: View {
     }
     //All button functions. Every operator button except open paren and square root will check to make sure the button pressed directly before it wasn't an invalid operator button (all of them except percantage) by running the isPreviousInvalidOperator func, and then commit all numbers that need to be added to the operation by checking for numbers that need to be commited and then calling commitNumbers. The operator buttons will then add itself to the operation in currentOperations, as well as currentWorkinValues in the Calculator struct.
     func exponentButton() {
-        guard !isPreviousInvalidOperator() else {
-            return
-        }
+        guard !isPreviousInvalidOperator() else { return }
+        
         if !numbersToBeCommited.isEmpty {
             commitNumbers()
         }
+        
         checksForDefault0()
         calculator.currentWorkingValues.append(Operators.exponent)
         currentOperations.append("^")
     }
+    
     //The sqrtButton and the openParen button will both check what the last input was. And then if necessary add an "x" to the end for implied multiplication.
     func sqrtButton() {
         if !numbersToBeCommited.isEmpty {
             commitNumbers()
         }
+        
         let last = currentOperations.last
         let isOperatorOrOpenParenOrStart = last == "^" || last == "(" || last == "÷" || last == "×" || last == "-" || last == "+" || last == "√" || currentOperations.isEmpty
         
@@ -535,6 +542,7 @@ struct CalculatorView: View {
         calculator.currentWorkingValues.append(Operators.openParen)
         currentOperations.append("(")
     }
+    
     func openParenButton() {
         if !numbersToBeCommited.isEmpty {
             commitNumbers()
@@ -551,16 +559,18 @@ struct CalculatorView: View {
         calculator.currentWorkingValues.append(Operators.openParen)
         currentOperations.append("(")
     }
+    
     func closeParenButton() {
-        guard !isPreviousInvalidOperator() else {
-            return
-        }
+        guard !isPreviousInvalidOperator() else { return }
+        
         if !numbersToBeCommited.isEmpty {
             commitNumbers()
         }
+        
         calculator.currentWorkingValues.append(Operators.closeParen)
         currentOperations.append(")")
     }
+    
     //M+ and M- will perform the calculation without actually displaying it, and then save that result to the numberInMemory
     func memoryAddButton() {
         guard currentOperations.last != "(" && currentOperations.last != "÷" && currentOperations.last != "×" && currentOperations.last != "-" && currentOperations.last != "+" && currentOperations.last != "^" else { return }
@@ -568,26 +578,32 @@ struct CalculatorView: View {
         if !numbersToBeCommited.isEmpty {
             commitNumbers()
         }
+        
         calculator.calculate()
+        
         if numberInMemory == nil {
             numberInMemory = 0 + calculator.currentValue
         } else {
             numberInMemory! += calculator.currentValue
         }
     }
+    
     func memorySubtractButton() {
         guard currentOperations.last != "(" && currentOperations.last != "÷" && currentOperations.last != "×" && currentOperations.last != "-" && currentOperations.last != "+" && currentOperations.last != "^" else { return }
         
         if !numbersToBeCommited.isEmpty {
             commitNumbers()
         }
+        
         calculator.calculate()
+        
         if numberInMemory == nil {
             numberInMemory = 0 - calculator.currentValue
         } else {
             numberInMemory! -= calculator.currentValue
         }
     }
+    
     //MR will first run code to check if there is currently a number at the end of the operation, and if so, replace that number with the number in memory by first looping through the numberInMemory, and then adding each digit to numbersToBeCommited. And then it will add itself to the currentOperations
     func memoryRecallButton() {
         if numberInMemory != nil {
@@ -595,6 +611,7 @@ struct CalculatorView: View {
             while (!currentOperations.isEmpty && Double(currentOperations[currentOperations.count - 1]) != nil) || (!currentOperations.isEmpty && currentOperations[currentOperations.count - 1] == ".") {
                 currentOperations.removeLast()
             }
+            
             if let validNumber = numberInMemory {
                 checksForNeededMultiplier()
                 for digit in String(validNumber) {
@@ -607,6 +624,7 @@ struct CalculatorView: View {
                 for _ in String(validNumber) {
                     numberOfDigits += 1
                 }
+                
                 if numberOfDigits > 12 {
                     let result = validNumber.formatted(.number.notation(.scientific).precision(.fractionLength(0...8)))
                     for digit in result {
@@ -630,6 +648,7 @@ struct CalculatorView: View {
             }
         }
     }
+    
     //The delete button will delete the last digit from all places, first it will check if there is a value to remove from currentOperations, and from numbersToBeCommited, and if so removes the last element. if removing the last number would leave an empty "E" at the end of the equation which would cause an error, it will also remove that. then it checks in currentWorkingValues in the Calculator struct to see if the last element is a number or operator. if it's an operator, it gets removed. if it's a number it pulls it out of currentWorkingValues and dissects it into numbersToBeCommited. If the number it pulls out is a round Double (eg: 68.0) it removes the last value three times to remove the 0, ., and 1 (eg: [6, 8, ., 0])
     func backspaceButton() {
         if !currentOperations.isEmpty {
@@ -640,6 +659,7 @@ struct CalculatorView: View {
                 }
             }
         }
+        
         if !numbersToBeCommited.isEmpty {
             numbersToBeCommited.removeLast()
             if !numbersToBeCommited.isEmpty {
@@ -655,6 +675,7 @@ struct CalculatorView: View {
             for value in String(removedValue) {
                 numbersToBeCommited.append(value)
             }
+            
             if !numbersToBeCommited.isEmpty {
                 if removedValue.isRound {
                     for _ in 1...3 {
@@ -666,79 +687,90 @@ struct CalculatorView: View {
             }
         }
     }
+    
     //Removes everything from all calculations
     func allClear() {
         numbersToBeCommited.removeAll()
         calculator.currentWorkingValues.removeAll()
         currentOperations.removeAll()
     }
+    
     func percentageButton() {
-        guard !isPreviousInvalidOperator() else {
-            return
-        }
+        guard !isPreviousInvalidOperator() else { return }
+        
         if !numbersToBeCommited.isEmpty {
             commitNumbers()
         }
+        
         checksForDefault0()
         calculator.currentWorkingValues.append(Operators.percentage)
         currentOperations.append("%")
     }
+    
     func divisionButton() {
-        guard !isPreviousInvalidOperator() else {
-            return
-        }
+        guard !isPreviousInvalidOperator() else { return }
+        
         if !numbersToBeCommited.isEmpty {
             commitNumbers()
         }
+        
         checksForDefault0()
         calculator.currentWorkingValues.append(Operators.divide)
         currentOperations.append("÷")
     }
+    
     func mulitplicationButton() {
-        guard !isPreviousInvalidOperator() else {
-            return
-        }
+        guard !isPreviousInvalidOperator() else { return }
+        
         if !numbersToBeCommited.isEmpty {
             commitNumbers()
         }
+        
         checksForDefault0()
         calculator.currentWorkingValues.append(Operators.multiply)
         currentOperations.append("×")
     }
+    
     //This button has a unique feature where instead of just running the isPreviousInvaildOperator func it will let you input a number as a negative number if there is an invalid operator directly before it.
     func subtractionButton() {
         let last = currentOperations.last
-        guard last != "-" else {
-            return
-        }
+        
+        guard last != "-" else { return }
+        
         guard last != "^" && last != "(" && last != "÷" && last != "×" && last != "+" else {
             numbersToBeCommited.append("-")
             currentOperations.append("-")
             return
         }
+        
         if !numbersToBeCommited.isEmpty {
             commitNumbers()
         }
+        
         calculator.currentWorkingValues.append(Operators.minus)
         currentOperations.append("-")
     }
+    
     func additionButton() {
-        guard !isPreviousInvalidOperator() else {
-            return
-        }
+        guard !isPreviousInvalidOperator() else { return }
+        
         if !numbersToBeCommited.isEmpty {
             commitNumbers()
         }
+        
         checksForDefault0()
         calculator.currentWorkingValues.append(Operators.plus)
         currentOperations.append("+")
     }
+    
     //This first runs the same as all the other operators, but this is treated as an alternate "=" button, it commits the numbersToBeCommited and then runs calculate() after passing in the operation. it then runs the format func on the result, as well as added the result to numbersToBeCommited.
     func signChangeButton() {
         guard currentOperations.last != "(" && currentOperations.last != "÷" && currentOperations.last != "×" && currentOperations.last != "-" && currentOperations.last != "+" && currentOperations.last != "^" else { return }
+        
         if !numbersToBeCommited.isEmpty {
             commitNumbers()
         }
+        
         calculator.currentWorkingValues.append(Operators.signChange)
         calculator.calculate()
         format(result: calculator.currentValue)
@@ -750,10 +782,12 @@ struct CalculatorView: View {
                 numbersToBeCommited.append(contentsOf: digit)
             }
         }
+        
         if currentOperations == ["0"] {
             allClear()
         }
     }
+    
     //This finalizes the operation by commiting all numbers that need to be commited, and then runs calculate(). it then call the format func using the result of the calculation, and then adds each digit of the result to numbersToBeCommited ignoring ",".
     func equalsButton() {
         guard currentOperations.last != "(" && currentOperations.last != "÷" && currentOperations.last != "×" && currentOperations.last != "-" && currentOperations.last != "+" && currentOperations.last != "^" else { return }
@@ -761,8 +795,10 @@ struct CalculatorView: View {
         if !numbersToBeCommited.isEmpty {
             commitNumbers()
         }
+        
         calculator.calculate()
         format(result: calculator.currentValue)
+        
         if Double(currentOperations[0]) != nil {
             for digit in currentOperations {
                 if digit == "," {
@@ -771,10 +807,12 @@ struct CalculatorView: View {
                 numbersToBeCommited.append(contentsOf: digit)
             }
         }
+        
         if currentOperations == ["0"] {
             allClear()
         }
     }
+    
     //The 0 button also checks to make sure that the on screen calculation doesn't only contain a 0 before doing it's thing.
     func zeroButton() {
         guard currentOperationText != "0" else { return }
@@ -782,6 +820,7 @@ struct CalculatorView: View {
         numbersToBeCommited += ["0"]
         currentOperations += ["0"]
     }
+    
     //functions similarly to all the other number buttons, but also checks to make sure you are not using more than one decimal for one number.
     func decimalButton() {
         guard !numbersToBeCommited.contains(".") else { return }
@@ -790,6 +829,7 @@ struct CalculatorView: View {
         numbersToBeCommited += ["."]
         currentOperations += ["."]
     }
+    
     //The positive number buttons simply add the number as a string to numbersToBeCommited and currentOperations. they will also run the checkForNeedMultiplier func which checks if there is an operator directly before the inputted number that would assume any number after would be mulitiplying the result (eg: √/％), and if so first appendes .multiply to currentWorkingValues and "x" to currentOperations.
     func positiveNumberButton(_ num: String) {
         checksForNeededMultiplier()
@@ -858,6 +898,7 @@ struct CalculatorView: View {
             }
         }
     }
+    
     //This function runs on operators when there is nothing currently in currentOperations. it will just add 0 to as a default base value.
     func checksForDefault0() {
         if currentOperations.isEmpty {
@@ -865,6 +906,7 @@ struct CalculatorView: View {
             currentOperations += ["0"]
         }
     }
+    
     //This function runs on most operators and will check to make sure that the previously entered value is one that can be mutated by that operator.
     func isPreviousInvalidOperator() -> Bool {
         let last = currentOperations.last
