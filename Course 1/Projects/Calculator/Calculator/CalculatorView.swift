@@ -505,7 +505,7 @@ struct CalculatorView: View {
             }
         }
     }
-    //All button functions. Every operator button expect open paren will check to make sure the button pressed directly before it wasn't an operator button(with the exclusion of percantage) by running the isPreviousInvalidOperator func, and then commit all numbers that need to be added to the operation by checking for numbers that need to be commited and then calling commitNumbers. The operator buttons will then add itself to the operation in currentOperations, as well as currentWorkinValues in the Calculator struct.
+    //All button functions. Every operator button except open paren and square root will check to make sure the button pressed directly before it wasn't an invalid operator button (all of them except percantage) by running the isPreviousInvalidOperator func, and then commit all numbers that need to be added to the operation by checking for numbers that need to be commited and then calling commitNumbers. The operator buttons will then add itself to the operation in currentOperations, as well as currentWorkinValues in the Calculator struct.
     func exponentButton() {
         guard !isPreviousInvalidOperator() else {
             return
@@ -812,53 +812,39 @@ struct CalculatorView: View {
     func format(result: Double) {
         var currentNumberOfDigits: Int = 0
         let resultAsInt: Int
+        
         if result.isNaN {
             currentOperations = ["NaN"]
             numbersToBeCommited.removeAll()
             return
         }
+        
         if result > Double(Int.max) {
             for _ in String(result) {
                 currentNumberOfDigits += 1
-            }
-            if currentNumberOfDigits > 12 {
-                currentOperations = []
-                for digit in result.formatted(.number.notation(.scientific).precision(.fractionLength(0...8))) {
-                    if digit == "," {
-                        continue
-                    }
-                    currentOperations.append(String(digit))
-                }
-            } else {
-                currentOperations = []
-                for digit in result.formatted(.number.precision(.fractionLength(0...8))) {
-                    if digit == "," {
-                        continue
-                    }
-                    currentOperations.append(String(digit))
-                }
             }
         } else {
             resultAsInt = Int(result)
             for _ in String(resultAsInt) {
                 currentNumberOfDigits += 1
             }
-            if currentNumberOfDigits > 12 {
-                currentOperations = []
-                for digit in result.formatted(.number.notation(.scientific).precision(.fractionLength(0...8))) {
-                    if digit == "," {
-                        continue
-                    }
-                    currentOperations.append(String(digit))
+        }
+        
+        if currentNumberOfDigits > 12 {
+            currentOperations = []
+            for digit in result.formatted(.number.notation(.scientific).precision(.fractionLength(0...8))) {
+                if digit == "," {
+                    continue
                 }
-            } else {
-                currentOperations = []
-                for digit in result.formatted(.number.precision(.fractionLength(0...8))) {
-                    if digit == "," {
-                        continue
-                    }
-                    currentOperations.append(String(digit))
+                currentOperations.append(String(digit))
+            }
+        } else {
+            currentOperations = []
+            for digit in result.formatted(.number.precision(.fractionLength(0...8))) {
+                if digit == "," {
+                    continue
                 }
+                currentOperations.append(String(digit))
             }
         }
     }

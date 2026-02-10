@@ -272,7 +272,7 @@ struct Calculator {
         calculate()
     }
     
-    //This functions almost the same of the previous one, using recursive functions to calculate just the expression it needs to, just more simple.
+    //This functions almost the same of the previous one, using recursive functions to calculate just the expression it needs to. This one just needs less steps than the last one.
     mutating func calculateExponentsAndSqrts() {
         var arrayForCalculation: [Any] = []
         var hasExponentOrSqrt = true
