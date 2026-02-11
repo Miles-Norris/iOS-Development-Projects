@@ -6,6 +6,7 @@
 //
 
 import Foundation
+
 //List of mutating functions on the calculator
 enum Operators {
     case plus, minus, multiply, divide, squareRoot, exponent, signChange, percentage, openParen, closeParen
@@ -14,6 +15,7 @@ enum Operators {
 struct Calculator {
     var isMiniCalc = false
     var currentValue: Double = 0
+    
     //currentWorkingValues has all of the values that will be used in the operation. this includes type Operators, and Double for this program. it also has a didSet that ensures it will never be empty because on a calculator the default value will always be 0.
     var currentWorkingValues: [Any] = [0.0] {
         didSet {
@@ -25,10 +27,13 @@ struct Calculator {
     
     //Takes an operation as an array
     mutating func calculate() {
+        
         //Total will be updated after every part of the operation
         var total: Double = 0
+        
         //This is used to check what the current operator is that needs to be used for the operation
         var lastEnteredOperator: Operators?
+        
         //Checks for parenthesis, Exponents/Sqrts, and Multiplication/Divison/Percentages.
         var hasParens = false
         var hasExponentOrSqrt = false
@@ -254,9 +259,11 @@ struct Calculator {
             //This is the same as before, it will calculate the first pair of parenthesis, replace that pair in the original equation with the result, and then repeat the process until all pairs have been calculated.
             currentWorkingValues = unwrappedArray
             calculate()
+            
             for _ in (indexToReplaceStart!)...(indexToReplaceEnd!) {
                 temporaryWorkingValues.remove(at: indexToReplaceStart!)
             }
+            
             temporaryWorkingValues.insert(currentValue, at: indexToReplaceStart!)
             
             if temporaryWorkingValues.contains(where: { ($0 as? Operators) == .openParen }) ||
@@ -303,13 +310,16 @@ struct Calculator {
                 }
             }
             currentWorkingValues = arrayForCalculation
+            
             //If we didn't have the isMiniCalc Bool here, it would infinitly loop this function because every time it would go to calculate it, it would see the operator present again and come back to this function to calculate it.
             isMiniCalc = true
             calculate()
             isMiniCalc = false
+            
             for _ in 1...numberOfRemovals {
                 temporaryWorkingValues.remove(at: indexToInsertAt!)
             }
+            
             temporaryWorkingValues.insert(currentValue, at: indexToInsertAt!)
             currentWorkingValues = temporaryWorkingValues
             
@@ -351,13 +361,16 @@ struct Calculator {
                     }
                 }
             }
+            
             currentWorkingValues = arrayForCalculation
             isMiniCalc = true
             calculate()
             isMiniCalc = false
+            
             for _ in 1...numberOfRemovals {
                 temporaryWorkingValues.remove(at: indexToInsertAt!)
             }
+            
             temporaryWorkingValues.insert(currentValue, at: indexToInsertAt!)
             currentWorkingValues = temporaryWorkingValues
             

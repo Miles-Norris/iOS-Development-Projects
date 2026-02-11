@@ -16,6 +16,8 @@ extension Double {
 
 struct CalculatorView: View {
     
+    @State var calculator = Calculator()
+    
     //This is a list of all of everything that should be displayed on the screen, it will usually be similar to what is in the currentWorkingValues list that is in the calculator, but not always.
     @State var currentOperations: [String] = [] {
         didSet {
@@ -31,9 +33,7 @@ struct CalculatorView: View {
     
     //This holds a single String and is what the Text object is using to display the text. it updates whenever currentOperations is changed. if the character inputted is specifically "√" it will be inserted before the number in is operating on.
     @State var currentOperationText: String = "0"
-    
-    @State var calculator = Calculator()
-    
+ 
     //numbersToBeCommited holds a list of Characters that will represent one number. It holds the number in a stasis so that you can edit the number and update what shows on screen without actually adding each digit of the number to the operation.
     @State var numbersToBeCommited: [Character] = [] {
         didSet {
@@ -510,6 +510,7 @@ struct CalculatorView: View {
             }
         }
     }
+    
     //All button functions. Every operator button except open paren and square root will check to make sure the button pressed directly before it wasn't an invalid operator button (all of them except percantage) by running the isPreviousInvalidOperator func, and then commit all numbers that need to be added to the operation by checking for numbers that need to be commited and then calling commitNumbers. The operator buttons will then add itself to the operation in currentOperations, as well as currentWorkinValues in the Calculator struct.
     func exponentButton() {
         guard !isPreviousInvalidOperator() else { return }
