@@ -31,7 +31,7 @@ struct CalculatorView: View {
         }
     }
     
-    //This holds a single String and is what the Text object is using to display the text. it updates whenever currentOperations is changed. if the character inputted is specifically "√" it will be inserted before the number in is operating on.
+    //This holds a single String and is what the Text object is using to display the text. it updates whenever currentOperations is changed.
     @State var currentOperationText: String = "0"
  
     //numbersToBeCommited holds a list of Characters that will represent one number. It holds the number in a stasis so that you can edit the number and update what shows on screen without actually adding each digit of the number to the operation.
@@ -650,7 +650,7 @@ struct CalculatorView: View {
         }
     }
     
-    //The delete button will delete the last digit from all places, first it will check if there is a value to remove from currentOperations, and from numbersToBeCommited, and if so removes the last element. if removing the last number would leave an empty "E" at the end of the equation which would cause an error, it will also remove that. then it checks in currentWorkingValues in the Calculator struct to see if the last element is a number or operator. if it's an operator, it gets removed. if it's a number it pulls it out of currentWorkingValues and dissects it into numbersToBeCommited. If the number it pulls out is a round Double (eg: 68.0) it removes the last value three times to remove the 0, ., and 1 (eg: [6, 8, ., 0])
+    //The delete button will delete the last digit from all places, first it will check if there is a value to remove from currentOperations, and from numbersToBeCommited, and if so removes the last element. if removing the last number would leave an empty "E" at the end of the equation which would cause an error, it will also remove that. then it checks in currentWorkingValues in the Calculator struct to see if the last element is a number or operator. if it's an operator, it gets removed. if it's a number it pulls it out of currentWorkingValues and dissects it into numbersToBeCommited. If the number it pulls out is a round Double (eg: 68.0) it removes the last value three times to remove the 0, ., and 8 (eg: [6, 8, ., 0])
     func backspaceButton() {
         if !currentOperations.isEmpty {
             currentOperations.removeLast()

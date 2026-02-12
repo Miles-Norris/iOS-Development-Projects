@@ -12,12 +12,17 @@ enum Operators {
     case plus, minus, multiply, divide, squareRoot, exponent, signChange, percentage, openParen, closeParen
 }
 
+protocol Inputs { }
+
+extension Operators: Inputs { }
+extension Double: Inputs { }
+
 struct Calculator {
     var isMiniCalc = false
     var currentValue: Double = 0
     
     //currentWorkingValues has all of the values that will be used in the operation. this includes type Operators, and Double for this program. it also has a didSet that ensures it will never be empty because on a calculator the default value will always be 0.
-    var currentWorkingValues: [Any] = [0.0] {
+    var currentWorkingValues: [any Inputs] = [0.0] {
         didSet {
             if currentWorkingValues.isEmpty {
                 currentWorkingValues = [0.0]
@@ -176,7 +181,7 @@ struct Calculator {
         //We copy the original equation so that we can use currentWorkingValues during this function.
         var temporaryWorkingValues = currentWorkingValues
         //We copy every value between the parenthesis to this unwrappedArray. We then run calculate() on this to get calculate the parenthesis and then pass the result back into the main equation.
-        var unwrappedArray: [Any] = []
+        var unwrappedArray: [any Inputs] = []
         var hasParens = true
         var parensOpen = false
         
@@ -281,7 +286,7 @@ struct Calculator {
     
     //This functions almost the same of the previous one, using recursive functions to calculate just the expression it needs to. This one just needs less steps than the last one.
     mutating func calculateExponentsAndSqrts() {
-        var arrayForCalculation: [Any] = []
+        var arrayForCalculation: [any Inputs] = []
         var hasExponentOrSqrt = true
         var temporaryWorkingValues = currentWorkingValues
         var indexToInsertAt: Int?
@@ -333,7 +338,7 @@ struct Calculator {
     }
     //Again, almost the same function, just with small tweaks
     mutating func calculateMultiplyAndDivideAndPercentage() {
-        var arrayForCalculation: [Any] = []
+        var arrayForCalculation: [any Inputs] = []
         var hasMulitplyOrDivideOrPercentage = true
         var temporaryWorkingValues = currentWorkingValues
         var indexToInsertAt: Int?
