@@ -81,7 +81,6 @@ struct CalculatorView: View {
                             .foregroundStyle(Color(.white))
                             .shadow(radius: 4)
                         
-                        
                         Text("^")
                             .padding(.top, 9)
                             .font(.custom("BodoniSvtyTwoITCTT-Bold", size: 22))
