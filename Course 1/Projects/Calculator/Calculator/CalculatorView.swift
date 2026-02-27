@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CalculatorView: View {
     
-    //This is my view modal that holds all the methods and properties for the view.
+    //This is the view modal that holds all the methods and properties for the view.
     @State var viewModal = CalculatorViewModal()
     
     var body: some View {
