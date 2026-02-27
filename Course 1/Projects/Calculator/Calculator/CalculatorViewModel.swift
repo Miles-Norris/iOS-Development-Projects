@@ -15,7 +15,7 @@ extension Double {
 }
 
 @Observable
-class CalculatorViewModal {
+class CalculatorViewModel {
     var calculator = Calculator()
     
     //This is a list of all of everything that should be displayed on the screen, it will usually be similar to what is in the currentWorkingValues list that is in the calculator, but not always.
@@ -464,3 +464,4 @@ class CalculatorViewModal {
         return invalid
     }
 }
+
