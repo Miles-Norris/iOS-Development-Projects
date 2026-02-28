@@ -38,9 +38,7 @@ struct GalleryView: View {
                         }
                     }
                 }
-
             }
-            
         }
         .padding(.horizontal)
         .onAppear {
