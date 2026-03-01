@@ -27,10 +27,10 @@ struct CalculatorButtonSubView: View {
         self.isSystemImage = isSystemImage
     }
     init(viewModal: Binding<CalculatorViewModel>,
-        buttonClosure: @escaping () -> Void,
-        buttonLabelSize: CGFloat,
-        buttonLabel: String,
-        isSystemImage: Bool) {
+         buttonClosure: @escaping () -> Void,
+         buttonLabelSize: CGFloat,
+         buttonLabel: String,
+         isSystemImage: Bool) {
         self._viewModel = viewModal
         self.buttonClosure = { _ in
             buttonClosure()

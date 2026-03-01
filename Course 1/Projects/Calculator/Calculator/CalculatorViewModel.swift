@@ -33,7 +33,7 @@ class CalculatorViewModel {
     
     //This holds a single String and is what the Text object is using to display the text. it updates whenever currentOperations is changed.
     var currentOperationText: String = "0"
- 
+    
     //numbersToBeCommited holds a list of Characters that will represent one number. It holds the number in a stasis so that you can edit the number and update what shows on screen without actually adding each digit of the number to the operation.
     var numbersToBeCommited: [Character] = [] {
         didSet {
