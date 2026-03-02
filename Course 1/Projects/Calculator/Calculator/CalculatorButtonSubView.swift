@@ -12,22 +12,31 @@ struct CalculatorButtonSubView: View {
     @Binding var viewModel: CalculatorViewModel
     
     let buttonClosure: (String) -> Void
+    let buttonWidth: CGFloat
+    let buttonHeight: CGFloat
     let buttonLabelSize: CGFloat
     let buttonLabel: String
     let isSystemImage: Bool
     
     init(viewModel: Binding<CalculatorViewModel>,
          buttonClosure: @escaping (String) -> Void,
-         buttonLabelSize: CGFloat, buttonLabel: String,
+         buttonWidth: CGFloat,
+         buttonHeight: CGFloat,
+         buttonLabelSize: CGFloat,
+         buttonLabel: String,
          isSystemImage: Bool) {
         self._viewModel = viewModel
         self.buttonClosure = buttonClosure
+        self.buttonWidth = buttonWidth
+        self.buttonHeight = buttonHeight
         self.buttonLabelSize = buttonLabelSize
         self.buttonLabel = buttonLabel
         self.isSystemImage = isSystemImage
     }
     init(viewModal: Binding<CalculatorViewModel>,
          buttonClosure: @escaping () -> Void,
+         buttonWidth: CGFloat,
+         buttonHeight: CGFloat,
          buttonLabelSize: CGFloat,
          buttonLabel: String,
          isSystemImage: Bool) {
@@ -35,6 +44,8 @@ struct CalculatorButtonSubView: View {
         self.buttonClosure = { _ in
             buttonClosure()
         }
+        self.buttonWidth = buttonWidth
+        self.buttonHeight = buttonHeight
         self.buttonLabelSize = buttonLabelSize
         self.buttonLabel = buttonLabel
         self.isSystemImage = isSystemImage
@@ -45,7 +56,7 @@ struct CalculatorButtonSubView: View {
             buttonClosure(buttonLabel)
         } label: {
             RoundedRectangle(cornerRadius: 20)
-                .frame(width: 81, height: 50)
+                .frame(width: buttonWidth, height: buttonHeight)
                 .foregroundStyle(Color(buttonLabel == "MR" ? viewModel.mrButtonColor : .white))
                 .shadow(radius: 4)
                 .overlay {
