@@ -53,13 +53,17 @@ struct CalculatorButtonSubView: View {
     
     var safeButtonWidth: CGFloat {
         let width = buttonWidth
-        if !width.isFinite || width <= 0 { return 1 }
+        if !width.isFinite || width <= 0 {
+            return 1
+        }
         return width
     }
 
     var safeButtonHeight: CGFloat {
         let height = buttonHeight
-        if !height.isFinite || height <= 0 { return 1 }
+        if !height.isFinite || height <= 0 {
+            return 1
+        }
         return height
     }
     
