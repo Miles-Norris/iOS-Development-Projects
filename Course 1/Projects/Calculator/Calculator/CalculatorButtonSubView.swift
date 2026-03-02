@@ -51,12 +51,24 @@ struct CalculatorButtonSubView: View {
         self.isSystemImage = isSystemImage
     }
     
+    var safeButtonWidth: CGFloat {
+        let width = buttonWidth
+        if !width.isFinite || width <= 0 { return 1 }
+        return width
+    }
+
+    var safeButtonHeight: CGFloat {
+        let height = buttonHeight
+        if !height.isFinite || height <= 0 { return 1 }
+        return height
+    }
+    
     var body: some View {
         Button {
             buttonClosure(buttonLabel)
         } label: {
             RoundedRectangle(cornerRadius: 20)
-                .frame(width: buttonWidth, height: buttonHeight)
+                .frame(width: safeButtonWidth, height: safeButtonHeight)
                 .foregroundStyle(Color(buttonLabel == "MR" ? viewModel.mrButtonColor : .white))
                 .shadow(radius: 4)
                 .overlay {
