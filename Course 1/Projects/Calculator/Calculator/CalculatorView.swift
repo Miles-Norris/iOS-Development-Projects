@@ -39,7 +39,7 @@ struct CalculatorView: View {
                             buttonClosure: button.buttonClosure,
                             buttonWidth: isPortrait ? proxy.size.width / 4 - 12 : proxy.size.width / 4 - 75,
                             buttonHeight: isPortrait ? proxy.size.height / 15 - 3 : proxy.size.height / 11,
-                            buttonLabelSize: button.buttonLabelSize,
+                            buttonLabelSize: button.buttonLabelSize + (proxy.size.width * proxy.size.height / 150000 - 2),
                             buttonLabel: button.buttonLabel,
                             isSystemImage: button.isSystemImage
                         )
