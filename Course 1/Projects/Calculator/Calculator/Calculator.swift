@@ -7,7 +7,7 @@
 
 import Foundation
 
-//List of mutating functions on the calculator
+// List of mutating functions on the calculator
 enum Operators {
     case plus, minus, multiply, divide, squareRoot, exponent, signChange, percentage, openParen, closeParen
 }
@@ -21,7 +21,7 @@ struct Calculator {
     var isMiniCalc = false
     var currentValue: Double = 0
     
-    //currentWorkingValues has all of the values that will be used in the operation. this includes type Operators, and Double for this program. it also has a didSet that ensures it will never be empty because on a calculator the default value will always be 0.
+    // currentWorkingValues has all of the values that will be used in the operation. this includes type Operators, and Double for this program. it also has a didSet that ensures it will never be empty because on a calculator the default value will always be 0.
     var currentWorkingValues: [any Inputs] = [0.0] {
         didSet {
             if currentWorkingValues.isEmpty {
@@ -30,27 +30,27 @@ struct Calculator {
         }
     }
     
-    //Takes an operation as an array
+    // Takes an operation as an array
     mutating func calculate() {
         
-        //Total will be updated after every part of the operation
+        // Total will be updated after every part of the operation
         var total: Double = 0
         
-        //This is used to check what the current operator is that needs to be used for the operation
+        //T his is used to check what the current operator is that needs to be used for the operation
         var lastEnteredOperator: Operators?
         
-        //Checks for parentheses, Exponents/Sqrts, and Multiplication/Divison/Percentages.
+        // hecks for parentheses, Exponents/Sqrts, and Multiplication/Divison/Percentages.
         var hasParens = false
         var hasExponentOrSqrt = false
         var hasMuliplyOrDivideOrPercentage = false
         
-        //In order to follow order of operations. the next 75ish lines of code checks for their respective operator type and then performs the respective calculate operator function.
+        // In order to follow order of operations. the next 75ish lines of code checks for their respective operator type and then performs the respective calculate operator function.
         if currentWorkingValues.contains(where: { ($0 as? Operators) == .openParen }) ||
             currentWorkingValues.contains(where: { ($0 as? Operators) == .closeParen }) {
             hasParens = true
         }
         
-        //Cleans Parens in case invalid parens were inputted
+        // Cleans Parens in case invalid parens were inputted
         if hasParens {
             let tokens = currentWorkingValues
             var stack: [Int] = []
@@ -70,7 +70,7 @@ struct Calculator {
                 }
             }
             
-            //leftover opens are invalid
+            // Leftover opens are invalid
             for i in stack {
                 removeIndexes.insert(i)
             }
@@ -78,7 +78,7 @@ struct Calculator {
             currentWorkingValues = tokens.enumerated()
                 .filter { !removeIndexes.contains($0.offset) }
                 .map { $0.element }
-            //Once the parenthesis are clean, it will run the calculateParentheses function to calculate them.
+            // Once the parenthesis are clean, it will run the calculateParentheses function to calculate them.
             if currentWorkingValues.contains(where: { ($0 as? Operators) == .openParen }) ||
                 currentWorkingValues.contains(where: { ($0 as? Operators) == .closeParen }) {
                 hasParens = true
@@ -109,9 +109,9 @@ struct Calculator {
             calculateMultiplyAndDivideAndPercentage()
         }
         
-        //Loops all of the values in the currentWorkingValuesArray in order.
+        // Loops all of the values in the currentWorkingValuesArray in order.
         for currentWorkingValue in currentWorkingValues {
-            //Checks to see if currentWorkingValue is a Double, and if it is, it then it looks at the lastEnteredOperator to see what operation to perform.
+            // Checks to see if currentWorkingValue is a Double, and if it is, it then it looks at the lastEnteredOperator to see what operation to perform.
             if let currentNumber = currentWorkingValue as? Double {
                 switch lastEnteredOperator {
                 case .plus:
@@ -137,9 +137,9 @@ struct Calculator {
                     continue
                 }
             }
-            //This will check if the currentWorkingValue is an Operator on the list of enum Operators.
+            // This will check if the currentWorkingValue is an Operator on the list of enum Operators.
             if let currentOperator = currentWorkingValue as? Operators {
-                //This will either store an operator to lastEnteredOperator or if it's an operator that only uses one value, it will perform the operation and update the total.
+                // This will either store an operator to lastEnteredOperator or if it's an operator that only uses one value, it will perform the operation and update the total.
                 switch currentOperator {
                 case .plus:
                     lastEnteredOperator = .plus
@@ -166,26 +166,26 @@ struct Calculator {
                 }
             }
         }
-        //Once the loop is fully finished currentValue is updated to the total
+        // Once the loop is fully finished currentValue is updated to the total
         currentValue = total
         currentWorkingValues = [currentValue]
         
     }
-    //This is the function to calculate the parentheses in the equation. it's super cringe and writing it made me want to jump into incoming traffic. Even reading it breaks my brain, but it works so trust the process.
+    // This is the function to calculate the parentheses in the equation. it's super cringe and writing it made me want to jump into incoming traffic. Even reading it breaks my brain, but it works so trust the process.
     mutating func calculateParentheses() {
-        //indexToReplaceStart and End pinpoint the beginning and end of the parentheses. We use these later to know what values in the original equation we need to replace with the result of the parentheses.
+        // indexToReplaceStart and End pinpoint the beginning and end of the parentheses. We use these later to know what values in the original equation we need to replace with the result of the parentheses.
         var indexToReplaceStart: Int?
         var indexToReplaceEnd: Int?
-        //This is used to check wether the parentheses are emebedded inside of more parentheses, so we know to unwrap/unembbed them.
+        // This is used to check wether the parentheses are emebedded inside of more parentheses, so we know to unwrap/unembbed them.
         var areParensEmbedded = false
-        //We copy the original equation so that we can use currentWorkingValues during this function.
+        // We copy the original equation so that we can use currentWorkingValues during this function.
         var temporaryWorkingValues = currentWorkingValues
-        //We copy every value between the parentheses to this unwrappedArray. We then run calculate() on this to get calculate the parentheses and then pass the result back into the main equation.
+        // We copy every value between the parentheses to this unwrappedArray. We then run calculate() on this to get calculate the parentheses and then pass the result back into the main equation.
         var unwrappedArray: [any Inputs] = []
         var hasParens = true
         var parensOpen = false
         
-        //This for loop will check to see if any parentheses pairs are opened while there is currently a pair opened, and if there is, it knows the parentheses are embedded. this also assigns the position of the first open parenthesis as indexToReplaceStart.
+        // This for loop will check to see if any parentheses pairs are opened while there is currently a pair opened, and if there is, it knows the parentheses are embedded. this also assigns the position of the first open parenthesis as indexToReplaceStart.
         for (i, value) in temporaryWorkingValues.enumerated() {
             if value as? Operators == .openParen {
                 if parensOpen == false {
@@ -202,18 +202,18 @@ struct Calculator {
             }
         }
         
-        //If the parentheses are embedded, this is the code it will run to unwrap them.
+        // If the parentheses are embedded, this is the code it will run to unwrap them.
         if areParensEmbedded {
             var numberOfParenPairs = 0
             var haveParensStarted = false
-            //First we go through and check how many pairs of parentheses are in the equation.
+            // First we go through and check how many pairs of parentheses are in the equation.
             for value in temporaryWorkingValues {
                 if value as? Operators == .openParen {
                     numberOfParenPairs += 1
                 }
             }
             
-            //This will loop through all of the values and once it hits the first open parentheses, it will start adding each value to unwrappedArray until it finds the end of all the parentheses.
+            // This will loop through all of the values and once it hits the first open parentheses, it will start adding each value to unwrappedArray until it finds the end of all the parentheses.
             for (i, value) in temporaryWorkingValues.enumerated() {
                 //Every time it hits a close parentheses it minuses 1 from numberOfParenPairs until it closes every pair.
                 if value as? Operators == .closeParen {
@@ -232,21 +232,21 @@ struct Calculator {
                 }
             }
             
-            //Now we assign unwrappedArray to currentWorkingValues and calculate it. Note that at this point we still have parentheses in the equation, so when we calculate now, it will see the parentheses and run calculateParentheses again it will continue this until it runs of parentheses to calculate. Once it doesn't see any embedded parentheses it will use the code below to calculate them insted of this loop.
+            // Now we assign unwrappedArray to currentWorkingValues and calculate it. Note that at this point we still have parentheses in the equation, so when we calculate now, it will see the parentheses and run calculateParentheses again it will continue this until it runs of parentheses to calculate. Once it doesn't see any embedded parentheses it will use the code below to calculate them insted of this loop.
             currentWorkingValues = unwrappedArray
             calculate()
-            //after it's done calculating, it will use the 2 index found previously to remove all the values within the parentheses and then replace that will the value gotten from the calculation.
+            // after it's done calculating, it will use the 2 index found previously to remove all the values within the parentheses and then replace that will the value gotten from the calculation.
             for _ in (indexToReplaceStart! + 1)...(indexToReplaceEnd! - 1) {
                 temporaryWorkingValues.remove(at: indexToReplaceStart! + 1)
             }
             temporaryWorkingValues.insert(currentValue, at: indexToReplaceStart! + 1)
         }
         
-        //This is the code that runs when there aren't any embedded parentheses.
+        // This is the code that runs when there aren't any embedded parentheses.
         while hasParens {
             var haveParensStarted = false
             
-            //This is very similar to the previous loop, but this time it will only go until it finishes one pair.
+            // This is very similar to the previous loop, but this time it will only go until it finishes one pair.
             for (i, value) in temporaryWorkingValues.enumerated() {
                 if value as? Operators == .closeParen {
                     indexToReplaceEnd = i
@@ -261,7 +261,7 @@ struct Calculator {
                     haveParensStarted = true
                 }
             }
-            //This is the same as before, it will calculate the first pair of parentheses, replace that pair in the original equation with the result, and then repeat the process until all pairs have been calculated.
+            // This is the same as before, it will calculate the first pair of parentheses, replace that pair in the original equation with the result, and then repeat the process until all pairs have been calculated.
             currentWorkingValues = unwrappedArray
             calculate()
             
@@ -279,12 +279,12 @@ struct Calculator {
             }
             
         }
-        //Finally it assigns the new equation to currentWorkingValues and calculate it one more time for the final result.
+        // Finally it assigns the new equation to currentWorkingValues and calculate it one more time for the final result.
         currentWorkingValues = temporaryWorkingValues
         calculate()
     }
     
-    //This functions almost the same of the previous one, using recursive functions to calculate just the expression it needs to. This one just needs less steps than the last one.
+    // This functions almost the same of the previous one, using recursive functions to calculate just the expression it needs to. This one just needs less steps than the last one.
     mutating func calculateExponentsAndSqrts() {
         var arrayForCalculation: [any Inputs] = []
         var hasExponentOrSqrt = true
@@ -316,7 +316,7 @@ struct Calculator {
             }
             currentWorkingValues = arrayForCalculation
             
-            //If we didn't have the isMiniCalc Bool here, it would infinitly loop this function because every time it would go to calculate it, it would see the operator present again and come back to this function to calculate it.
+            // If we didn't have the isMiniCalc Bool here, it would infinitly loop this function because every time it would go to calculate it, it would see the operator present again and come back to this function to calculate it.
             isMiniCalc = true
             calculate()
             isMiniCalc = false
@@ -336,7 +336,7 @@ struct Calculator {
             }
         }
     }
-    //Again, almost the same function, just with small tweaks
+    // Again, almost the same function, just with small tweaks
     mutating func calculateMultiplyAndDivideAndPercentage() {
         var arrayForCalculation: [any Inputs] = []
         var hasMulitplyOrDivideOrPercentage = true

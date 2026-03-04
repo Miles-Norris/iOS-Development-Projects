@@ -48,10 +48,13 @@ struct RangedResponseSubview: View {
                 Text("\(question.answers[3].text)")
                     .multilineTextAlignment(.center)
             }
-            .font(.custom("ChalkboardSE-bold", size: 15))
+            .font(.custom("ChalkboardSE-bold", size: 12))
         }
         .padding(.horizontal, 30)
         .onChange(of: selectedAnswer) {
+            quizManager.selectAnswers([selectedAnswer], label: question.label)
+        }
+        .onAppear {
             quizManager.selectAnswers([selectedAnswer], label: question.label)
         }
     }

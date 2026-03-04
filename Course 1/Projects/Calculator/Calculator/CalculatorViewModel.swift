@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-//Extension of type Double to check if a Double is a round double (eg: 78.0 vs 78.1).
+// Extension of type Double to check if a Double is a round double (eg: 78.0 vs 78.1).
 extension Double {
     var isRound: Bool {
         return self.truncatingRemainder(dividingBy: 1) == 0
@@ -18,7 +18,7 @@ extension Double {
 class CalculatorViewModel {
     var calculator = Calculator()
     
-    //This is a list of all of everything that should be displayed on the screen, it will usually be similar to what is in the currentWorkingValues list that is in the calculator, but not always.
+    // This is a list of all of everything that should be displayed on the screen, it will usually be similar to what is in the currentWorkingValues list that is in the calculator, but not always.
     var currentOperations: [String] = [] {
         didSet {
             currentOperationText = ""
@@ -31,10 +31,10 @@ class CalculatorViewModel {
         }
     }
     
-    //This holds a single String and is what the Text object is using to display the text. it updates whenever currentOperations is changed.
+    // This holds a single String and is what the Text object is using to display the text. it updates whenever currentOperations is changed.
     var currentOperationText: String = "0"
     
-    //numbersToBeCommited holds a list of Characters that will represent one number. It holds the number in a stasis so that you can edit the number and update what shows on screen without actually adding each digit of the number to the operation.
+    // numbersToBeCommited holds a list of Characters that will represent one number. It holds the number in a stasis so that you can edit the number and update what shows on screen without actually adding each digit of the number to the operation.
     var numbersToBeCommited: [Character] = [] {
         didSet {
             if numbersToBeCommited == ["0", "0"] {
@@ -45,7 +45,7 @@ class CalculatorViewModel {
     
     var mrButtonColor: Color = .white
     
-    //numberInMemory holds an optional Double that will be set by pressing the M+ or M- buttons. this also changes the MR button color if there is a value stored in memory
+    // numberInMemory holds an optional Double that will be set by pressing the M+ or M- buttons. this also changes the MR button color if there is a value stored in memory
     var numberInMemory: Double? = nil {
         willSet {
             if newValue != nil {
@@ -56,7 +56,7 @@ class CalculatorViewModel {
         }
     }
     
-    //All button functions. Every operator button except open paren and square root will check to make sure the button pressed directly before it wasn't an invalid operator button (all of them except percantage) by running the isPreviousInvalidOperator func, and then commit all numbers that need to be added to the operation by checking for numbers that need to be commited and then calling commitNumbers. The operator buttons will then add itself to the operation in currentOperations, as well as currentWorkinValues in the Calculator struct.
+    // All button functions. Every operator button except open paren and square root will check to make sure the button pressed directly before it wasn't an invalid operator button (all of them except percantage) by running the isPreviousInvalidOperator func, and then commit all numbers that need to be added to the operation by checking for numbers that need to be commited and then calling commitNumbers. The operator buttons will then add itself to the operation in currentOperations, as well as currentWorkinValues in the Calculator struct.
     func exponentButton() {
         guard !isPreviousInvalidOperator() else { return }
         
@@ -69,7 +69,7 @@ class CalculatorViewModel {
         currentOperations.append("^")
     }
     
-    //The sqrtButton and the openParen button will both check what the last input was. And then if necessary add an "x" to the end for implied multiplication.
+    // The sqrtButton and the openParen button will both check what the last input was. And then if necessary add an "x" to the end for implied multiplication.
     func sqrtButton() {
         if !numbersToBeCommited.isEmpty {
             commitNumbers()
@@ -117,7 +117,7 @@ class CalculatorViewModel {
         currentOperations.append(")")
     }
     
-    //M+ and M- will perform the calculation without actually displaying it, and then save that result to the numberInMemory
+    // M+ and M- will perform the calculation without actually displaying it, and then save that result to the numberInMemory
     func memoryAddButton() {
         guard currentOperations.last != "(" && currentOperations.last != "÷" && currentOperations.last != "×" && currentOperations.last != "-" && currentOperations.last != "+" && currentOperations.last != "^" else { return }
         
@@ -150,7 +150,7 @@ class CalculatorViewModel {
         }
     }
     
-    //MR will first run code to check if there is currently a number at the end of the operation, and if so, replace that number with the number in memory by first looping through the numberInMemory, and then adding each digit to numbersToBeCommited. And then it will add itself to the currentOperations
+    // MR will first run code to check if there is currently a number at the end of the operation, and if so, replace that number with the number in memory by first looping through the numberInMemory, and then adding each digit to numbersToBeCommited. And then it will add itself to the currentOperations
     func memoryRecallButton() {
         if numberInMemory != nil {
             numbersToBeCommited.removeAll()
@@ -164,7 +164,7 @@ class CalculatorViewModel {
                     numbersToBeCommited.append(digit)
                 }
             }
-            //Here I run similar code to the format() func below, but with a few tweaks to make it work as desired.
+            // Here I run similar code to the format() func below, but with a few tweaks to make it work as desired.
             var numberOfDigits: Int = 0
             if let validNumber = numberInMemory {
                 for _ in String(validNumber) {
@@ -195,11 +195,11 @@ class CalculatorViewModel {
         }
     }
     
-    //MC clears the numberInMemory
+    // MC clears the numberInMemory
     func memoryClearButton() {
         numberInMemory = nil
     }
-    //The delete button will delete the last digit from all places, first it will check if there is a value to remove from currentOperations, and from numbersToBeCommited, and if so removes the last element. if removing the last number would leave an empty "E" at the end of the equation which would cause an error, it will also remove that. then it checks in currentWorkingValues in the Calculator struct to see if the last element is a number or operator. if it's an operator, it gets removed. if it's a number it pulls it out of currentWorkingValues and dissects it into numbersToBeCommited. If the number it pulls out is a round Double (eg: 68.0) it removes the last value three times to remove the 0, ., and 8 (eg: [6, 8, ., 0])
+    // The delete button will delete the last digit from all places, first it will check if there is a value to remove from currentOperations, and from numbersToBeCommited, and if so removes the last element. if removing the last number would leave an empty "E" at the end of the equation which would cause an error, it will also remove that. then it checks in currentWorkingValues in the Calculator struct to see if the last element is a number or operator. if it's an operator, it gets removed. if it's a number it pulls it out of currentWorkingValues and dissects it into numbersToBeCommited. If the number it pulls out is a round Double (eg: 68.0) it removes the last value three times to remove the 0, ., and 8 (eg: [6, 8, ., 0])
     func backspaceButton() {
         if !currentOperations.isEmpty {
             currentOperations.removeLast()
@@ -238,7 +238,7 @@ class CalculatorViewModel {
         }
     }
     
-    //Removes everything from all calculations
+    // Removes everything from all calculations
     func allClear() {
         numbersToBeCommited.removeAll()
         calculator.currentWorkingValues.removeAll()
@@ -281,7 +281,7 @@ class CalculatorViewModel {
         currentOperations.append("×")
     }
     
-    //This button has a unique feature where instead of just running the isPreviousInvaildOperator func it will let you input a number as a negative number if there is an invalid operator directly before it.
+    // This button has a unique feature where instead of just running the isPreviousInvaildOperator func it will let you input a number as a negative number if there is an invalid operator directly before it.
     func subtractionButton() {
         let last = currentOperations.last
         
@@ -313,7 +313,7 @@ class CalculatorViewModel {
         currentOperations.append("+")
     }
     
-    //This first runs the same as all the other operators, but this is treated as an alternate "=" button, it commits the numbersToBeCommited and then runs calculate() after passing in the operation. it then runs the format func on the result, as well as added the result to numbersToBeCommited.
+    // This first runs the same as all the other operators, but this is treated as an alternate "=" button, it commits the numbersToBeCommited and then runs calculate() after passing in the operation. it then runs the format func on the result, as well as added the result to numbersToBeCommited.
     func signChangeButton() {
         guard currentOperations.last != "(" && currentOperations.last != "÷" && currentOperations.last != "×" && currentOperations.last != "-" && currentOperations.last != "+" && currentOperations.last != "^" else { return }
         
@@ -338,7 +338,7 @@ class CalculatorViewModel {
         }
     }
     
-    //This finalizes the operation by commiting all numbers that need to be commited, and then runs calculate(). it then call the format func using the result of the calculation, and then adds each digit of the result to numbersToBeCommited ignoring ",".
+    // This finalizes the operation by commiting all numbers that need to be commited, and then runs calculate(). it then call the format func using the result of the calculation, and then adds each digit of the result to numbersToBeCommited ignoring ",".
     func equalsButton() {
         guard currentOperations.last != "(" && currentOperations.last != "÷" && currentOperations.last != "×" && currentOperations.last != "-" && currentOperations.last != "+" && currentOperations.last != "^" else { return }
         
@@ -363,7 +363,7 @@ class CalculatorViewModel {
         }
     }
     
-    //The 0 button also checks to make sure that the on screen calculation doesn't only contain a 0 before doing it's thing.
+    // The 0 button also checks to make sure that the on screen calculation doesn't only contain a 0 before doing it's thing.
     func zeroButton() {
         guard currentOperationText != "0" else { return }
         checksForNeededMultiplier()
@@ -371,7 +371,7 @@ class CalculatorViewModel {
         currentOperations += ["0"]
     }
     
-    //functions similarly to all the other number buttons, but also checks to make sure you are not using more than one decimal for one number.
+    // Functions similarly to all the other number buttons, but also checks to make sure you are not using more than one decimal for one number.
     func decimalButton() {
         guard !numbersToBeCommited.contains(".") else { return }
         checksForNeededMultiplier()
@@ -380,14 +380,14 @@ class CalculatorViewModel {
         currentOperations += ["."]
     }
     
-    //The positive number buttons simply add the number as a string to numbersToBeCommited and currentOperations. they will also run the checkForNeedMultiplier func which checks if there is an operator directly before the inputted number that would assume any number after would be mulitiplying the result (eg: √/％), and if so first appendes .multiply to currentWorkingValues and "x" to currentOperations.
+    // The positive number buttons simply add the number as a string to numbersToBeCommited and currentOperations. they will also run the checkForNeedMultiplier func which checks if there is an operator directly before the inputted number that would assume any number after would be mulitiplying the result (eg: √/％), and if so first appendes .multiply to currentWorkingValues and "x" to currentOperations.
     func positiveNumberButton(_ num: String) {
         checksForNeededMultiplier()
         numbersToBeCommited += [Character(num)]
         currentOperations += [num]
     }
     
-    //The commitNumbers function makes a full string from all the charactersin numbersToBeCommited by looping through all of them in a for loop and adding them to an empty string. it then puts that string into currentWorkingValues in the calculator struct as a Double. Finally it resets numbersToBeCommited to an empty array.
+    // The commitNumbers function makes a full string from all the charactersin numbersToBeCommited by looping through all of them in a for loop and adding them to an empty string. it then puts that string into currentWorkingValues in the calculator struct as a Double. Finally it resets numbersToBeCommited to an empty array.
     func commitNumbers() {
         var numberAsString = ""
         
@@ -398,7 +398,7 @@ class CalculatorViewModel {
         numbersToBeCommited = []
     }
     
-    //The format function takes in the result of the calculation as a Double, and then checks to see how many digits are in the result using a for loop. then it will either format the number with scientific notation if it's more than 12 non-fraction digits long, or format normally with up to 10 decimals of it isn't more than 12 digits. it will also get rid of any commas, and then it will add each digit of the formatted result to currentOperations.
+    // The format function takes in the result of the calculation as a Double, and then checks to see how many digits are in the result using a for loop. then it will either format the number with scientific notation if it's more than 12 non-fraction digits long, or format normally with up to 10 decimals of it isn't more than 12 digits. it will also get rid of any commas, and then it will add each digit of the formatted result to currentOperations.
     func format(result: Double) {
         var currentNumberOfDigits: Int = 0
         let resultAsInt: Int
@@ -439,7 +439,7 @@ class CalculatorViewModel {
         }
     }
     
-    //This is a function that runs whenever a number gets inputted. see number "7" for more details.
+    // This is a function that runs whenever a number gets inputted. see number "7" for more details.
     func checksForNeededMultiplier() {
         if !currentOperations.isEmpty {
             if currentOperations[currentOperations.count - 1] == "%" || currentOperations[currentOperations.count - 1] == ")" {
@@ -449,7 +449,7 @@ class CalculatorViewModel {
         }
     }
     
-    //This function runs on operators when there is nothing currently in currentOperations. it will just add 0 to as a default base value.
+    // This function runs on operators when there is nothing currently in currentOperations. it will just add 0 to as a default base value.
     func checksForDefault0() {
         if currentOperations.isEmpty {
             numbersToBeCommited += ["0"]
@@ -457,7 +457,7 @@ class CalculatorViewModel {
         }
     }
     
-    //This function runs on most operators and will check to make sure that the previously entered value is one that can be mutated by that operator.
+    // This function runs on most operators and will check to make sure that the previously entered value is one that can be mutated by that operator.
     func isPreviousInvalidOperator() -> Bool {
         let last = currentOperations.last
         let invalid = last == "^" || last == "(" || last == "÷" || last == "×" || last == "-" || last == "+"

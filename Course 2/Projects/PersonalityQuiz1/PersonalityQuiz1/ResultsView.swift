@@ -12,12 +12,12 @@ struct ResultsView: View {
     
     var body: some View {
         VStack {
-            Text("You are a \(quizManager.result)!")
-                .font(.custom("ChalkboardSE-bold", size: 60))
+            Text("You Belong in \(quizManager.result)!")
+                .font(.custom("ChalkboardSE-bold", size: 50))
                 .multilineTextAlignment(.center)
             Image("\(quizManager.result)")
                 .resizable()
-                .frame(width: 200, height: 200)
+                .frame(width: 250, height: 250)
         }
         .onAppear {
             quizManager.calculateResults()

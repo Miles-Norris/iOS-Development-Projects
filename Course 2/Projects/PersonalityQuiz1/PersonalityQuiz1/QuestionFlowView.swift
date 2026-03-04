@@ -31,14 +31,14 @@ struct QuestionFlowView: View {
                     if quizManager.questionList.count == currentQuestionIndex + 1 {
                         NavigationLink(destination: ResultsView()) {
                             Image(systemName: "chevron.right")
-                                .font(.system(size: 20))
-                                .foregroundStyle(Color.black)
+                                .font(.system(size: 17))
+                                .foregroundStyle(Color.primary)
                         }
                     } else {
                         NavigationLink(destination: QuestionFlowView(question: quizManager.questionList[currentQuestionIndex + 1], currentQuestionIndex: currentQuestionIndex + 1)) {
                             Image(systemName: "chevron.right")
-                                .font(.system(size: 20))
-                                .foregroundStyle(Color.black)
+                                .font(.system(size: 17))
+                                .foregroundStyle(Color.primary)
                         }
                     }
                 }

@@ -30,5 +30,10 @@ struct SingleResponseSubview: View {
                 quizManager.selectAnswers([selectedChoice], label: question.label)
             }
         }
+        .onAppear {
+            if let selectedChoice {
+                quizManager.selectAnswers([selectedChoice], label: question.label)
+            }
+        }
     }
 }

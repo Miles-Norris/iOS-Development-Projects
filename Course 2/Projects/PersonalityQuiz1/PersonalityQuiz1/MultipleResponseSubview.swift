@@ -47,6 +47,9 @@ struct MultipleResponseSubview: View {
         .onChange(of: selectedAnswers) {
             quizManager.selectAnswers(selectedAnswers, label: question.label)
         }
+        .onAppear {
+            quizManager.selectAnswers(selectedAnswers, label: question.label)
+        }
     }
 }
 

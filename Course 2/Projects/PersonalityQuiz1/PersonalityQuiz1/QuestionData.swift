@@ -17,15 +17,15 @@ struct Question {
 struct Answer: Identifiable, Hashable {
     var id: UUID = UUID()
     var text: String
-    var type: AnimalType
+    var type: Houses
 }
 
 enum ResponseType {
     case single, multiple, ranged
 }
 
-enum AnimalType {
-    case lion, cat, rabbit, turtle
+enum Houses {
+    case gryffindor, slytherin, hufflepuff, ravenclaw
 }
 
 @Observable
@@ -37,79 +37,79 @@ class QuizManager {
         selectedAnswers[label] = answers
     }
     func calculateResults() {
-        var lionPoints = 0
-        var catPoints = 0
-        var rabbitPoints = 0
-        var turtlePoints = 0
-        for animalArr in selectedAnswers.values {
-            for animal in animalArr {
+        var gryffindorPoints = 0
+        var ravenclawPoints = 0
+        var hufflepuffPoints = 0
+        var slytherinPoints = 0
+        for houseArr in selectedAnswers.values {
+            for animal in houseArr {
                 switch animal.type {
-                case .lion:
-                    lionPoints += 1
-                case .cat:
-                    catPoints += 1
-                case .rabbit:
-                    rabbitPoints += 1
-                case .turtle:
-                    turtlePoints += 1
+                case .gryffindor:
+                    gryffindorPoints += 1
+                case .ravenclaw:
+                    ravenclawPoints += 1
+                case .hufflepuff:
+                    hufflepuffPoints += 1
+                case .slytherin:
+                    slytherinPoints += 1
                 }
             }
         }
-        if max(lionPoints, catPoints, rabbitPoints, turtlePoints) == lionPoints {
-            result = "Lion"
-        } else if max(lionPoints, catPoints, rabbitPoints, turtlePoints) == catPoints {
-            result = "Cat"
-        } else if max(lionPoints, catPoints, rabbitPoints, turtlePoints) == rabbitPoints {
-            result = "Rabbit"
-        } else if max(lionPoints, catPoints, rabbitPoints, turtlePoints) == turtlePoints {
-            result = "Turtle"
+        if max(gryffindorPoints, ravenclawPoints, hufflepuffPoints, slytherinPoints) == gryffindorPoints {
+            result = "Gryffindor"
+        } else if max(gryffindorPoints, ravenclawPoints, hufflepuffPoints, slytherinPoints) == ravenclawPoints {
+            result = "Ravenclaw"
+        } else if max(gryffindorPoints, ravenclawPoints, hufflepuffPoints, slytherinPoints) == hufflepuffPoints {
+            result = "Hufflepuff"
+        } else if max(gryffindorPoints, ravenclawPoints, hufflepuffPoints, slytherinPoints) == slytherinPoints {
+            result = "Slytherin"
         } else {
-            result = "Lion"
+            result = "Gryffindor"
         }
     }
     
     let questionList: [Question] = [
         Question(
-            text: "Which food do you like the most?",
+            text: "Which quality do you most value in others?",
             type: .single,
             answers: [
-                Answer(text: "Steak", type: .lion),
-                Answer(text: "Fish", type: .cat),
-                Answer(text: "Carrots", type: .rabbit),
-                Answer(text: "Corn", type: .turtle)
+                Answer(text: "Loyalty", type: .gryffindor),
+                Answer(text: "Intelligence", type: .ravenclaw),
+                Answer(text: "Kindness", type: .hufflepuff),
+                Answer(text: "Ambition", type: .slytherin)
             ],
-            label: "Food"
+            label: "Value"
         ),
         Question(
             text: "Which activities do you enjoy?",
             type: .multiple,
             answers: [
-                Answer(text: "Swimming", type: .turtle),
-                Answer(text: "Sleeping", type: .cat),
-                Answer(text: "Cuddling", type: .rabbit),
-                Answer(text: "Eating", type: .lion)
+                Answer(text: "Climbing", type: .slytherin),
+                Answer(text: "Reading", type: .ravenclaw),
+                Answer(text: "Sleeping", type: .hufflepuff),
+                Answer(text: "Fighting", type: .gryffindor)
             ],
             label: "Activities"
         ),
         Question(
-            text: "How much do you enjoy car rides?",
+            text: "How much patience do you have with people?",
             type: .ranged,
             answers: [
-                Answer(text: "I dislike them", type: .cat),
-                Answer(text: "I get a little nervous", type: .rabbit),
-                Answer(text: "I barely notice them", type: .turtle),
-                Answer(text: "I love them", type: .lion)
+                Answer(text: "I get upset quickly", type: .slytherin),
+                Answer(text: "I can tolerate them for a bit", type: .ravenclaw),
+                Answer(text: "I have a good amount of patience", type: .gryffindor),
+                Answer(text: "I can handle anything they got", type: .hufflepuff)
             ],
-            label: "Car Rides"
+            label: "Patience"
         ),
         Question(
             text: "Where would you go on vacation?",
             type: .single,
             answers: [
-                Answer(text: "Europe", type: .cat),
-                Answer(text: "The Beach", type: .turtle),
-                Answer(text: "Alaska", type: .rabbit),
-                Answer(text: "The Jungle", type: .lion)
+                Answer(text: "Europe", type: .ravenclaw),
+                Answer(text: "I Would Rather Stay Home", type: .slytherin),
+                Answer(text: "The Mountains", type: .hufflepuff),
+                Answer(text: "The Jungle", type: .gryffindor)
             ],
             label: "Vacation"
         )

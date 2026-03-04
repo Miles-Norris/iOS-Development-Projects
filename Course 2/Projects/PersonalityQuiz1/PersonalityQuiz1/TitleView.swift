@@ -13,10 +13,10 @@ struct TitleView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 80) {
-                Text("What Animal Are You?")
-                    .font(.custom("ChalkboardSE-bold", size: 60))
+                Text("Which Hogwarts House Are You?")
+                    .font(.custom("ChalkboardSE-bold", size: 45))
                     .multilineTextAlignment(.center)
-                Image("Lion")
+                Image("HogwartsCrest")
                     .resizable()
                     .frame(width: 200, height: 200)
                 NavigationLink(destination: QuestionFlowView(question: quizManager.questionList[0], currentQuestionIndex: 0)) {

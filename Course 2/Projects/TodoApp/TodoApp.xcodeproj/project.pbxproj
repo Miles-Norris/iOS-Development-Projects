@@ -7,19 +7,19 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		4B259BA32F55E3FA00039A89 /* PersonalityQuiz1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PersonalityQuiz1.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4B6AA1462F5883BD0009BC09 /* TodoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TodoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		4B259BA52F55E3FA00039A89 /* PersonalityQuiz1 */ = {
+		4B6AA1482F5883BD0009BC09 /* TodoApp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = PersonalityQuiz1;
+			path = TodoApp;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		4B259BA02F55E3FA00039A89 /* Frameworks */ = {
+		4B6AA1432F5883BD0009BC09 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -29,18 +29,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		4B259B9A2F55E3FA00039A89 = {
+		4B6AA13D2F5883BD0009BC09 = {
 			isa = PBXGroup;
 			children = (
-				4B259BA52F55E3FA00039A89 /* PersonalityQuiz1 */,
-				4B259BA42F55E3FA00039A89 /* Products */,
+				4B6AA1482F5883BD0009BC09 /* TodoApp */,
+				4B6AA1472F5883BD0009BC09 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		4B259BA42F55E3FA00039A89 /* Products */ = {
+		4B6AA1472F5883BD0009BC09 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				4B259BA32F55E3FA00039A89 /* PersonalityQuiz1.app */,
+				4B6AA1462F5883BD0009BC09 /* TodoApp.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -48,64 +48,64 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		4B259BA22F55E3FA00039A89 /* PersonalityQuiz1 */ = {
+		4B6AA1452F5883BD0009BC09 /* TodoApp */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4B259BAE2F55E3FC00039A89 /* Build configuration list for PBXNativeTarget "PersonalityQuiz1" */;
+			buildConfigurationList = 4B6AA1512F5883BF0009BC09 /* Build configuration list for PBXNativeTarget "TodoApp" */;
 			buildPhases = (
-				4B259B9F2F55E3FA00039A89 /* Sources */,
-				4B259BA02F55E3FA00039A89 /* Frameworks */,
-				4B259BA12F55E3FA00039A89 /* Resources */,
+				4B6AA1422F5883BD0009BC09 /* Sources */,
+				4B6AA1432F5883BD0009BC09 /* Frameworks */,
+				4B6AA1442F5883BD0009BC09 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				4B259BA52F55E3FA00039A89 /* PersonalityQuiz1 */,
+				4B6AA1482F5883BD0009BC09 /* TodoApp */,
 			);
-			name = PersonalityQuiz1;
+			name = TodoApp;
 			packageProductDependencies = (
 			);
-			productName = PersonalityQuiz1;
-			productReference = 4B259BA32F55E3FA00039A89 /* PersonalityQuiz1.app */;
+			productName = TodoApp;
+			productReference = 4B6AA1462F5883BD0009BC09 /* TodoApp.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		4B259B9B2F55E3FA00039A89 /* Project object */ = {
+		4B6AA13E2F5883BD0009BC09 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 2600;
 				LastUpgradeCheck = 2600;
 				TargetAttributes = {
-					4B259BA22F55E3FA00039A89 = {
+					4B6AA1452F5883BD0009BC09 = {
 						CreatedOnToolsVersion = 26.0.1;
 					};
 				};
 			};
-			buildConfigurationList = 4B259B9E2F55E3FA00039A89 /* Build configuration list for PBXProject "PersonalityQuiz1" */;
+			buildConfigurationList = 4B6AA1412F5883BD0009BC09 /* Build configuration list for PBXProject "TodoApp" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
 			);
-			mainGroup = 4B259B9A2F55E3FA00039A89;
+			mainGroup = 4B6AA13D2F5883BD0009BC09;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
-			productRefGroup = 4B259BA42F55E3FA00039A89 /* Products */;
+			productRefGroup = 4B6AA1472F5883BD0009BC09 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				4B259BA22F55E3FA00039A89 /* PersonalityQuiz1 */,
+				4B6AA1452F5883BD0009BC09 /* TodoApp */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		4B259BA12F55E3FA00039A89 /* Resources */ = {
+		4B6AA1442F5883BD0009BC09 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -115,7 +115,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		4B259B9F2F55E3FA00039A89 /* Sources */ = {
+		4B6AA1422F5883BD0009BC09 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -125,7 +125,7 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		4B259BAC2F55E3FC00039A89 /* Debug */ = {
+		4B6AA14F2F5883BF0009BC09 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -188,7 +188,7 @@
 			};
 			name = Debug;
 		};
-		4B259BAD2F55E3FC00039A89 /* Release */ = {
+		4B6AA1502F5883BF0009BC09 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -244,14 +244,13 @@
 			};
 			name = Release;
 		};
-		4B259BAF2F55E3FC00039A89 /* Debug */ = {
+		4B6AA1522F5883BF0009BC09 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 8SS63Q4VXD;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -264,7 +263,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.miles.PersonalityQuiz1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.miles.TodoApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -276,14 +275,13 @@
 			};
 			name = Debug;
 		};
-		4B259BB02F55E3FC00039A89 /* Release */ = {
+		4B6AA1532F5883BF0009BC09 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 8SS63Q4VXD;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -296,7 +294,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.miles.PersonalityQuiz1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.miles.TodoApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -311,25 +309,25 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		4B259B9E2F55E3FA00039A89 /* Build configuration list for PBXProject "PersonalityQuiz1" */ = {
+		4B6AA1412F5883BD0009BC09 /* Build configuration list for PBXProject "TodoApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				4B259BAC2F55E3FC00039A89 /* Debug */,
-				4B259BAD2F55E3FC00039A89 /* Release */,
+				4B6AA14F2F5883BF0009BC09 /* Debug */,
+				4B6AA1502F5883BF0009BC09 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4B259BAE2F55E3FC00039A89 /* Build configuration list for PBXNativeTarget "PersonalityQuiz1" */ = {
+		4B6AA1512F5883BF0009BC09 /* Build configuration list for PBXNativeTarget "TodoApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				4B259BAF2F55E3FC00039A89 /* Debug */,
-				4B259BB02F55E3FC00039A89 /* Release */,
+				4B6AA1522F5883BF0009BC09 /* Debug */,
+				4B6AA1532F5883BF0009BC09 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 4B259B9B2F55E3FA00039A89 /* Project object */;
+	rootObject = 4B6AA13E2F5883BD0009BC09 /* Project object */;
 }

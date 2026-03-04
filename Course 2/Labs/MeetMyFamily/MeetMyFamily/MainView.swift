@@ -23,7 +23,7 @@ struct MainView: View {
                 }
                 .padding(.horizontal, 7)
                 .padding(.top, 140)
-            }`
+            }
             Text("Family")
                 .font(.custom("HiraginoSans-W8", size: 40))
                 .padding(20)
