@@ -9,6 +9,8 @@ import SwiftUI
 
 struct QuestionFlowView: View {
     @Environment(QuizManager.self) var quizManager
+    @Binding var isPresented: Bool
+    
     let question: Question
     var currentQuestionIndex: Int
     
@@ -29,13 +31,13 @@ struct QuestionFlowView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     if quizManager.questionList.count == currentQuestionIndex + 1 {
-                        NavigationLink(destination: ResultsView()) {
+                        NavigationLink(destination: ResultsView(isPresented: $isPresented)) {
                             Image(systemName: "chevron.right")
                                 .font(.system(size: 17))
                                 .foregroundStyle(Color.primary)
                         }
                     } else {
-                        NavigationLink(destination: QuestionFlowView(question: quizManager.questionList[currentQuestionIndex + 1], currentQuestionIndex: currentQuestionIndex + 1)) {
+                        NavigationLink(destination: QuestionFlowView(isPresented: $isPresented, question: quizManager.questionList[currentQuestionIndex + 1], currentQuestionIndex: currentQuestionIndex + 1)) {
                             Image(systemName: "chevron.right")
                                 .font(.system(size: 17))
                                 .foregroundStyle(Color.primary)

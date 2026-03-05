@@ -43,7 +43,7 @@ struct MultipleResponseSubview: View {
         }
         .font(.custom("ChalkboardSE-bold", size: 20))
         .tint(.cyan)
-        .padding(60)
+        .padding(45)
         .onChange(of: selectedAnswers) {
             quizManager.selectAnswers(selectedAnswers, label: question.label)
         }

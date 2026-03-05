@@ -112,6 +112,72 @@ class QuizManager {
                 Answer(text: "The Jungle", type: .gryffindor)
             ],
             label: "Vacation"
+        ),
+        Question(
+            text: "How do you usually approach risks?",
+            type: .ranged,
+            answers: [
+                Answer(text: "I avoid them whenever possible", type: .hufflepuff),
+                Answer(text: "I consider them carefully first", type: .ravenclaw),
+                Answer(text: "I take them if they seem worthwile", type: .slytherin),
+                Answer(text: "I jump in boldy", type: .gryffindor)
+            ],
+            label: "Risks"
+        ),
+        Question(
+            text: "Your teacher assigns a group project. What role do you naturally take?",
+            type: .single,
+            answers: [
+                Answer(text: "The leader", type: .gryffindor),
+                Answer(text: "The researcher", type: .ravenclaw),
+                Answer(text: "The organizer", type: .hufflepuff),
+                Answer(text: "The strategist", type: .slytherin)
+            ],
+            label: "Class Project"
+        ),
+        Question(
+            text: "What traits describe you?",
+            type: .multiple,
+            answers: [
+                Answer(text: "Daring", type: .slytherin),
+                Answer(text: "Curious", type: .ravenclaw),
+                Answer(text: "Calm", type: .hufflepuff),
+                Answer(text: "Determined", type: .gryffindor)
+            ],
+            label: "Traits"
+        ),
+        Question(
+            text: "How important is recognition for your acheivments?",
+            type: .ranged,
+            answers: [
+                Answer(text: "I don't care who notices", type: .hufflepuff),
+                Answer(text: "It's nice if people notice", type: .ravenclaw),
+                Answer(text: "I appreciate recognition", type: .gryffindor),
+                Answer(text: "I want my accomplishments to stand out", type: .slytherin)
+            ],
+            label: "Recognition"
+        ),
+        Question(
+            text: "What motivates you the most?",
+            type: .multiple,
+            answers: [
+                Answer(text: "Achieving success and recognition", type: .slytherin),
+                Answer(text: "Learning new things", type: .ravenclaw),
+                Answer(text: "Protecting the people you care about", type: .hufflepuff),
+                Answer(text: "Proving yourself in difficult situations", type: .gryffindor)
+            ],
+            label: "Traits"
+        ),
+        Question(
+            text: "How competitive are you?",
+            type: .ranged,
+            answers: [
+                Answer(text: "Not competitive at all", type: .hufflepuff),
+                Answer(text: "Slightly competitive", type: .ravenclaw),
+                Answer(text: "Competitive in the right situations", type: .gryffindor),
+                Answer(text: "Extremely competitive", type: .slytherin)
+            ],
+            label: "Competitveness"
         )
     ]
 }

@@ -19,6 +19,8 @@ struct SingleResponseSubview: View {
             Picker("\(question.text)", selection: $selectedChoice) {
                 ForEach(question.answers) { answer in
                     Text("\(answer.text)")
+                        .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
                         .tag(answer)
                 }
             }

@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct TitleView: View {
-    @State var quizManager = QuizManager()
-    
+    @State private var quizManager = QuizManager()
+    @State private var isPresented = false
     var body: some View {
         NavigationStack {
             VStack(spacing: 80) {
@@ -19,7 +19,9 @@ struct TitleView: View {
                 Image("HogwartsCrest")
                     .resizable()
                     .frame(width: 200, height: 200)
-                NavigationLink(destination: QuestionFlowView(question: quizManager.questionList[0], currentQuestionIndex: 0)) {
+                Button {
+                    isPresented = true
+                } label: {
                     RoundedRectangle(cornerSize: CGSize(width: 20, height: 30))
                         .frame(width: 200, height: 75)
                         .foregroundStyle(Color.cyan)
@@ -32,6 +34,9 @@ struct TitleView: View {
                                 .foregroundStyle(Color.white)
                         }
                 }
+            }
+            .navigationDestination(isPresented: $isPresented) {
+                QuestionFlowView(isPresented: $isPresented, question: quizManager.questionList[0], currentQuestionIndex: 0)
             }
         }
         .environment(quizManager)
