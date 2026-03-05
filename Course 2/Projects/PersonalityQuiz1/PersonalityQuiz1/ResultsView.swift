@@ -14,7 +14,7 @@ struct ResultsView: View {
     var body: some View {
         VStack(spacing: 75) {
             Text("You Belong in \(quizManager.result)!")
-                .font(.custom("ChalkboardSE-bold", size: 50))
+                .font(.custom("HoeflerText-Black", size: 50))
                 .multilineTextAlignment(.center)
             Image("\(quizManager.result)")
                 .resizable()
@@ -29,8 +29,8 @@ struct ResultsView: View {
                         RoundedRectangle(cornerSize: CGSize(width: 20, height: 30))
                             .stroke(Color.black, lineWidth: 8)
                         Text("Retake")
-                            .font(.custom("ChalkboardSE-bold", size: 35))
-                            .padding(.bottom, 10)
+                            .font(.custom("HoeflerText-Black", size: 35))
+                            .padding(.top, 5)
                             .foregroundStyle(Color.white)
                     }
             }

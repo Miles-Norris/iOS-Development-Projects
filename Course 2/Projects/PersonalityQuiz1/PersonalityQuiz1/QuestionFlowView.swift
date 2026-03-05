@@ -18,7 +18,7 @@ struct QuestionFlowView: View {
         NavigationStack {
             VStack {
                 Text("\(question.text)")
-                    .font(.custom("ChalkboardSE-bold", size: 20))
+                    .font(.custom("HoeflerText-Black", size: 20))
                 switch question.type {
                 case .single:
                     SingleResponseSubview(question: question)

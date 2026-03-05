@@ -14,7 +14,7 @@ struct TitleView: View {
         NavigationStack {
             VStack(spacing: 80) {
                 Text("Which Hogwarts House Are You?")
-                    .font(.custom("ChalkboardSE-bold", size: 45))
+                    .font(.custom("HoeflerText-Black", size: 45))
                     .multilineTextAlignment(.center)
                 Image("HogwartsCrest")
                     .resizable()
@@ -29,8 +29,8 @@ struct TitleView: View {
                             RoundedRectangle(cornerSize: CGSize(width: 20, height: 30))
                                 .stroke(Color.black, lineWidth: 8)
                             Text("Begin")
-                                .font(.custom("ChalkboardSE-bold", size: 35))
-                                .padding(.bottom, 10)
+                                .font(.custom("HoeflerText-Black", size: 35))
+                                .padding(.top, 5)
                                 .foregroundStyle(Color.white)
                         }
                 }

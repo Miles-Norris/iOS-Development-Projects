@@ -41,7 +41,7 @@ struct MultipleResponseSubview: View {
             Toggle(question.answers[2].text, isOn: $answer3)
             Toggle(question.answers[3].text, isOn: $answer4)
         }
-        .font(.custom("ChalkboardSE-bold", size: 20))
+        .font(.custom("HoeflerText-Black", size: 20))
         .tint(.cyan)
         .padding(45)
         .onChange(of: selectedAnswers) {

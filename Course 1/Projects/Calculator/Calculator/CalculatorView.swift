@@ -15,9 +15,25 @@ struct CalculatorView: View {
     var body: some View {
         
         GeometryReader { proxy in
-            let isPortrait = proxy.size.height >= proxy.size.width
             
-            VStack {
+            VStack(alignment: .trailing) {
+                
+                Button {
+                    viewModel.isHistoryShowing.toggle()
+                } label: {
+                    Circle()
+                        .frame(width: 50, height: 50)
+                        .foregroundStyle(Color.white)
+                        .shadow(radius: 4)
+                        .overlay {
+                            Image(systemName: "clock.arrow.trianglehead.counterclockwise.rotate.90")
+                                .resizable()
+                                .frame(width: 28, height: 24)
+                                .foregroundStyle(Color.black)
+                        }
+                        .padding(.trailing, 20)
+                }
+                
                 Spacer()
                 // This HStack hold the main text of the calculator
                 HStack {
@@ -30,6 +46,7 @@ struct CalculatorView: View {
                         .truncationMode(.head)
                         .minimumScaleFactor(0.4)
                 }
+                .padding(.horizontal, 15)
                 
                 // This is a grid of all the buttons on screen. the ForEach goes through all of the buttons in CalculatorButtonData and creates a CalculatorButtonSubview with the parameters given.
                 LazyVGrid(columns: [GridItem(), GridItem(), GridItem(), GridItem()], spacing: 7) {
@@ -37,16 +54,49 @@ struct CalculatorView: View {
                         CalculatorButtonSubView(
                             viewModel: $viewModel,
                             buttonClosure: button.buttonClosure,
-                            buttonWidth: isPortrait ? proxy.size.width / 4 - 12 : proxy.size.width / 4 - 75,
-                            buttonHeight: isPortrait ? proxy.size.height / 15 - 3 : proxy.size.height / 11,
-                            buttonLabelSize: button.buttonLabelSize + (proxy.size.width * proxy.size.height / 150000 - 2),
+                            buttonWidth: viewModel.deviceWidth / 4 - 12,
+                            buttonHeight: viewModel.deviceHeight / 15 - 3,
+                            buttonLabelSize: button.buttonLabelSize + (viewModel.deviceWidth * viewModel.deviceHeight / 150000 - 2),
                             buttonLabel: button.buttonLabel,
                             isSystemImage: button.isSystemImage
                         )
                     }
                 }
+                .padding(.horizontal, 15)
             }
-            .padding(.horizontal, isPortrait ? 15 : 140)
+            .overlay {
+                if viewModel.isHistoryShowing {
+                    ZStack(alignment: .top) {
+                        Color.black.opacity(0.35)
+                            .ignoresSafeArea()
+                            .onTapGesture {
+                                viewModel.isHistoryShowing = false
+                            }
+                        
+                        Text("History")
+                            .bold()
+                            .foregroundStyle(Color.black)
+                            .font(.custom("BodoniSvtyTwoITCTT-Bold", size: 35))
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 10)
+                            .background {
+                                Capsule()
+                                    .foregroundStyle(Color.white)
+                            }
+                    }
+                }
+            }
+            .sheet(isPresented: $viewModel.isHistoryShowing) {
+                HistoryView(viewModel: $viewModel, deviceWidth: $viewModel.deviceWidth, deviceHeight: $viewModel.deviceHeight)
+                    .presentationDetents([.medium])
+                    .presentationDragIndicator(.hidden)
+                    .interactiveDismissDisabled(true)
+                    .presentationBackgroundInteraction(.enabled)
+            }
+            .onAppear {
+                viewModel.deviceWidth = proxy.size.width
+                viewModel.deviceHeight = proxy.size.height
+            }
         }
     }
 }
