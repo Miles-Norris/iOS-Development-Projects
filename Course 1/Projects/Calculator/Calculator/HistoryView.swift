@@ -15,6 +15,7 @@ struct HistoryView: View {
         GeometryReader { proxy in
             let modalWidth = proxy.size.width
             let modalHeight = proxy.size.height
+            
             ScrollView(showsIndicators: false) {
                 VStack {
                     ForEach(viewModel.operationHistory, id: \.self) { operation in

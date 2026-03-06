@@ -14,6 +14,7 @@ struct CalculatorView: View {
     
     var body: some View {
         
+        // Used to get the size of the device that's currently being used. proxy has properties that we can use to change UI based on the device.
         GeometryReader { proxy in
             
             VStack(alignment: .trailing) {
@@ -67,6 +68,7 @@ struct CalculatorView: View {
                 .padding(.horizontal, 15)
             }
             .overlay {
+                // If the history is onscreen we want to add a dimming effect to the rest of the screen. As well as display the history title.
                 if viewModel.isHistoryShowing {
                     ZStack(alignment: .top) {
                         Color.black.opacity(0.35)

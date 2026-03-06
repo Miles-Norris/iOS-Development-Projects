@@ -56,6 +56,7 @@ class CalculatorViewModel {
         }
     }
     
+    // These are used with CalculatorView and HistoryView to create the history feature.
     var isHistoryShowing = false
     var operationHistory: [String] = []
     var lastOperation = ""
@@ -481,6 +482,7 @@ class CalculatorViewModel {
         return invalid
     }
     
+    // This runs when you select an operation from the history. It clears the current operation and replaces it with the one from history by running the button function for every input.
     func recallHistory(_ operation: String) {
         allClear()
         for character in operation {
