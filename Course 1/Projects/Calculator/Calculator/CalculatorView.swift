@@ -22,7 +22,7 @@ struct CalculatorView: View {
                     viewModel.isHistoryShowing.toggle()
                 } label: {
                     Circle()
-                        .frame(width: 50, height: 50)
+                        .frame(width: viewModel.deviceHeight / 15 - 3)
                         .foregroundStyle(Color.white)
                         .shadow(radius: 4)
                         .overlay {
@@ -30,8 +30,10 @@ struct CalculatorView: View {
                                 .resizable()
                                 .frame(width: 28, height: 24)
                                 .foregroundStyle(Color.black)
+                                .scaleEffect(1 + viewModel.deviceWidth * viewModel.deviceWidth / 1200000)
                         }
                         .padding(.trailing, 20)
+                        
                 }
                 
                 Spacer()
@@ -87,7 +89,7 @@ struct CalculatorView: View {
                 }
             }
             .sheet(isPresented: $viewModel.isHistoryShowing) {
-                HistoryView(viewModel: $viewModel, deviceWidth: $viewModel.deviceWidth, deviceHeight: $viewModel.deviceHeight)
+                HistoryView(viewModel: $viewModel)
                     .presentationDetents([.medium])
                     .presentationDragIndicator(.hidden)
                     .interactiveDismissDisabled(true)
