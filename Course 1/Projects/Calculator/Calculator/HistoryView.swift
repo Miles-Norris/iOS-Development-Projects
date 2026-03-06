@@ -22,7 +22,7 @@ struct HistoryView: View {
                         RoundedRectangle(cornerRadius: 20)
                             .frame(width: modalWidth - 30, height: modalHeight / 5 - 10)
                             .foregroundStyle(Color.white)
-                            .shadow(radius: 7)
+                            .shadow(radius: 10)
                             .overlay {
                                 Text(operation)
                                     .bold()

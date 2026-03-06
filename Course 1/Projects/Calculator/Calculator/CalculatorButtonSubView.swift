@@ -74,7 +74,7 @@ struct CalculatorButtonSubView: View {
             RoundedRectangle(cornerRadius: 20)
                 .frame(width: safeButtonWidth, height: safeButtonHeight)
                 .foregroundStyle(Color(buttonLabel == "MR" ? viewModel.mrButtonColor : .white))
-                .shadow(radius: 4)
+                .shadow(radius: 5)
                 .overlay {
                     if isSystemImage {
                         Image(systemName: buttonLabel)

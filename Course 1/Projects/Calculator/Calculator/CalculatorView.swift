@@ -14,7 +14,7 @@ struct CalculatorView: View {
     
     var body: some View {
         
-        // Used to get the size of the device that's currently being used. proxy has properties that we can use to change UI based on the device.
+        // Used to get the size of the device that's currently being used. proxy has properties like .size that we can use to change UI based on the device.
         GeometryReader { proxy in
             
             VStack(alignment: .trailing) {
@@ -25,13 +25,13 @@ struct CalculatorView: View {
                     Circle()
                         .frame(width: viewModel.deviceHeight / 15 - 3)
                         .foregroundStyle(Color.white)
-                        .shadow(radius: 4)
+                        .shadow(radius: 8)
                         .overlay {
                             Image(systemName: "clock.arrow.trianglehead.counterclockwise.rotate.90")
                                 .resizable()
                                 .frame(width: 28, height: 24)
                                 .foregroundStyle(Color.black)
-                                .scaleEffect(1 + viewModel.deviceWidth * viewModel.deviceWidth / 1200000)
+                                .scaleEffect(1 + viewModel.deviceWidth * viewModel.deviceWidth / 1400000)
                         }
                         .padding(.trailing, 20)
                         
@@ -53,7 +53,7 @@ struct CalculatorView: View {
                 
                 // This is a grid of all the buttons on screen. the ForEach goes through all of the buttons in CalculatorButtonData and creates a CalculatorButtonSubview with the parameters given.
                 LazyVGrid(columns: [GridItem(), GridItem(), GridItem(), GridItem()], spacing: 7) {
-                    ForEach(calculatorButtons) { button in
+                    ForEach(viewModel.calculatorButtons) { button in
                         CalculatorButtonSubView(
                             viewModel: $viewModel,
                             buttonClosure: button.buttonClosure,

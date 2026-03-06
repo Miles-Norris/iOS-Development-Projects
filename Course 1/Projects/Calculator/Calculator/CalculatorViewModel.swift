@@ -66,6 +66,8 @@ class CalculatorViewModel {
     
     // All button functions. Every operator button except open paren and square root will check to make sure the button pressed directly before it wasn't an invalid operator button (all of them except percantage) by running the isPreviousInvalidOperator func, and then commit all numbers that need to be added to the operation by checking for numbers that need to be commited and then calling commitNumbers. The operator buttons will then add itself to the operation in currentOperations, as well as currentWorkinValues in the Calculator struct.
     func exponentButton() {
+        checksForExtraDecimal()
+        
         guard !isPreviousInvalidOperator() else { return }
         
         if !numbersToBeCommited.isEmpty {
@@ -79,6 +81,8 @@ class CalculatorViewModel {
     
     // The sqrtButton and the openParen button will both check what the last input was. And then if necessary add an "x" to the end for implied multiplication.
     func sqrtButton() {
+        checksForExtraDecimal()
+        
         if !numbersToBeCommited.isEmpty {
             commitNumbers()
         }
@@ -98,6 +102,8 @@ class CalculatorViewModel {
     }
     
     func openParenButton() {
+        checksForExtraDecimal()
+        
         if !numbersToBeCommited.isEmpty {
             commitNumbers()
         }
@@ -115,6 +121,8 @@ class CalculatorViewModel {
     }
     
     func closeParenButton() {
+        checksForExtraDecimal()
+        
         guard !isPreviousInvalidOperator() else { return }
         
         if !numbersToBeCommited.isEmpty {
@@ -127,6 +135,8 @@ class CalculatorViewModel {
     
     // M+ and M- will perform the calculation without actually displaying it, and then save that result to the numberInMemory
     func memoryAddButton() {
+        checksForExtraDecimal()
+        
         guard currentOperations.last != "(" && currentOperations.last != "÷" && currentOperations.last != "×" && currentOperations.last != "-" && currentOperations.last != "+" && currentOperations.last != "^" else { return }
         
         if !numbersToBeCommited.isEmpty {
@@ -143,6 +153,8 @@ class CalculatorViewModel {
     }
     
     func memorySubtractButton() {
+        checksForExtraDecimal()
+        
         guard currentOperations.last != "(" && currentOperations.last != "÷" && currentOperations.last != "×" && currentOperations.last != "-" && currentOperations.last != "+" && currentOperations.last != "^" else { return }
         
         if !numbersToBeCommited.isEmpty {
@@ -254,6 +266,8 @@ class CalculatorViewModel {
     }
     
     func percentageButton() {
+        checksForExtraDecimal()
+        
         guard !isPreviousInvalidOperator() else { return }
         
         if !numbersToBeCommited.isEmpty {
@@ -266,6 +280,8 @@ class CalculatorViewModel {
     }
     
     func divisionButton() {
+        checksForExtraDecimal()
+        
         guard !isPreviousInvalidOperator() else { return }
         
         if !numbersToBeCommited.isEmpty {
@@ -278,6 +294,8 @@ class CalculatorViewModel {
     }
     
     func mulitplicationButton() {
+        checksForExtraDecimal()
+        
         guard !isPreviousInvalidOperator() else { return }
         
         if !numbersToBeCommited.isEmpty {
@@ -291,6 +309,8 @@ class CalculatorViewModel {
     
     // This button has a unique feature where instead of just running the isPreviousInvaildOperator func it will let you input a number as a negative number if there is an invalid operator directly before it.
     func subtractionButton() {
+        checksForExtraDecimal()
+        
         let last = currentOperations.last
         
         guard last != "-" else { return }
@@ -310,6 +330,8 @@ class CalculatorViewModel {
     }
     
     func additionButton() {
+        checksForExtraDecimal()
+        
         guard !isPreviousInvalidOperator() else { return }
         
         if !numbersToBeCommited.isEmpty {
@@ -323,6 +345,8 @@ class CalculatorViewModel {
     
     // This first runs the same as all the other operators, but this is treated as an alternate "=" button, it commits the numbersToBeCommited and then runs calculate() after passing in the operation. it then runs the format func on the result, as well as added the result to numbersToBeCommited.
     func signChangeButton() {
+        checksForExtraDecimal()
+        
         guard currentOperations.last != "(" && currentOperations.last != "÷" && currentOperations.last != "×" && currentOperations.last != "-" && currentOperations.last != "+" && currentOperations.last != "^" else { return }
         
         if !numbersToBeCommited.isEmpty {
@@ -353,6 +377,8 @@ class CalculatorViewModel {
     
     // This finalizes the operation by commiting all numbers that need to be commited, and then runs calculate(). it then call the format func using the result of the calculation, and then adds each digit of the result to numbersToBeCommited ignoring ",".
     func equalsButton() {
+        checksForExtraDecimal()
+        
         guard currentOperations.last != "(" && currentOperations.last != "÷" && currentOperations.last != "×" && currentOperations.last != "-" && currentOperations.last != "+" && currentOperations.last != "^" else { return }
         
         if !numbersToBeCommited.isEmpty {
@@ -472,6 +498,12 @@ class CalculatorViewModel {
         if currentOperations.isEmpty {
             numbersToBeCommited += ["0"]
             currentOperations += ["0"]
+        }
+    }
+    
+    func checksForExtraDecimal() {
+        if currentOperations.last == "." {
+            backspaceButton()
         }
     }
     

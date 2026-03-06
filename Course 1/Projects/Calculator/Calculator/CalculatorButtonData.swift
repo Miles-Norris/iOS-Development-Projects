@@ -8,7 +8,7 @@
 import Foundation
 
 
-extension CalculatorView {
+extension CalculatorViewModel {
     
     struct CalculatorButtons: Identifiable {
         var id: UUID = UUID()
@@ -40,142 +40,142 @@ extension CalculatorView {
 
     var calculatorButtons: [CalculatorButtons] { [
         CalculatorButtons(
-            buttonClosure: viewModel.exponentButton,
+            buttonClosure: exponentButton,
             buttonLabelSize: 22,
             buttonLabel: "^",
             isSystemImage: false),
         CalculatorButtons(
-            buttonClosure: viewModel.sqrtButton,
+            buttonClosure: sqrtButton,
             buttonLabelSize: 21,
             buttonLabel: "√",
             isSystemImage: false),
         CalculatorButtons(
-            buttonClosure: viewModel.openParenButton,
+            buttonClosure: openParenButton,
             buttonLabelSize: 21,
             buttonLabel: "(",
             isSystemImage: false),
         CalculatorButtons(
-            buttonClosure: viewModel.closeParenButton,
+            buttonClosure: closeParenButton,
             buttonLabelSize: 21,
             buttonLabel: ")",
             isSystemImage: false),
         CalculatorButtons(
-            buttonClosure: viewModel.memoryAddButton,
+            buttonClosure: memoryAddButton,
             buttonLabelSize: 18,
             buttonLabel: "M+",
             isSystemImage: false),
         CalculatorButtons(
-            buttonClosure: viewModel.memorySubtractButton,
+            buttonClosure: memorySubtractButton,
             buttonLabelSize: 18,
             buttonLabel: "M-",
             isSystemImage: false),
         CalculatorButtons(
-            buttonClosure: viewModel.memoryRecallButton,
+            buttonClosure: memoryRecallButton,
             buttonLabelSize: 18,
             buttonLabel: "MR",
             isSystemImage: false),
         CalculatorButtons(
-            buttonClosure: viewModel.memoryClearButton,
+            buttonClosure: memoryClearButton,
             buttonLabelSize: 18,
             buttonLabel: "MC",
             isSystemImage: false),
         CalculatorButtons(
-            buttonClosure: viewModel.backspaceButton,
+            buttonClosure: backspaceButton,
             buttonLabelSize: 18,
             buttonLabel: "delete.left",
             isSystemImage: true),
         CalculatorButtons(
-            buttonClosure: viewModel.allClear,
+            buttonClosure: allClear,
             buttonLabelSize: 18,
             buttonLabel: "AC",
             isSystemImage: false),
         CalculatorButtons(
-            buttonClosure: viewModel.percentageButton,
+            buttonClosure: percentageButton,
             buttonLabelSize: 22,
             buttonLabel: "%",
             isSystemImage: false),
         CalculatorButtons(
-            buttonClosure: viewModel.divisionButton,
+            buttonClosure: divisionButton,
             buttonLabelSize: 18,
             buttonLabel: "divide",
             isSystemImage: true),
         CalculatorButtons(
-            buttonClosure: viewModel.positiveNumberButton(_:),
+            buttonClosure: positiveNumberButton(_:),
             buttonLabelSize: 21,
             buttonLabel: "7",
             isSystemImage: false),
         CalculatorButtons(
-            buttonClosure: viewModel.positiveNumberButton(_:),
+            buttonClosure: positiveNumberButton(_:),
             buttonLabelSize: 21,
             buttonLabel: "8",
             isSystemImage: false),
         CalculatorButtons(
-            buttonClosure: viewModel.positiveNumberButton(_:),
+            buttonClosure: positiveNumberButton(_:),
             buttonLabelSize: 21,
             buttonLabel: "9",
             isSystemImage: false),
         CalculatorButtons(
-            buttonClosure: viewModel.mulitplicationButton,
+            buttonClosure: mulitplicationButton,
             buttonLabelSize: 18,
             buttonLabel: "multiply",
             isSystemImage: true),
         CalculatorButtons(
-            buttonClosure: viewModel.positiveNumberButton(_:),
+            buttonClosure: positiveNumberButton(_:),
             buttonLabelSize: 21,
             buttonLabel: "4",
             isSystemImage: false),
         CalculatorButtons(
-            buttonClosure: viewModel.positiveNumberButton(_:),
+            buttonClosure: positiveNumberButton(_:),
             buttonLabelSize: 21,
             buttonLabel: "5",
             isSystemImage: false),
         CalculatorButtons(
-            buttonClosure: viewModel.positiveNumberButton(_:),
+            buttonClosure: positiveNumberButton(_:),
             buttonLabelSize: 21,
             buttonLabel: "6",
             isSystemImage: false),
         CalculatorButtons(
-            buttonClosure: viewModel.subtractionButton,
+            buttonClosure: subtractionButton,
             buttonLabelSize: 17,
             buttonLabel: "minus",
             isSystemImage: true),
         CalculatorButtons(
-            buttonClosure: viewModel.positiveNumberButton(_:),
+            buttonClosure: positiveNumberButton(_:),
             buttonLabelSize: 21,
             buttonLabel: "1",
             isSystemImage: false),
         CalculatorButtons(
-            buttonClosure: viewModel.positiveNumberButton(_:),
+            buttonClosure: positiveNumberButton(_:),
             buttonLabelSize: 21,
             buttonLabel: "2",
             isSystemImage: false),
         CalculatorButtons(
-            buttonClosure: viewModel.positiveNumberButton(_:),
+            buttonClosure: positiveNumberButton(_:),
             buttonLabelSize: 21,
             buttonLabel: "3",
             isSystemImage: false),
         CalculatorButtons(
-            buttonClosure: viewModel.additionButton,
+            buttonClosure: additionButton,
             buttonLabelSize: 17,
             buttonLabel: "plus",
             isSystemImage: true),
         CalculatorButtons(
-            buttonClosure: viewModel.signChangeButton,
+            buttonClosure: signChangeButton,
             buttonLabelSize: 18,
             buttonLabel: "plus.forwardslash.minus",
             isSystemImage: true),
         CalculatorButtons(
-            buttonClosure: viewModel.zeroButton,
+            buttonClosure: zeroButton,
             buttonLabelSize: 21,
             buttonLabel: "0",
             isSystemImage: false),
         CalculatorButtons(
-            buttonClosure: viewModel.decimalButton,
+            buttonClosure: decimalButton,
             buttonLabelSize: 21,
             buttonLabel: ".",
             isSystemImage: false),
         CalculatorButtons(
-            buttonClosure: viewModel.equalsButton,
+            buttonClosure: equalsButton,
             buttonLabelSize: 18,
             buttonLabel: "equal",
             isSystemImage: true),
