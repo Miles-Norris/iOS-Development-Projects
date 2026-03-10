@@ -23,7 +23,7 @@ struct CalculatorView: View {
                     viewModel.isHistoryShowing.toggle()
                 } label: {
                     Circle()
-                        .frame(width: viewModel.deviceHeight / 15 - 3)
+                        .frame(width: max(viewModel.deviceHeight / 15 - 3, 1))
                         .foregroundStyle(Color.white)
                         .shadow(radius: 8)
                         .overlay {
@@ -31,7 +31,7 @@ struct CalculatorView: View {
                                 .resizable()
                                 .frame(width: 28, height: 24)
                                 .foregroundStyle(Color.black)
-                                .scaleEffect(1 + viewModel.deviceWidth * viewModel.deviceWidth / 1400000)
+                                .scaleEffect(0.75 + viewModel.deviceWidth * viewModel.deviceHeight / 1400000)
                         }
                         .padding(.trailing, 20)
                         

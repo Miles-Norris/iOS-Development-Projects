@@ -11,7 +11,7 @@ import Foundation
 extension CalculatorViewModel {
     
     struct CalculatorButtons: Identifiable {
-        var id: UUID = UUID()
+        let id: UUID = UUID()
         let buttonClosure: (String) -> Void
         let buttonLabelSize: CGFloat
         let buttonLabel: String

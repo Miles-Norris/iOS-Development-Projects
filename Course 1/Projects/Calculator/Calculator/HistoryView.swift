@@ -20,7 +20,7 @@ struct HistoryView: View {
                 VStack {
                     ForEach(viewModel.operationHistory, id: \.self) { operation in
                         RoundedRectangle(cornerRadius: 20)
-                            .frame(width: modalWidth - 30, height: modalHeight / 5 - 10)
+                            .frame(width: max(modalWidth - 30, 1), height: max(modalHeight / 5 - 10, 1))
                             .foregroundStyle(Color.white)
                             .shadow(radius: 10)
                             .overlay {
@@ -46,9 +46,4 @@ struct HistoryView: View {
             .defaultScrollAnchor(.bottom)
         }
     }
-}
-
-#Preview {
-    @Previewable @State var viewModel = CalculatorViewModel()
-    HistoryView(viewModel: $viewModel)
 }
