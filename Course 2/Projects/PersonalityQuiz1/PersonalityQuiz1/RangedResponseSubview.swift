@@ -49,6 +49,12 @@ struct RangedResponseSubview: View {
                     .multilineTextAlignment(.center)
             }
             .font(.custom("HoeflerText-Black", size: 12))
+            
+            Text(selectedAnswer.text)
+                .font(.custom("HoeflerText-Black", size: 20))
+                .bold()
+                .padding(.top, 50)
+                .multilineTextAlignment(.center)
         }
         .padding(.horizontal, 30)
         .padding(.top, 30)

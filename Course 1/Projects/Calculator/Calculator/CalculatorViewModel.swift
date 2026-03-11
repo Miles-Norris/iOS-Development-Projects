@@ -173,9 +173,19 @@ class CalculatorViewModel {
     // MR will first run code to check if there is currently a number at the end of the operation, and if so, replace that number with the number in memory by first looping through the numberInMemory, and then adding each digit to numbersToBeCommited. And then it will add itself to the currentOperations
     func memoryRecallButton() {
         if numberInMemory != nil {
+            
             numbersToBeCommited.removeAll()
-            while (!currentOperations.isEmpty && Double(currentOperations[currentOperations.count - 1]) != nil) || (!currentOperations.isEmpty && currentOperations[currentOperations.count - 1] == ".") {
+            
+            while (!currentOperations.isEmpty && Double(currentOperations[currentOperations.count - 1]) != nil) || (!currentOperations.isEmpty && currentOperations.last == ".") {
                 currentOperations.removeLast()
+            }
+            
+            if !currentOperations.isEmpty && currentOperations.last == "-" {
+                if currentOperations.count == 1 {
+                    currentOperations.removeLast()
+                } else if currentOperations[currentOperations.count - 2] == "(" || currentOperations[currentOperations.count - 2] == "÷" || currentOperations[currentOperations.count - 2] == "×" || currentOperations[currentOperations.count - 2] == "-" || currentOperations[currentOperations.count - 2] == "+" || currentOperations[currentOperations.count - 2] == "^" {
+                    currentOperations.removeLast()
+                }
             }
             
             if let validNumber = numberInMemory {

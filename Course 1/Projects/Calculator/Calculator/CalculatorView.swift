@@ -34,7 +34,6 @@ struct CalculatorView: View {
                                 .scaleEffect(0.75 + viewModel.deviceWidth * viewModel.deviceHeight / 1400000)
                         }
                         .padding(.trailing, 20)
-                        
                 }
                 
                 Spacer()

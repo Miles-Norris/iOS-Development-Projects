@@ -36,6 +36,7 @@ class QuizManager {
     func selectAnswers(_ answers: [Answer], label: String) {
         selectedAnswers[label] = answers
     }
+    
     func calculateResults() {
         var gryffindorPoints = 0
         var ravenclawPoints = 0

@@ -10,6 +10,7 @@ import SwiftUI
 struct TitleView: View {
     @State private var quizManager = QuizManager()
     @State private var isPresented = false
+    
     var body: some View {
         NavigationStack {
             VStack(spacing: 80) {
