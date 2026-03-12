@@ -16,6 +16,7 @@ extension Double {
 
 @Observable
 class CalculatorViewModel {
+    
     var calculator = Calculator()
     
     // This is a list of all of everything that should be displayed on the screen, it will usually be similar to what is in the currentWorkingValues list that is in the calculator, but not always.
@@ -49,7 +50,7 @@ class CalculatorViewModel {
     var numberInMemory: Double? = nil {
         willSet {
             if newValue != nil {
-                mrButtonColor = .cyan.opacity(0.2)
+                mrButtonColor = .lightCyan
             } else {
                 mrButtonColor = .white
             }
