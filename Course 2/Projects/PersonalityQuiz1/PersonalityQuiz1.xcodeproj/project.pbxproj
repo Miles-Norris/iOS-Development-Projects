@@ -8,6 +8,7 @@
 
 /* Begin PBXFileReference section */
 		4B259BA32F55E3FA00039A89 /* PersonalityQuiz1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PersonalityQuiz1.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4B6167162F6DA7E2009104FD /* PersonalityQuiz1.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = PersonalityQuiz1.xcodeproj; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -32,6 +33,7 @@
 		4B259B9A2F55E3FA00039A89 = {
 			isa = PBXGroup;
 			children = (
+				4B6167162F6DA7E2009104FD /* PersonalityQuiz1.xcodeproj */,
 				4B259BA52F55E3FA00039A89 /* PersonalityQuiz1 */,
 				4B259BA42F55E3FA00039A89 /* Products */,
 			);
@@ -42,6 +44,11 @@
 			children = (
 				4B259BA32F55E3FA00039A89 /* PersonalityQuiz1.app */,
 			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4B68DBE72F70AC7600F4E802 /* Products */ = {
+			isa = PBXGroup;
 			name = Products;
 			sourceTree = "<group>";
 		};
@@ -97,6 +104,12 @@
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 4B259BA42F55E3FA00039A89 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 4B68DBE72F70AC7600F4E802 /* Products */;
+					ProjectRef = 4B6167162F6DA7E2009104FD /* PersonalityQuiz1.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				4B259BA22F55E3FA00039A89 /* PersonalityQuiz1 */,
