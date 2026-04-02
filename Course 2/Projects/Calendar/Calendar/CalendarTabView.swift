@@ -10,13 +10,13 @@ import SwiftUI
 struct CalendarTabView: View {
     
     @State var currentDate: Date = Date()
-    @State var dayOfTheMonth: Int = 0
+    @State var dayOfTheMonth: Int = 1
     
     let calendar = Calendar.current
     
     var body: some View {
         TabView {
-            TodayView()
+            TodayView(date: currentDate)
                 .tabItem {
                     VStack {
                         Image(systemName: "\(dayOfTheMonth).calendar")

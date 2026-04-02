@@ -16,12 +16,12 @@ struct CalendarEntry: Identifiable {
     var codeChallengeName: String
     var wordOfTheDay: String
     var lessonOutline: LessonDescriptor
-    var readingDue: String?
-    var assignmentsDue: [Completable]?
-    var newAssignments: [Completable]?
+    var readingDue: [String]?
+    var assignmentsDue: [String]?
+    var newAssignments: [String]?
     
-    static var calendarEntrys: [CalendarEntry] = [
-        CalendarEntry(
+    static var calendarEntrys: [String: CalendarEntry] = [
+        "Jan 06": CalendarEntry(
             date: "Jan 06",
             lessonID: "SF02",
             lessonName: "Constants, Variables, and Basic Types",
@@ -29,10 +29,10 @@ struct CalendarEntry: Identifiable {
             codeChallengeName: "'Name, Age, and Pi' - Basic Constants & Variables",
             wordOfTheDay: "Compiler",
             lessonOutline: LessonOutline.lessonOutlines["Constants, Variables, and Basic Types"]!,
-            readingDue: "Swift Fundamentals 1.3",
-            newAssignments: [Assignment.assignments["Constants and Variables"]!]
+            readingDue: ["Swift Fundamentals 1.3"],
+            newAssignments: ["Constants and Variables"]
         ),
-        CalendarEntry(
+        "Jan 07": CalendarEntry(
             date: "Jan 07",
             lessonID: "SF03",
             lessonName: "Operators and Control Flow",
@@ -40,11 +40,11 @@ struct CalendarEntry: Identifiable {
             codeChallengeName: "'Colors, Numbers, Letters' - Control Flow, If Statements, Switch Statements",
             wordOfTheDay: "Console",
             lessonOutline: LessonOutline.lessonOutlines["Operators and Control Flow"]!,
-            readingDue: "Swift Fundamentals 1.4, 1.5",
-            assignmentsDue: [Assignment.assignments["Constants and Variables"]!],
-            newAssignments: [Assignment.assignments["Operators"]!, Assignment.assignments["Control Flow"]!]
+            readingDue: ["Swift Fundamentals 1.4", "Swift Funmdamentals 1.5"],
+            assignmentsDue: ["Constants and Variables"],
+            newAssignments: ["Operators", "Control Flow"]
         ),
-        CalendarEntry(
+        "Jan 08": CalendarEntry(
             date: "Jan 08",
             lessonID: "SF04",
             lessonName: "Strings",
@@ -52,9 +52,9 @@ struct CalendarEntry: Identifiable {
             codeChallengeName: "'Introduction Printer, Letter Counter, Number Adder' - String Interpolation, Basic Functions",
             wordOfTheDay: "Syntax",
             lessonOutline: LessonOutline.lessonOutlines["Strings"]!,
-            readingDue: "Swift Fundamental 2.2",
-            assignmentsDue: [Assignment.assignments["Operators"]!, Assignment.assignments["Control Flow"]!],
-            newAssignments: [Assignment.assignments["Strings"]!]
+            readingDue: ["Swift Fundamental 2.2"],
+            assignmentsDue: ["Operators", "Control Flow"],
+            newAssignments: ["Strings"]
         )
     ]
 }

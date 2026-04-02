@@ -14,13 +14,7 @@ struct LessonOutline: LessonDescriptor {
     
     static var lessonOutlines: [String: LessonOutline] = [
         "Constants, Variables, and Basic Types": LessonOutline(lessonMarkdown: """
-                ---
-                lessonID: SF02
-                repeatUntil: 
-                lessonName: Constants, Variables, and Basic Types
-                folder: 1 - Swift Fundamentals
-                ---
-                        
+                
                 # Constants, Variables, and Basic Types - *Aug 14, 2025*
                         
                 | Code Challenge | Word of the Day | Review Topics |
@@ -60,13 +54,7 @@ struct LessonOutline: LessonDescriptor {
                 
                 """),
         "Operators and Control Flow": LessonOutline(lessonMarkdown: """
-                ---
-                lessonID: SF03
-                repeatUntil: 
-                lessonName: Operators and Control Flow
-                folder: 1 - Swift Fundamentals
-                ---
-
+                
                 # Operators and Control Flow - *Aug 15, 2025*
 
                 | Code Challenge | Word of the Day | Review Topics |
@@ -119,12 +107,6 @@ struct LessonOutline: LessonDescriptor {
 
                 """),
         "Strings": LessonOutline(lessonMarkdown: """
-                ---
-                lessonID: SF04
-                repeatUntil: 
-                lessonName: Strings
-                folder: 1 - Swift Fundamentals
-                ---
 
                 # Strings - *Aug 18, 2025*
 

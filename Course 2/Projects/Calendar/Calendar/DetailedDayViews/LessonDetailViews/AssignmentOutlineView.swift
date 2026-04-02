@@ -6,13 +6,31 @@
 //
 
 import SwiftUI
+import MarkdownUI
 
 struct AssignmentOutlineView: View {
+    @Environment(\.dismiss) var dismiss
+    let assignmentOutline: Assignment
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationStack {
+            ScrollView {
+                Markdown(assignmentOutline.assignmentMarkdown)
+                    .markdownTheme(.gitHub)
+                    .padding()
+            }
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "multiply")
+                    }
+                }
+            }
+        }
     }
 }
 
 #Preview {
-    AssignmentOutlineView()
+    AssignmentOutlineView(assignmentOutline: Assignment.assignments["Operators"]!)
 }

@@ -6,13 +6,31 @@
 //
 
 import SwiftUI
+import MarkdownUI
 
 struct LessonOutlineView: View {
+    @Environment(\.dismiss) var dismiss
+    let lessonOutline: LessonOutline
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationStack {
+            ScrollView {
+                Markdown(lessonOutline.lessonMarkdown)
+                    .markdownTheme(.gitHub)
+                    .padding()
+            }
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "multiply")
+                    }
+                }
+            }
+        }
     }
 }
 
 #Preview {
-    LessonOutlineView()
+    LessonOutlineView(lessonOutline: LessonOutline.lessonOutlines["Strings"]!)
 }

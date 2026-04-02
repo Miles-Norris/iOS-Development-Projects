@@ -8,11 +8,31 @@
 import SwiftUI
 
 struct TodayView: View {
+    let date: Date
+    @State var formattedDate: String = ""
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ScrollView {
+            VStack {
+                if let today = CalendarEntry.calendarEntrys[formattedDate] {
+                    CalendarEntryDetailView(currentEntry: today)
+                } else {
+                    // Text("No Lesson Found For Today")
+                    // .foregroundStyle(Color.gray)
+                    // .font(.title2)
+                    // .bold()
+                    // .italic()
+                    // .padding(.top, 360)
+                    CalendarEntryDetailView(currentEntry: CalendarEntry.calendarEntrys["Jan 08"]!)
+                }
+            }
+            .frame(maxHeight: .infinity)
+        }
+        .onAppear {
+            formattedDate = date.formatted(.dateTime.month(.abbreviated).day(.twoDigits))
+        }
     }
 }
 
 #Preview {
-    TodayView()
+    TodayView(date: Date())
 }
