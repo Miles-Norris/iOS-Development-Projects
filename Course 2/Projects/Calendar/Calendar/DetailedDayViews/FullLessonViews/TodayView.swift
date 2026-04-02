@@ -9,11 +9,11 @@ import SwiftUI
 
 struct TodayView: View {
     let date: Date
-    @State var formattedDate: String = ""
+    @State var viewModel = TodayViewModel()
     var body: some View {
         ScrollView {
-            VStack {
-                if let today = CalendarEntry.calendarEntrys[formattedDate] {
+            VStack(alignment: .leading) {
+                if let today = viewModel.currentEntry {
                     CalendarEntryDetailView(currentEntry: today)
                 } else {
                     // Text("No Lesson Found For Today")
@@ -22,13 +22,22 @@ struct TodayView: View {
                     // .bold()
                     // .italic()
                     // .padding(.top, 360)
-                    CalendarEntryDetailView(currentEntry: CalendarEntry.calendarEntrys["Jan 08"]!)
+                    CalendarEntryDetailView(currentEntry: CalendarEntry.calendarEntrys[2])
                 }
+                Button {
+                    viewModel.submitFeedbackPressed()
+                } label: {
+                    Text("Submit Feedback")
+                }
+                .padding()
             }
             .frame(maxHeight: .infinity)
         }
+        .sheet(isPresented: $viewModel.isFeedbackFormDisplayed) {
+            FeedbackFormView()
+        }
         .onAppear {
-            formattedDate = date.formatted(.dateTime.month(.abbreviated).day(.twoDigits))
+            viewModel.initializeDate(date: date)
         }
     }
 }

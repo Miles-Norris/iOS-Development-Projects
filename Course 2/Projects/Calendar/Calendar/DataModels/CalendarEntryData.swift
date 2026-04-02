@@ -20,8 +20,8 @@ struct CalendarEntry: Identifiable {
     var assignmentsDue: [String]?
     var newAssignments: [String]?
     
-    static var calendarEntrys: [String: CalendarEntry] = [
-        "Jan 06": CalendarEntry(
+    static var calendarEntrys: [CalendarEntry] = [
+        CalendarEntry(
             date: "Jan 06",
             lessonID: "SF02",
             lessonName: "Constants, Variables, and Basic Types",
@@ -32,7 +32,7 @@ struct CalendarEntry: Identifiable {
             readingDue: ["Swift Fundamentals 1.3"],
             newAssignments: ["Constants and Variables"]
         ),
-        "Jan 07": CalendarEntry(
+        CalendarEntry(
             date: "Jan 07",
             lessonID: "SF03",
             lessonName: "Operators and Control Flow",
@@ -44,7 +44,7 @@ struct CalendarEntry: Identifiable {
             assignmentsDue: ["Constants and Variables"],
             newAssignments: ["Operators", "Control Flow"]
         ),
-        "Jan 08": CalendarEntry(
+        CalendarEntry(
             date: "Jan 08",
             lessonID: "SF04",
             lessonName: "Strings",

@@ -214,5 +214,5 @@ struct CalendarEntryDetailView: View {
 }
 
 #Preview {
-    CalendarEntryDetailView(currentEntry: CalendarEntry.calendarEntrys["Jan 08"]!)
+    CalendarEntryDetailView(currentEntry: CalendarEntry.calendarEntrys[2])
 }
