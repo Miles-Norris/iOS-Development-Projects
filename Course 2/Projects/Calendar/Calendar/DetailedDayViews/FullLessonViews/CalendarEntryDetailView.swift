@@ -79,7 +79,6 @@ struct CalendarEntryDetailView: View {
                     .padding(.bottom, 10)
                 
                 if let reading = currentEntry.readingDue, let assignments = currentEntry.assignmentsDue {
-                    
                     Text("Reading")
                         .font(.title2)
                         .bold()
@@ -204,11 +203,12 @@ struct CalendarEntryDetailView: View {
             }
             .padding(.horizontal, 20)
         }
+        // I have two different sheets here, one for the details of the lesson, and one that will display the details of any assignment that is tapped.
         .sheet(isPresented: $viewModel.isLessonOutlinePresented) {
             LessonOutlineView(lessonOutline: LessonOutline.lessonOutlines[currentEntry.lessonName]!)
         }
         .sheet(item: $viewModel.assignmentToDisplay) { assignmentToDisplay in
-                AssignmentOutlineView(assignmentOutline: assignmentToDisplay)
+            AssignmentOutlineView(assignment: $viewModel.assignmentToDisplay)
         }
     }
 }

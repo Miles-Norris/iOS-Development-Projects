@@ -19,6 +19,8 @@ class FeedbackFormViewModel {
     func allLessonsFiltered() {
         if !searchText.isEmpty {
             filteredLessons = CalendarEntry.calendarEntrys.filter { $0.lessonName.lowercased().contains(searchText.lowercased()) || $0.lessonID.lowercased().contains(searchText.lowercased()) || $0.date.lowercased().contains(searchText.lowercased()) }
+        } else {
+            filteredLessons = CalendarEntry.calendarEntrys
         }
     }
     

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CalendarTabView: View {
     
+    // We use today's date to both initialize the TodayView, and to update the tab item to reflect today's date.
     @State var currentDate: Date = Date()
     @State var dayOfTheMonth: Int = 1
     
@@ -16,7 +17,7 @@ struct CalendarTabView: View {
     
     var body: some View {
         TabView {
-            TodayView(date: currentDate)
+            TodayView(date: currentDate, viewModel: TodayViewModel())
                 .tabItem {
                     VStack {
                         Image(systemName: "\(dayOfTheMonth).calendar")

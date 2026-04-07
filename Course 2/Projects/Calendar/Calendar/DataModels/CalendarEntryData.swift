@@ -7,6 +7,7 @@
 
 import Foundation
 
+// The main model for a full calendar entry. It has an extension with a list of dummy entrys for now. It also has a collection for each course of the program that will contain all the lessons in that course.
 struct CalendarEntry: Identifiable {
     var id = UUID()
     var date: String
@@ -19,6 +20,9 @@ struct CalendarEntry: Identifiable {
     var readingDue: [String]?
     var assignmentsDue: [String]?
     var newAssignments: [String]?
+}
+
+extension CalendarEntry {
     
     static var calendarEntrys: [CalendarEntry] = [
         CalendarEntry(
@@ -57,4 +61,14 @@ struct CalendarEntry: Identifiable {
             newAssignments: ["Strings"]
         )
     ]
+    
+    static let swiftFundamentals = calendarEntrys.filter { $0.lessonID.hasPrefix("SF") }
+    static let tablesAndPersistence = calendarEntrys.filter { $0.lessonID.hasPrefix("TP") }
+    static let networkingAndDataStorage = calendarEntrys.filter { $0.lessonID.hasPrefix("ND") }
+    static let specialTopics = calendarEntrys.filter { $0.lessonID.hasPrefix("ST") }
+    static let fullAppDevelopment = calendarEntrys.filter { $0.lessonID.hasPrefix("FA") }
+    static let prototypeAndProjectPlanning = calendarEntrys.filter { $0.lessonID.hasPrefix("PC") }
+    static let groupCapstone = calendarEntrys.filter { $0.lessonID.hasPrefix("GC") }
+    
+    static let sections = ["Swift Fundamentals", "Tables And Persistence", "Networking And Data Storage", "Special Topics", "Full App Development", "Prototype And Project Planning", "Group Capstone"]
 }

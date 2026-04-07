@@ -32,6 +32,7 @@ struct FeedbackFormSelectView: View {
                             .textInputAutocapitalization(.none)
                             .autocorrectionDisabled(true)
                         
+                        // calls a function on the viewModel to clear the search bar.
                         if !viewModel.searchText.isEmpty {
                             Button {
                                 viewModel.searchBarClear()
@@ -46,6 +47,10 @@ struct FeedbackFormSelectView: View {
                     .background {
                         RoundedRectangle(cornerRadius: 25)
                             .fill(Color(.systemGray6))
+                        
+                        RoundedRectangle(cornerRadius: 25)
+                            .stroke(lineWidth: 2)
+                            .foregroundStyle(.gray)
                     }
                     Spacer()
                 }
@@ -53,6 +58,7 @@ struct FeedbackFormSelectView: View {
                 
                 ForEach(viewModel.filteredLessons) { lesson in
                     Button {
+                        // When a lesson is selected, it calls the viewModel to update lessonSelected which then displays the feedback form.
                         viewModel.lessonSelected(lesson: lesson)
                     } label: {
                         HStack(spacing: 12) {
@@ -85,6 +91,7 @@ struct FeedbackFormSelectView: View {
                 Spacer()
             }
             .padding()
+            // When ever the contents of the search bar change, a function on the viewModel is called to update the lesson shown.
             .onChange(of: viewModel.searchText) {
                 viewModel.allLessonsFiltered()
             }

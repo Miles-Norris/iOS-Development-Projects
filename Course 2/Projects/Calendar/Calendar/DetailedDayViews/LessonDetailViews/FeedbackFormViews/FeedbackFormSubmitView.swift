@@ -35,6 +35,10 @@ struct FeedbackFormSubmitView: View {
                     .background {
                         RoundedRectangle(cornerRadius: 25)
                             .fill(Color(.systemGray6))
+                        
+                        RoundedRectangle(cornerRadius: 25)
+                            .stroke(lineWidth: 2)
+                            .foregroundStyle(.gray)
                     }
                     .padding(.bottom, 30)
                 
@@ -48,6 +52,10 @@ struct FeedbackFormSubmitView: View {
                     .background {
                         RoundedRectangle(cornerRadius: 25)
                             .fill(Color(.systemGray6))
+                        
+                        RoundedRectangle(cornerRadius: 25)
+                            .stroke(lineWidth: 2)
+                            .foregroundStyle(.gray)
                     }
                     .padding(.bottom, 30)
                 
@@ -61,6 +69,10 @@ struct FeedbackFormSubmitView: View {
                     .background {
                         RoundedRectangle(cornerRadius: 25)
                             .fill(Color(.systemGray6))
+                        
+                        RoundedRectangle(cornerRadius: 25)
+                            .stroke(lineWidth: 2)
+                            .foregroundStyle(.gray)
                     }
                     .padding(.bottom, 30)
                 
@@ -68,6 +80,7 @@ struct FeedbackFormSubmitView: View {
                     Spacer()
                     
                     Button {
+                        // Does nothing right now, will later make a network call.
                         dismiss()
                     } label: {
                         Text("Submit")

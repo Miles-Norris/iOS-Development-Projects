@@ -14,6 +14,7 @@ struct LessonOutlineView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
+                // Uses the MarkdownUI framework to display markdown data in a nice format.
                 Markdown(lessonOutline.lessonMarkdown)
                     .markdownTheme(.gitHub)
                     .padding()

@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct CalendarEntrySubview: View {
+    @Environment(\.colorScheme) var colorScheme
     let calendarEntry: CalendarEntry
     var body: some View {
         HStack {
@@ -40,12 +41,12 @@ struct CalendarEntrySubview: View {
         .padding()
         .background {
             RoundedRectangle(cornerRadius: 15)
-                .foregroundStyle(.white)
-                .shadow(radius: 10)
+                .foregroundStyle(colorScheme == .dark ? .black : .white)
+                .shadow(color: colorScheme == .dark ? .white.opacity(0.3) : .black.opacity(0.15), radius: 5, x: 0, y: 0)
         }
-        .frame(minWidth: 365)
-        .frame(maxWidth: 365)
-        .padding(.bottom, 10)
+        .frame(minWidth: 350)
+        .frame(maxWidth: 350)
+        .padding(.bottom, 8)
     }
 }
 

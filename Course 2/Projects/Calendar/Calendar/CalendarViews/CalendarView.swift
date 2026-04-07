@@ -8,28 +8,21 @@
 import SwiftUI
 
 struct CalendarView: View {
-    @State var swiftFundamentals = CalendarEntry.calendarEntrys.filter { $0.lessonID.hasPrefix("SF") }
-    @State var tablesAndPersistence = CalendarEntry.calendarEntrys.filter { $0.lessonID.hasPrefix("TP") }
-    @State var networkingAndDataStorage = CalendarEntry.calendarEntrys.filter { $0.lessonID.hasPrefix("ND") }
-    @State var specialTopics = CalendarEntry.calendarEntrys.filter { $0.lessonID.hasPrefix("ST") }
-    @State var fullAppDevelopment = CalendarEntry.calendarEntrys.filter { $0.lessonID.hasPrefix("FA") }
-    @State var prototypeAndProjectPlanning = CalendarEntry.calendarEntrys.filter { $0.lessonID.hasPrefix("PC") }
-    @State var groupCapstone = CalendarEntry.calendarEntrys.filter { $0.lessonID.hasPrefix("GC") }
+    @State var sectionsWithData: [String: [CalendarEntry]] = [:]
+    
+    // To display all of our lessons, it uses a subview for each course of the program that displays all the lessons in that course
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading) {
-                    if !swiftFundamentals.isEmpty {
-                        Text("Swift Fundamentals")
-                            .font(.system(size: 35))
-                            .bold()
-                        
-                        ForEach(swiftFundamentals) { lesson in
-                            CalendarEntrySubview(calendarEntry: lesson)
-                        }
+                    ForEach(CalendarEntry.sections, id: \.self) { section in
+                        CalendarSectionSubview(section: sectionsWithData[section] ?? CalendarEntry.swiftFundamentals, sectionTitle: section)
                     }
                 }
                 .frame(maxWidth: .infinity)
+            }
+            .onAppear {
+                sectionsWithData = ["Swift Fundamentals": CalendarEntry.swiftFundamentals, "Tables And Persistence": CalendarEntry.tablesAndPersistence, "Networking And Data Storage": CalendarEntry.networkingAndDataStorage, "Special Topics": CalendarEntry.specialTopics, "Full App Development": CalendarEntry.fullAppDevelopment, "Prototype And Project Planning": CalendarEntry.prototypeAndProjectPlanning, "Group Capstone": CalendarEntry.groupCapstone]
             }
         }
     }

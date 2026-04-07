@@ -9,8 +9,12 @@ import Foundation
 
 protocol LessonDescriptor { }
 
+// This is how we display the detailed lesson description. it has a dummy list for the moment.
 struct LessonOutline: LessonDescriptor {
     var lessonMarkdown: String
+}
+
+extension LessonOutline {
     
     static var lessonOutlines: [String: LessonOutline] = [
         "Constants, Variables, and Basic Types": LessonOutline(lessonMarkdown: """
