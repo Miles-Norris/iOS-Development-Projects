@@ -66,7 +66,7 @@ struct CalendarEntryDetailView: View {
                     .font(.system(size: 45))
                     .bold()
                     .underline()
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(Color.accentColor)
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
                     .padding(.vertical, 5)
@@ -158,7 +158,7 @@ struct CalendarEntryDetailView: View {
                                 .bold()
                                 .font(.body)
                                 .underline()
-                                .foregroundStyle(.blue)
+                                .foregroundStyle(Color.accentColor)
                                 .padding(.vertical, 3)
                                 .padding(.horizontal, 8)
                                 .onTapGesture {
@@ -197,7 +197,7 @@ struct CalendarEntryDetailView: View {
                                 .bold()
                                 .font(.title3)
                                 .underline()
-                                .foregroundStyle(.blue)
+                                .foregroundStyle(Color.accentColor)
                                 .padding(.vertical, 3)
                                 .padding(.horizontal, 8)
                                 .onTapGesture {
