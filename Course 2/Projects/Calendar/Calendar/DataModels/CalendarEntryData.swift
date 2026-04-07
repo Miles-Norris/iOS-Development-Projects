@@ -56,7 +56,7 @@ extension CalendarEntry {
             codeChallengeName: "'Introduction Printer, Letter Counter, Number Adder' - String Interpolation, Basic Functions",
             wordOfTheDay: "Syntax",
             lessonOutline: LessonOutline.lessonOutlines["Strings"]!,
-            readingDue: ["Swift Fundamental 2.2"],
+            readingDue: ["Swift Fundamentals 2.2"],
             assignmentsDue: ["Operators", "Control Flow"],
             newAssignments: ["Strings"]
         )
