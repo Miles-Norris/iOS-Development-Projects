@@ -20,7 +20,7 @@ struct CalendarSectionSubview: View {
                 
                 // This goes another level deeper into the subviews and creates a CalendarEntrySubview for each lesson in this section.
                 ForEach(section) { lesson in
-                    NavigationLink(destination: CalendarEntryDetailView(currentEntry: lesson)) {
+                    NavigationLink(destination: CalendarEntryDetailView(currentEntry: lesson, viewModel: CalendarEntryDetailViewModel())) {
                         CalendarEntrySubview(calendarEntry: lesson)
                     }
                     .buttonStyle(.plain)

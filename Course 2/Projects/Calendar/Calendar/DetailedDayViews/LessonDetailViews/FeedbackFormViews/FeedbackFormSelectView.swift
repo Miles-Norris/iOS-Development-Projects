@@ -21,73 +21,10 @@ struct FeedbackFormSelectView: View {
                     Spacer()
                 }
                 
-                HStack {
-                    Spacer()
-                    HStack {
-                        Image(systemName: "magnifyingglass")
-                            .foregroundStyle(.secondary)
-                        
-                        TextField("Search", text: $viewModel.searchText)
-                            .frame(width: 250, height: 50)
-                            .textInputAutocapitalization(.none)
-                            .autocorrectionDisabled(true)
-                        
-                        // calls a function on the viewModel to clear the search bar.
-                        if !viewModel.searchText.isEmpty {
-                            Button {
-                                viewModel.searchBarClear()
-                            } label: {
-                                Image(systemName: "xmark.circle.fill")
-                                    .foregroundStyle(.secondary)
-                            }
-                            .buttonStyle(.plain)
-                        }
-                    }
-                    .padding(.horizontal)
-                    .background {
-                        RoundedRectangle(cornerRadius: 25)
-                            .fill(Color(.systemGray6))
-                        
-                        RoundedRectangle(cornerRadius: 25)
-                            .stroke(lineWidth: 2)
-                            .foregroundStyle(.gray)
-                    }
-                    Spacer()
-                }
-                .padding(.bottom)
+                SearchBarView(viewModel: $viewModel)
                 
-                ForEach(viewModel.filteredLessons) { lesson in
-                    Button {
-                        // When a lesson is selected, it calls the viewModel to update lessonSelected which then displays the feedback form.
-                        viewModel.lessonSelected(lesson: lesson)
-                    } label: {
-                        HStack(spacing: 12) {
-                            Image(systemName: "book.closed")
-                                .font(.title3)
-                                .foregroundStyle(.secondary)
-                            
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text(lesson.lessonName)
-                                    .font(.headline)
-                                
-                                Text("\(lesson.lessonID) • \(lesson.date)")
-                                    .font(.subheadline)
-                                    .foregroundStyle(.secondary)
-                                    .lineLimit(1)
-                                    .truncationMode(.tail)
-                            }
-                            
-                            Spacer()
-                            
-                            Image(systemName: "chevron.right")
-                                .font(.footnote)
-                                .foregroundStyle(.tertiary)
-                        }
-                        .contentShape(Rectangle())
-                        .padding(.vertical, 8)
-                    }
-                    .buttonStyle(.plain)
-                }
+                LessonListView(viewModel: viewModel)
+                
                 Spacer()
             }
             .padding()
@@ -103,6 +40,86 @@ struct FeedbackFormSelectView: View {
                         Image(systemName: "multiply")
                     }
                 }
+            }
+        }
+    }
+    
+    struct SearchBarView: View {
+        @Binding var viewModel: FeedbackFormViewModel
+        
+        var body: some View {
+            HStack {
+                Spacer()
+                HStack {
+                    Image(systemName: "magnifyingglass")
+                        .foregroundStyle(.secondary)
+                    
+                    TextField("Search", text: $viewModel.searchText)
+                        .frame(width: 250, height: 50)
+                        .textInputAutocapitalization(.none)
+                        .autocorrectionDisabled(true)
+                    
+                    // calls a function on the viewModel to clear the search bar.
+                    if !viewModel.searchText.isEmpty {
+                        Button {
+                            viewModel.searchBarClear()
+                        } label: {
+                            Image(systemName: "xmark.circle.fill")
+                                .foregroundStyle(.secondary)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+                .padding(.horizontal)
+                .background {
+                    RoundedRectangle(cornerRadius: 25)
+                        .fill(Color(.systemGray6))
+                    
+                    RoundedRectangle(cornerRadius: 25)
+                        .stroke(lineWidth: 2)
+                        .foregroundStyle(.gray)
+                }
+                Spacer()
+            }
+            .padding(.bottom)
+        }
+    }
+    
+    struct LessonListView: View {
+        let viewModel: FeedbackFormViewModel
+        
+        var body: some View {
+            ForEach(viewModel.filteredLessons) { lesson in
+                Button {
+                    // When a lesson is selected, it calls the viewModel to update lessonSelected which then displays the feedback form.
+                    viewModel.lessonSelected(lesson: lesson)
+                } label: {
+                    HStack(spacing: 12) {
+                        Image(systemName: "book.closed")
+                            .font(.title3)
+                            .foregroundStyle(.secondary)
+                        
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(lesson.lessonName)
+                                .font(.headline)
+                            
+                            Text("\(lesson.lessonID) • \(lesson.date)")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                                .lineLimit(1)
+                                .truncationMode(.tail)
+                        }
+                        
+                        Spacer()
+                        
+                        Image(systemName: "chevron.right")
+                            .font(.footnote)
+                            .foregroundStyle(.tertiary)
+                    }
+                    .contentShape(Rectangle())
+                    .padding(.vertical, 8)
+                }
+                .buttonStyle(.plain)
             }
         }
     }

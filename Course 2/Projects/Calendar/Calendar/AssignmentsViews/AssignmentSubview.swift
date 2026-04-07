@@ -42,6 +42,7 @@ struct AssignmentSubview: View {
             
             Image(systemName: assignment.isComplete ? "checkmark.square" : "square")
                 .font(.system(size: 28))
+                .padding(.horizontal, 10)
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 8)
