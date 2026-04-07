@@ -25,7 +25,7 @@ struct CalendarTabView: View {
                     }
                 }
             
-            CalendarView()
+            CalendarView(viewModel: CalendarViewModel())
                 .tabItem {
                     VStack {
                         Image(systemName: "calendar")
@@ -33,7 +33,7 @@ struct CalendarTabView: View {
                     }
                 }
             
-            AssignmentsView()
+            AssignmentsView(viewModel: AssignmentsViewModel())
                 .tabItem {
                     VStack {
                         Image(systemName: "text.document")
@@ -44,6 +44,7 @@ struct CalendarTabView: View {
         .onAppear {
             currentDate = Date()
             dayOfTheMonth = calendar.component(.day, from: currentDate)
+            Assignment.filterAssignments()
         }
     }
 }
