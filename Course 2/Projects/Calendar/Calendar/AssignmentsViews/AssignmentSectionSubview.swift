@@ -14,9 +14,10 @@ struct AssignmentSectionSubview: View {
     var body: some View {
         if !section.isEmpty {
             Text(sectionTitle)
-                .font(.system(size: 35))
+                .font(.system(size: 30, design: .rounded))
                 .bold()
-                .padding(.vertical)
+                .padding(.top)
+                .padding(.top, sectionTitle == "Swift Fundamentals" ? 0 : 15)
             
             ForEach(section) { assignment in
                 Button {
@@ -25,6 +26,7 @@ struct AssignmentSectionSubview: View {
                     AssignmentSubview(assignment: assignment)
                 }
                 .buttonStyle(.plain)
+                .padding(.vertical, 4)
             }
         }
     }

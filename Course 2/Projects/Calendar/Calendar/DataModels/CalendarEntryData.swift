@@ -7,68 +7,67 @@
 
 import Foundation
 
-// The main model for a full calendar entry. It has an extension with a list of dummy entrys for now. It also has a collection for each course of the program that will contain all the lessons in that course.
-struct CalendarEntry: Identifiable {
-    var id = UUID()
+struct CalendarEntry: Codable, Identifiable, Equatable, Comparable {
+    static func < (lhs: CalendarEntry, rhs: CalendarEntry) -> Bool {
+        let leftNum: Int = {
+            guard let id = lhs.dayID else { return Int.min }
+            let suffix = String(id.suffix(2))
+            return Int(suffix) ?? Int.min
+        }()
+        let rightNum: Int = {
+            guard let id = rhs.dayID else { return Int.min }
+            let suffix = String(id.suffix(2))
+            return Int(suffix) ?? Int.min
+        }()
+        return leftNum < rightNum
+    }
+    
+    var id: UUID
     var date: String
-    var lessonID: String
-    var lessonName: String
-    var mainObjective: String
-    var codeChallengeName: String
-    var wordOfTheDay: String
-    var lessonOutline: LessonDescriptor
-    var readingDue: [String]?
-    var assignmentsDue: [String]?
-    var newAssignments: [String]?
+    var holiday: Bool
+    var dayID: String?
+    var lessonName: String?
+    var lessonID: UUID?
+    var mainObjective: String?
+    var readingDue: String?
+    var assignmentsDue: [Assignment]
+    var newAssignments: [Assignment]
+    var dailyCodeChallengeName: String?
+    var wordOfTheDay: String?
+    
 }
 
-extension CalendarEntry {
+@Observable
+class CalendarStore: Equatable {
     
-    static var calendarEntrys: [CalendarEntry] = [
-        CalendarEntry(
-            date: "Jan 06",
-            lessonID: "SF02",
-            lessonName: "Constants, Variables, and Basic Types",
-            mainObjective: "Define and use variables and constants.",
-            codeChallengeName: "'Name, Age, and Pi' - Basic Constants & Variables",
-            wordOfTheDay: "Compiler",
-            lessonOutline: LessonOutline.lessonOutlines["Constants, Variables, and Basic Types"]!,
-            readingDue: ["Swift Fundamentals 1.3"],
-            newAssignments: ["Constants and Variables"]
-        ),
-        CalendarEntry(
-            date: "Jan 07",
-            lessonID: "SF03",
-            lessonName: "Operators and Control Flow",
-            mainObjective: "Use mathematical opeerators, comparison operators, and logical operators. Control application flow.",
-            codeChallengeName: "'Colors, Numbers, Letters' - Control Flow, If Statements, Switch Statements",
-            wordOfTheDay: "Console",
-            lessonOutline: LessonOutline.lessonOutlines["Operators and Control Flow"]!,
-            readingDue: ["Swift Fundamentals 1.4", "Swift Funmdamentals 1.5"],
-            assignmentsDue: ["Constants and Variables"],
-            newAssignments: ["Operators", "Control Flow"]
-        ),
-        CalendarEntry(
-            date: "Jan 08",
-            lessonID: "SF04",
-            lessonName: "Strings",
-            mainObjective: "Use Swift Strings, including creating, combining, and manipulating them.",
-            codeChallengeName: "'Introduction Printer, Letter Counter, Number Adder' - String Interpolation, Basic Functions",
-            wordOfTheDay: "Syntax",
-            lessonOutline: LessonOutline.lessonOutlines["Strings"]!,
-            readingDue: ["Swift Fundamentals 2.2"],
-            assignmentsDue: ["Operators", "Control Flow"],
-            newAssignments: ["Strings"]
-        )
-    ]
+    static func == (lhs: CalendarStore, rhs: CalendarStore) -> Bool {
+        lhs.calendarEntries == rhs.calendarEntries
+    }
     
-    static let swiftFundamentals = calendarEntrys.filter { $0.lessonID.hasPrefix("SF") }
-    static let tablesAndPersistence = calendarEntrys.filter { $0.lessonID.hasPrefix("TP") }
-    static let networkingAndDataStorage = calendarEntrys.filter { $0.lessonID.hasPrefix("ND") }
-    static let specialTopics = calendarEntrys.filter { $0.lessonID.hasPrefix("ST") }
-    static let fullAppDevelopment = calendarEntrys.filter { $0.lessonID.hasPrefix("FA") }
-    static let prototypeAndProjectPlanning = calendarEntrys.filter { $0.lessonID.hasPrefix("PC") }
-    static let groupCapstone = calendarEntrys.filter { $0.lessonID.hasPrefix("GC") }
+    var calendarEntries: [CalendarEntry] = []
+    
+    var swiftFundamentals: [CalendarEntry] { calendarEntries.filter { $0.dayID?.hasPrefix("SF") == true } }
+    var tablesAndPersistence: [CalendarEntry] { calendarEntries.filter { $0.dayID?.hasPrefix("TP") == true } }
+    var networkingAndDataStorage: [CalendarEntry] { calendarEntries.filter { $0.dayID?.hasPrefix("ND") == true } }
+    var specialTopics: [CalendarEntry] { calendarEntries.filter { $0.dayID?.hasPrefix("ST") == true } }
+    var fullAppDevelopment: [CalendarEntry] { calendarEntries.filter { $0.dayID?.hasPrefix("FA") == true } }
+    var prototypeAndProjectPlanning: [CalendarEntry] { calendarEntries.filter { $0.dayID?.hasPrefix("PC") == true } }
+    var groupCapstone: [CalendarEntry] { calendarEntries.filter { $0.dayID?.hasPrefix("GC") == true } }
     
     static let sections = ["Swift Fundamentals", "Tables And Persistence", "Networking And Data Storage", "Special Topics", "Full App Development", "Prototype And Project Planning", "Group Capstone"]
+    
+    static func allLessonsSorted(store: CalendarStore) -> [CalendarEntry] {
+        var result: [CalendarEntry] = []
+        
+        result += store.swiftFundamentals.sorted { $0 < $1 }
+        result += store.tablesAndPersistence.sorted { $0 < $1 }
+        result += store.networkingAndDataStorage.sorted { $0 < $1 }
+        result += store.specialTopics.sorted { $0 < $1 }
+        result += store.fullAppDevelopment.sorted { $0 < $1 }
+        result += store.prototypeAndProjectPlanning.sorted { $0 < $1 }
+        result += store.groupCapstone.sorted { $0 < $1 }
+        
+        return result
+    }
 }
+

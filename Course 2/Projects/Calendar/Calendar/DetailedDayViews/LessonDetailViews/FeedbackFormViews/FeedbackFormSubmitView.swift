@@ -21,7 +21,7 @@ struct FeedbackFormSubmitView: View {
                 
                 Question3View(viewModel: $viewModel)
                
-                SubmitButtonView()
+                SubmitButtonView(viewModel: viewModel)
                
                 Spacer()
             }
@@ -45,11 +45,12 @@ struct FeedbackFormSubmitView: View {
             HStack {
                 Spacer()
                 Text(viewModel.selectedLesson?.lessonName ?? "")
-                    .font(.system(size: 40))
+                    .font(.system(size: 40, design: .rounded))
                     .bold()
                     .lineLimit(2)
                     .minimumScaleFactor(0.5)
                     .padding()
+                    .multilineTextAlignment(.center)
                 Spacer()
             }
             .padding(.bottom, 40)
@@ -58,6 +59,7 @@ struct FeedbackFormSubmitView: View {
     
     struct Question1View: View {
         @Binding var viewModel: FeedbackFormViewModel
+        @Environment(\.colorScheme) var colorScheme
         
         var body: some View {
             Text("What went well in today's lesson?")
@@ -70,17 +72,15 @@ struct FeedbackFormSubmitView: View {
                 .background {
                     RoundedRectangle(cornerRadius: 25)
                         .fill(Color(.systemGray6))
-                    
-                    RoundedRectangle(cornerRadius: 25)
-                        .stroke(lineWidth: 2)
-                        .foregroundStyle(.gray)
                 }
+                .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.35 : 0.08), radius: 10, x: 0, y: 6)
                 .padding(.bottom, 30)
         }
     }
     
     struct Question2View: View {
         @Binding var viewModel: FeedbackFormViewModel
+        @Environment(\.colorScheme) var colorScheme
         
         var body: some View {
             Text("What are you still confused about?")
@@ -93,17 +93,15 @@ struct FeedbackFormSubmitView: View {
                 .background {
                     RoundedRectangle(cornerRadius: 25)
                         .fill(Color(.systemGray6))
-                    
-                    RoundedRectangle(cornerRadius: 25)
-                        .stroke(lineWidth: 2)
-                        .foregroundStyle(.gray)
                 }
+                .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.35 : 0.08), radius: 10, x: 0, y: 6)
                 .padding(.bottom, 30)
         }
     }
     
     struct Question3View: View {
         @Binding var viewModel: FeedbackFormViewModel
+        @Environment(\.colorScheme) var colorScheme
         
         var body: some View {
             Text("What Suggestions for activities or changes to the lesson do you have?")
@@ -116,11 +114,8 @@ struct FeedbackFormSubmitView: View {
                 .background {
                     RoundedRectangle(cornerRadius: 25)
                         .fill(Color(.systemGray6))
-                    
-                    RoundedRectangle(cornerRadius: 25)
-                        .stroke(lineWidth: 2)
-                        .foregroundStyle(.gray)
                 }
+                .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.35 : 0.08), radius: 10, x: 0, y: 6)
                 .padding(.bottom, 30)
             
         }
@@ -128,13 +123,21 @@ struct FeedbackFormSubmitView: View {
     
     struct SubmitButtonView: View {
         @Environment(\.dismiss) var dismiss
+        @Environment(\.colorScheme) var colorScheme
+        let viewModel: FeedbackFormViewModel
         var body: some View {
             HStack {
                 Spacer()
                 
                 Button {
-                    // Does nothing right now, will later make a network call.
-                    dismiss()
+                    Task {
+                        do {
+                            try await viewModel.submitLessonFeedback()
+                            dismiss()
+                        } catch {
+                            print(error.localizedDescription)
+                        }
+                    }
                 } label: {
                     Text("Submit")
                         .font(.title2)
@@ -145,6 +148,7 @@ struct FeedbackFormSubmitView: View {
                         .background {
                             Capsule()
                         }
+                        .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.35 : 0.08), radius: 10, x: 0, y: 6)
                 }
                 
                 Spacer()

@@ -9,22 +9,54 @@ import SwiftUI
 import MarkdownUI
 
 struct AssignmentOutlineView: View {
+    @Environment(\.colorScheme) var colorScheme
     @Environment(\.dismiss) var dismiss
     @Binding var assignment: Assignment?
+    
+    let currentUser: User
     var body: some View {
         NavigationStack {
             if let assignmentValue = assignment {
                 ScrollView {
                     // Uses the MarkdownUI framework to display markdown data in a nice format.
-                    Markdown(assignmentValue.assignmentMarkdown)
-                        .markdownTheme(.gitHub)
-                        .padding()
+                    if let body = assignmentValue.body {
+                        Markdown(String(describing: body))
+                            .markdownTheme(.gitHub)
+                            .padding()
+                    }
                     
                     Button {
-                        // Does nothing at the moment, will make a network call when the API is implemented.
-                        dismiss()
+                        var newProgress: String {
+                            if assignmentValue.userProgress == "notStarted" {
+                                return "inProgress"
+                            } else if assignmentValue.userProgress == "inProgress" {
+                                return "complete"
+                            } else {
+                                return "inProgress"
+                            }
+                        }
+                        Task {
+                            do {
+                                try await postAssignmentProgress(newProgress: newProgress)
+                                dismiss()
+                            } catch {
+                                print(error.localizedDescription)
+                                dismiss()
+                            }
+                        }
                     } label: {
-                        Text((assignment?.isComplete ?? false) ? "Mark Incomplete" : "Mark Complete")
+                        var text: String {
+                            if assignmentValue.userProgress == "notStarted" {
+                                return "Start"
+                            } else if assignmentValue.userProgress == "inProgress" {
+                                return "Complete"
+                            } else if assignmentValue.userProgress == "complete" {
+                                return "Mark Incomplete"
+                            } else {
+                                return ""
+                            }
+                        }
+                        Text(text)
                             .font(.title2)
                             .bold()
                             .foregroundStyle(.white)
@@ -33,8 +65,11 @@ struct AssignmentOutlineView: View {
                             .background {
                                 Capsule()
                             }
+                            .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.35 : 0.08), radius: 10, x: 0, y: 6)
                     }
+                    .padding(.top, 30)
                 }
+                .navigationTitle(assignmentValue.name)
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
                         Button {
@@ -47,9 +82,11 @@ struct AssignmentOutlineView: View {
             }
         }
     }
+    
+    func postAssignmentProgress(newProgress: String) async throws {
+        if let id = assignment?.id {
+             assignment = try await DataFetcher.shared.fetchData(UpdateAssignmentProgressAPIRequest(secret: currentUser.secret, body: AssignmentProgressPostBody(assignmentID: id, progress: newProgress)))
+        }
+    }
 }
 
-#Preview {
-    @Previewable @State var assignent: Assignment? =  Assignment.assignments["Operators"]!
-    AssignmentOutlineView(assignment: $assignent)
-}

@@ -33,14 +33,14 @@ struct CalculatorButtonSubView: View {
         self.buttonLabel = buttonLabel
         self.isSystemImage = isSystemImage
     }
-    init(viewModal: Binding<CalculatorViewModel>,
+    init(viewModel: Binding<CalculatorViewModel>,
          buttonClosure: @escaping () -> Void,
          buttonWidth: CGFloat,
          buttonHeight: CGFloat,
          buttonLabelSize: CGFloat,
          buttonLabel: String,
          isSystemImage: Bool) {
-        self._viewModel = viewModal
+        self._viewModel = viewModel
         self.buttonClosure = { _ in
             buttonClosure()
         }

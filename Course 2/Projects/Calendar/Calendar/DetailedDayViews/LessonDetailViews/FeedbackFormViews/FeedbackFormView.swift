@@ -20,7 +20,3 @@ struct FeedbackFormView: View {
         }
     }
 }
-
-#Preview {
-    FeedbackFormView(viewModel: FeedbackFormViewModel())
-}

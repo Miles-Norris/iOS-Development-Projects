@@ -11,37 +11,36 @@ import MarkdownUI
 struct CalendarEntryDetailView: View {
     let currentEntry: CalendarEntry
     
+    let currentUser: User
+    
     @State var viewModel: CalendarEntryDetailViewModel
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading) {
-                
+            VStack(alignment: .leading, spacing: 24) {
                 DateHeaderView(currentEntry: currentEntry, viewModel: viewModel)
-                
+                Divider()
                 LessonInfoView(currentEntry: currentEntry, viewModel: viewModel)
-                
                 Divider()
-                    .padding(.bottom, 15)
-                
                 WorkDueView(currentEntry: currentEntry, viewModel: viewModel)
-                
                 Divider()
-                    .padding(.top)
-                
                 NewAssignmentsView(currentEntry: currentEntry, viewModel: viewModel)
-                
+                Divider()
                 CodeChallengeView(currentEntry: currentEntry)
-                
+                Divider()
                 WordOfTheDayView(currentEntry: currentEntry)
             }
             .padding(.horizontal, 20)
+            .padding(.vertical, 24)
         }
+        .background(Color(.systemBackground))
         // I have two different sheets here, one for the details of the lesson, and one that will display the details of any assignment that is tapped.
         .sheet(isPresented: $viewModel.isLessonOutlinePresented) {
-            LessonOutlineView(lessonOutline: LessonOutline.lessonOutlines[currentEntry.lessonName]!)
+            if let outline = viewModel.lessonOutlineToPresent {
+                LessonOutlineView(lessonOutline: outline)
+            }
         }
         .sheet(item: $viewModel.assignmentToDisplay) { assignmentToDisplay in
-            AssignmentOutlineView(assignment: $viewModel.assignmentToDisplay)
+            AssignmentOutlineView(assignment: $viewModel.assignmentToDisplay, currentUser: currentUser)
         }
     }
     
@@ -50,35 +49,30 @@ struct CalendarEntryDetailView: View {
         let viewModel: CalendarEntryDetailViewModel
         
         var body: some View {
-            HStack(spacing: 20) {
+            HStack(spacing: 16) {
                 Text(currentEntry.date)
-                    .font(.system(size: 45))
-                    .bold()
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.5)
-                    .padding(.vertical, 5)
-                    .padding(.horizontal, 15)
-                
+                    .font(.system(size: 34, weight: .bold, design: .rounded))
+
                 Divider()
-                    .frame(height: 60)
+                    .frame(height: 28)
+
+                if let id = currentEntry.dayID {
+                    Text(id)
+                        .font(.system(size: 28, weight: .semibold, design: .rounded))
+                        .foregroundStyle(Color.accentColor)
+                        .onTapGesture {
+                            Task {
+                                do {
+                                    try await viewModel.getLessonOutline(currentEntry: currentEntry)
+                                } catch {
+                                    print(error.localizedDescription)
+                                }
+                            }
+                        }
+                }
                 
-                Text(currentEntry.lessonID)
-                    .font(.system(size: 45))
-                    .bold()
-                    .underline()
-                    .foregroundStyle(Color.accentColor)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.5)
-                    .padding(.vertical, 5)
-                    .padding(.horizontal, 15)
-                    .onTapGesture {
-                        viewModel.lessonOutlinePressed()
-                    }
-                
+                Spacer(minLength: 0)
             }
-            .padding(5)
-            .padding(.top, 10)
-            
         }
     }
     
@@ -87,31 +81,43 @@ struct CalendarEntryDetailView: View {
         let viewModel: CalendarEntryDetailViewModel
         
         var body: some View {
-            HStack {
-                Spacer()
+            HStack(spacing: 8) {
+                Image(systemName: "book.fill")
+                    .foregroundStyle(Color.accentColor)
                 Text("Lesson")
-                    .font(.title2)
-                    .bold()
-                    .padding(.top, 20)
+                    .font(.title2).bold()
                 Spacer()
             }
+            .padding(.bottom, 5)
+        
+            if let lessonName = currentEntry.lessonName {
+                Text(lessonName)
+                    .font(.system(size: 28, weight: .bold, design: .rounded))
+                    .foregroundStyle(.primary)
+                    .onTapGesture {
+                        Task {
+                            do {
+                                try await viewModel.getLessonOutline(currentEntry: currentEntry)
+                            } catch {
+                                print(error.localizedDescription)
+                            }
+                        }
+                    }
+                    .padding(.bottom, 4)
+            }
             
-            Divider()
-            
-            Text(currentEntry.lessonName)
-                .font(.system(size: 50))
-                .bold()
-                .lineLimit(2)
-                .minimumScaleFactor(0.1)
-                .padding(.bottom, 35)
-                .onTapGesture {
-                    viewModel.lessonOutlinePressed()
+            if let objective = currentEntry.mainObjective {
+                if objective.isEmpty {
+                    Text("No Lesson Overview Today")
+                        .foregroundStyle(.secondary)
+                        .italic().bold()
+                        .padding(.bottom, 4)
+                } else {
+                    Text(objective)
+                        .font(.body.weight(.semibold))
+                        .padding(.bottom, 4)
                 }
-            
-            Text(currentEntry.mainObjective)
-                .font(.system(size: 18))
-                .bold()
-                .padding(.bottom, 20)
+            }
         }
     }
     
@@ -120,58 +126,43 @@ struct CalendarEntryDetailView: View {
         let viewModel: CalendarEntryDetailViewModel
         
         var body: some View {
-            Text("Work Due")
-                .font(.system(size: 35))
-                .bold()
-                .padding(.bottom, 10)
+            HStack(spacing: 8) {
+                Image(systemName: "checklist")
+                    .foregroundStyle(Color.accentColor)
+                Text("Work Due")
+                    .font(.title2).bold()
+                Spacer()
+            }
+            .padding(.bottom, 6)
             
-            if let reading = currentEntry.readingDue, let assignments = currentEntry.assignmentsDue {
-                Text("Reading")
-                    .font(.title2)
-                    .bold()
-                    .padding(.bottom, 5)
-                VStack(alignment: .leading, spacing: 8) {
-                    ForEach(reading, id: \.self) { item in
-                        HStack(alignment: .firstTextBaseline, spacing: 8) {
-                            Text("•")
-                                .font(.body)
-                            Text(item)
-                                .bold()
-                                .font(.body)
-                        }
-                    }
+            if let reading = currentEntry.readingDue, !currentEntry.assignmentsDue.isEmpty {
+                if !reading.isEmpty {
+                    Text("Reading")
+                        .font(.headline).bold()
+                    Text(reading)
+                        .font(.body.weight(.semibold))
+                    
+                    Divider().padding(.vertical, 3)
                 }
                 
-                Divider()
-                    .frame(width: 220)
-                
                 Text("Assignments")
-                    .font(.title2)
-                    .bold()
-                    .padding(.bottom, 5)
+                    .font(.headline).bold()
                 VStack(alignment: .leading, spacing: 8) {
-                    ForEach(assignments, id: \.self) { item in
+                    ForEach(currentEntry.assignmentsDue) { item in
                         HStack(alignment: .firstTextBaseline, spacing: 8) {
-                            Text("•")
-                                .font(.body)
-                            Text(item)
-                                .bold()
-                                .font(.body)
-                                .underline()
+                            Text("•").font(.body)
+                            Text(item.name)
+                                .font(.body.weight(.semibold))
                                 .foregroundStyle(Color.accentColor)
-                                .padding(.vertical, 3)
-                                .padding(.horizontal, 8)
-                                .onTapGesture {
-                                    viewModel.assignmentOutlinePressed(Assignment.assignments[item]!)
-                                }
+                                .onTapGesture { viewModel.assignmentOutlinePressed(item) }
                         }
                     }
                 }
             } else {
                 Text("No Work Due Today")
-                    .foregroundStyle(Color.gray)
-                    .bold()
-                    .italic()
+                    .foregroundStyle(.secondary)
+                    .italic().bold()
+                    .padding(.vertical, 6)
             }
         }
     }
@@ -181,36 +172,32 @@ struct CalendarEntryDetailView: View {
         let viewModel: CalendarEntryDetailViewModel
         
         var body: some View {
-            Text("New Assignments")
-                .font(.system(size: 30))
-                .bold()
-                .padding(.top, 15)
-                .padding(.bottom, 10)
+            HStack(spacing: 8) {
+                Image(systemName: "sparkles")
+                    .foregroundStyle(Color.accentColor)
+                Text("New Assignments")
+                    .font(.title2).bold()
+                Spacer()
+            }
+            .padding(.bottom, 6)
             
-            if let assignments = currentEntry.newAssignments {
+            if !currentEntry.newAssignments.isEmpty {
                 VStack(alignment: .leading, spacing: 8) {
-                    ForEach(assignments, id: \.self) { item in
+                    ForEach(currentEntry.newAssignments) { item in
                         HStack(alignment: .firstTextBaseline, spacing: 8) {
-                            Text("•")
-                                .font(.title3)
-                            Text(item)
-                                .bold()
-                                .font(.title3)
-                                .underline()
+                            Text("•").font(.title3)
+                            Text(item.name)
+                                .font(.body.weight(.semibold))
                                 .foregroundStyle(Color.accentColor)
-                                .padding(.vertical, 3)
-                                .padding(.horizontal, 8)
-                                .onTapGesture {
-                                    viewModel.assignmentOutlinePressed(Assignment.assignments[item]!)
-                                }
+                                .onTapGesture { viewModel.assignmentOutlinePressed(item) }
                         }
                     }
                 }
             } else {
                 Text("No New Assignments Today")
-                    .foregroundStyle(Color.gray)
-                    .bold()
-                    .italic()
+                    .foregroundStyle(.secondary)
+                    .italic().bold()
+                    .padding(.top, 4)
             }
         }
     }
@@ -219,21 +206,24 @@ struct CalendarEntryDetailView: View {
         let currentEntry: CalendarEntry
         
         var body: some View {
-            HStack {
-                Spacer()
+            HStack(spacing: 8) {
+                Image(systemName: "curlybraces.square.fill")
+                    .foregroundStyle(Color.accentColor)
                 Text("Code Challenge")
-                    .font(.title2)
-                    .bold()
-                    .padding(.top, 30)
+                    .font(.title2).bold()
                 Spacer()
             }
             
-            Divider()
-            
-            Text(currentEntry.codeChallengeName)
-                .font(.system(size: 18))
-                .bold()
-                .padding(.top, 10)
+            if let codeChallenge = currentEntry.dailyCodeChallengeName {
+                Text(codeChallenge)
+                    .font(.body.weight(.semibold))
+                    .padding(.top, 6)
+            } else {
+                Text("No Code Challenge Today")
+                    .foregroundStyle(.secondary)
+                    .italic().bold()
+                    .padding(.top, 4)
+            }
         }
     }
     
@@ -241,32 +231,30 @@ struct CalendarEntryDetailView: View {
         let currentEntry: CalendarEntry
         
         var body: some View {
-            HStack {
-                Spacer()
+            HStack(spacing: 8) {
+                Image(systemName: "text.book.closed.fill")
+                    .foregroundStyle(Color.accentColor)
                 Text("Word Of the Day")
-                    .font(.title2)
-                    .bold()
-                    .padding(.top, 30)
+                    .font(.title2).bold()
                 Spacer()
             }
             
-            Divider()
-            
-            HStack {
-                Spacer()
-                Text(currentEntry.wordOfTheDay)
-                    .font(.title)
-                    .bold()
-                    .padding(.top, 10)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.1)
-                Spacer()
+            if let wordOfTheDay = currentEntry.wordOfTheDay {
+                HStack {
+                    Spacer()
+                    Text(wordOfTheDay)
+                        .font(.title3.weight(.bold))
+                        .foregroundStyle(Color.accentColor)
+                    Spacer()
+                }
+                .padding(.top, 6)
+            } else {
+                Text("No Word Of The Day Today")
+                    .foregroundStyle(.secondary)
+                    .italic().bold()
+                    .padding(.top, 4)
             }
-            .padding(.bottom, 20)
         }
     }
 }
 
-#Preview {
-    CalendarEntryDetailView(currentEntry: CalendarEntry.calendarEntrys[2], viewModel: CalendarEntryDetailViewModel())
-}

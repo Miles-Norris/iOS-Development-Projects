@@ -15,8 +15,9 @@ struct FeedbackFormSelectView: View {
             VStack(alignment: .leading) {
                 HStack{
                     Spacer()
-                    Text("Select a Lesson")
-                        .font(.system(size: 30))
+                    Text("Give Feedback On A Selected Lesson")
+                        .multilineTextAlignment(.center)
+                        .font(.system(size: 30, design: .rounded))
                         .bold()
                     Spacer()
                 }
@@ -24,13 +25,16 @@ struct FeedbackFormSelectView: View {
                 SearchBarView(viewModel: $viewModel)
                 
                 LessonListView(viewModel: viewModel)
+                    .ignoresSafeArea()
                 
                 Spacer()
             }
             .padding()
-            // When ever the contents of the search bar change, a function on the viewModel is called to update the lesson shown.
             .onChange(of: viewModel.searchText) {
                 viewModel.allLessonsFiltered()
+            }
+            .onChange(of: viewModel.lessonsStore.calendarEntries) {
+                viewModel.filteredLessons = viewModel.lessonsStore.calendarEntries
             }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -46,23 +50,26 @@ struct FeedbackFormSelectView: View {
     
     struct SearchBarView: View {
         @Binding var viewModel: FeedbackFormViewModel
-        
+        @FocusState private var searchIsFocused: Bool
+        @Environment(\.colorScheme) var colorScheme
+
         var body: some View {
             HStack {
                 Spacer()
                 HStack {
                     Image(systemName: "magnifyingglass")
                         .foregroundStyle(.secondary)
-                    
+
                     TextField("Search", text: $viewModel.searchText)
                         .frame(width: 250, height: 50)
                         .textInputAutocapitalization(.none)
                         .autocorrectionDisabled(true)
-                    
-                    // calls a function on the viewModel to clear the search bar.
+                        .focused($searchIsFocused)
+
                     if !viewModel.searchText.isEmpty {
                         Button {
                             viewModel.searchBarClear()
+                            searchIsFocused = false 
                         } label: {
                             Image(systemName: "xmark.circle.fill")
                                 .foregroundStyle(.secondary)
@@ -74,14 +81,15 @@ struct FeedbackFormSelectView: View {
                 .background {
                     RoundedRectangle(cornerRadius: 25)
                         .fill(Color(.systemGray6))
-                    
-                    RoundedRectangle(cornerRadius: 25)
-                        .stroke(lineWidth: 2)
-                        .foregroundStyle(.gray)
                 }
+                .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.35 : 0.08), radius: 10, x: 0, y: 6)
                 Spacer()
             }
             .padding(.bottom)
+            .contentShape(Rectangle())
+            .onTapGesture {
+                searchIsFocused = false
+            }
         }
     }
     
@@ -89,38 +97,43 @@ struct FeedbackFormSelectView: View {
         let viewModel: FeedbackFormViewModel
         
         var body: some View {
-            ForEach(viewModel.filteredLessons) { lesson in
-                Button {
-                    // When a lesson is selected, it calls the viewModel to update lessonSelected which then displays the feedback form.
-                    viewModel.lessonSelected(lesson: lesson)
-                } label: {
-                    HStack(spacing: 12) {
-                        Image(systemName: "book.closed")
-                            .font(.title3)
-                            .foregroundStyle(.secondary)
-                        
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(lesson.lessonName)
-                                .font(.headline)
-                            
-                            Text("\(lesson.lessonID) • \(lesson.date)")
-                                .font(.subheadline)
+            ScrollView {
+                ForEach(viewModel.filteredLessons) { lesson in
+                    Button {
+                        // When a lesson is selected, it calls the viewModel to update lessonSelected which then displays the feedback form.
+                        viewModel.lessonSelected(lesson: lesson)
+                    } label: {
+                        HStack(spacing: 12) {
+                            Image(systemName: "book.closed")
+                                .font(.title3)
                                 .foregroundStyle(.secondary)
-                                .lineLimit(1)
-                                .truncationMode(.tail)
+                            
+                            if let lessonName = lesson.lessonName, let id = lesson.dayID {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(lessonName)
+                                        .font(.headline)
+                                    
+                                    Text("\(id) • \(lesson.date)")
+                                        .font(.subheadline)
+                                        .foregroundStyle(.secondary)
+                                        .lineLimit(1)
+                                        .truncationMode(.tail)
+                                }
+                            }
+                            
+                            Spacer()
+                            
+                            Image(systemName: "chevron.right")
+                                .font(.footnote)
+                                .foregroundStyle(.tertiary)
                         }
-                        
-                        Spacer()
-                        
-                        Image(systemName: "chevron.right")
-                            .font(.footnote)
-                            .foregroundStyle(.tertiary)
+                        .contentShape(Rectangle())
+                        .padding(.vertical, 8)
                     }
-                    .contentShape(Rectangle())
-                    .padding(.vertical, 8)
+                    .buttonStyle(.plain)
                 }
-                .buttonStyle(.plain)
             }
+            .ignoresSafeArea()
         }
     }
 }
