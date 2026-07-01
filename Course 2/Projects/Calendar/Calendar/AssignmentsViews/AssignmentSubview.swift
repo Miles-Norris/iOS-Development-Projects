@@ -12,7 +12,7 @@ struct AssignmentSubview: View {
     let assignment: Assignment
 
     private var status: (label: String, color: Color, isComplete: Bool) {
-        let progress = assignment.userProgress?.lowercased()
+        let progress = assignment.userProgress
         if progress == "complete" {
             return ("Complete", .green, true)
         } else if progress == "inProgress" {

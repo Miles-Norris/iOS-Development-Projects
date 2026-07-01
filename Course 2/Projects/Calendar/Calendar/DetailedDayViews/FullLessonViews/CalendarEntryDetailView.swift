@@ -14,6 +14,9 @@ struct CalendarEntryDetailView: View {
     let currentUser: User
     
     @State var viewModel: CalendarEntryDetailViewModel
+    
+    @Binding var assignmentStore: AssignmentStore
+    @Binding var calendarStore: CalendarStore
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
@@ -40,7 +43,7 @@ struct CalendarEntryDetailView: View {
             }
         }
         .sheet(item: $viewModel.assignmentToDisplay) { assignmentToDisplay in
-            AssignmentOutlineView(assignment: $viewModel.assignmentToDisplay, currentUser: currentUser)
+            AssignmentOutlineView(assignment: $viewModel.assignmentToDisplay, assignmentStore: $assignmentStore, calendarStore: $calendarStore, currentUser: currentUser)
         }
     }
     

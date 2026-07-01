@@ -19,7 +19,10 @@ struct Assignment: Codable, Identifiable, Equatable {
 }
 
 @Observable
-class AssignmentStore {
+class AssignmentStore: Equatable {
+    static func == (lhs: AssignmentStore, rhs: AssignmentStore) -> Bool {
+        lhs.assignments == rhs.assignments
+    }
     
     var assignments: [Assignment] = []
     
@@ -39,25 +42,30 @@ class AssignmentStore {
         FAassignments.removeAll()
         PCassignments.removeAll()
         GCassignments.removeAll()
+        let assignmentsByName = Dictionary(uniqueKeysWithValues: assignments.map { ($0.name, $0) })
+
         for lesson in calendarEntries {
             for assignment in lesson.assignmentsDue {
+                guard let detailedAssignment = assignmentsByName[assignment.name] else {
+                    continue 
+                }
                 switch lesson.dayID!.prefix(2) {
                 case "SF":
-                    SFassignments.append(assignment)
+                    SFassignments.append(detailedAssignment)
                 case "TP":
-                    TPassignments.append(assignment)
+                    TPassignments.append(detailedAssignment)
                 case "ND":
-                    NDassignments.append(assignment)
+                    NDassignments.append(detailedAssignment)
                 case "ST":
-                    STassignments.append(assignment)
+                    STassignments.append(detailedAssignment)
                 case "FA":
-                    FAassignments.append(assignment)
+                    FAassignments.append(detailedAssignment)
                 case "PC":
-                    PCassignments.append(assignment)
+                    PCassignments.append(detailedAssignment)
                 case "GC":
-                    GCassignments.append(assignment)
+                    GCassignments.append(detailedAssignment)
                 default:
-                    return
+                    break
                 }
             }
         }

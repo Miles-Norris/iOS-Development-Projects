@@ -14,6 +14,8 @@ struct CalendarView: View {
     
     let currentUser: User
     
+    @Binding var assignmentStore: AssignmentStore
+    
     var body: some View {
         NavigationStack {
             if calendarEntryStore.calendarEntries.count < 175 {
@@ -37,7 +39,7 @@ struct CalendarView: View {
                     
                     VStack(alignment: .leading) {
                         ForEach(CalendarStore.sections, id: \.self) { section in
-                            CalendarSectionSubview(section: sectionData[section] ?? calendarEntryStore.swiftFundamentals, sectionTitle: section, currentUser: currentUser)
+                            CalendarSectionSubview(section: sectionData[section] ?? calendarEntryStore.swiftFundamentals, sectionTitle: section, currentUser: currentUser, assignmentStore: $assignmentStore, calendarStore: $calendarEntryStore)
                         }
                     }
                     .frame(maxWidth: .infinity)

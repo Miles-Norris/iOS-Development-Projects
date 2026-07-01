@@ -32,7 +32,7 @@ class CalendarEntryDetailViewModel {
             isLessonOutlinePresented = true
         } catch {
             print(error.localizedDescription)
-            throw APIRequestError.invalidResponse
+            throw APIRequestError.invalidResponse(0)
         }
     }
 }

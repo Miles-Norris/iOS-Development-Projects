@@ -70,11 +70,16 @@ struct LessonOutlineView: View {
                     }
                     
                     if lessonOutline.body.isEmpty && lessonOutline.objectives.isEmpty && lessonOutline.schedule.isEmpty {
-                        Text("No Lesson Today")
+                        Spacer()
+                        
+                        Text("No Lesson Outline Today")
                         .foregroundStyle(Color.gray)
                         .font(.title2)
                         .bold()
                         .italic()
+                        .padding(.bottom, 350)
+                        
+                        Spacer()
                     }
                 }
             }

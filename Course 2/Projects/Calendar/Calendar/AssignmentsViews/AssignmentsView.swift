@@ -13,8 +13,19 @@ struct AssignmentsView: View {
     @State var assignmentToPresent: Assignment?
     
     @Binding var assignmentsStore: AssignmentStore
+    @Binding var calendarStore: CalendarStore
     
-    @State var sectionData: [String: [Assignment]] = [:]
+    var sectionData: [String: [Assignment]] {
+        [
+            "Swift Fundamentals": assignmentsStore.SFassignments,
+            "Tables And Persistence": assignmentsStore.TPassignments,
+            "Networking And Data Storage": assignmentsStore.NDassignments,
+            "Special Topics": assignmentsStore.STassignments,
+            "Full App Development": assignmentsStore.FAassignments,
+            "Prototype And Project Planning": assignmentsStore.PCassignments,
+            "Group Capstone": assignmentsStore.GCassignments
+        ]
+    }
     
     let currentUser: User
     
@@ -48,10 +59,7 @@ struct AssignmentsView: View {
                 .frame(maxWidth: .infinity)
             }
             .sheet(item: $assignmentToPresent) { assignment in
-                AssignmentOutlineView(assignment: $assignmentToPresent, currentUser: currentUser)
-            }
-            .onAppear {
-                sectionData = ["Swift Fundamentals": assignmentsStore.SFassignments, "Tables And Persistence": assignmentsStore.TPassignments, "Networking And Data Storage": assignmentsStore.NDassignments, "Special Topics": assignmentsStore.STassignments, "Full App Development": assignmentsStore.FAassignments, "Prototype And Project Planning": assignmentsStore.PCassignments, "Group Capstone": assignmentsStore.GCassignments]
+                AssignmentOutlineView(assignment: $assignmentToPresent, assignmentStore: $assignmentsStore, calendarStore: $calendarStore, currentUser: currentUser)
             }
         }
     }

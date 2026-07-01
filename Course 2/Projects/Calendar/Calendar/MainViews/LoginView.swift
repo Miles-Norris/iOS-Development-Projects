@@ -22,7 +22,7 @@ struct LoginView: View {
         Group {
             if loginSuccess {
                 if let currentUser {
-                    CalendarTabView(currentDate: Date(), currentUser: currentUser)
+                    CalendarTabView(viewModel: CalendarTabViewModel(currentDate: Date(), dayOfTheMonth: 1, currentUser: currentUser))
                 }
             } else {
                 VStack(spacing: 16) {

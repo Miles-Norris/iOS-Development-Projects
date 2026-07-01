@@ -12,11 +12,12 @@ struct TodayView: View {
     let currentEntry: CalendarEntry?
     @State var viewModel: TodayViewModel
     @Binding var calendarEntryStore: CalendarStore
+    @Binding var assignmentStore: AssignmentStore
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
                 if let today = currentEntry {
-                    CalendarEntryDetailView(currentEntry: today, currentUser: viewModel.currentUser, viewModel: CalendarEntryDetailViewModel(currentUser: viewModel.currentUser))
+                    CalendarEntryDetailView(currentEntry: today, currentUser: viewModel.currentUser, viewModel: CalendarEntryDetailViewModel(currentUser: viewModel.currentUser), assignmentStore: $assignmentStore, calendarStore: $calendarEntryStore)
                     
                 } else {
                     Text("No Lesson Found For Today")
