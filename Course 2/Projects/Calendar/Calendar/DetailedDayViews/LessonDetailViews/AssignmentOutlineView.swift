@@ -46,8 +46,10 @@ struct AssignmentOutlineView: View {
                                     return "inProgress"
                                 } else if assignmentValue.userProgress == "inProgress" {
                                     return "complete"
-                                } else {
+                                } else if assignmentValue.userProgress == "complete" {
                                     return "notStarted"
+                                } else {
+                                    return "inProgress"
                                 }
                             }
                             Task {

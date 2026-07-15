@@ -24,7 +24,7 @@ struct CalendarEntryDetailView: View {
                 Divider()
                 LessonInfoView(currentEntry: currentEntry, viewModel: viewModel)
                 Divider()
-                WorkDueView(currentEntry: currentEntry, viewModel: viewModel)
+                WorkDueView(currentEntry: currentEntry, viewModel: viewModel, assignmentStore: $assignmentStore)
                 Divider()
                 NewAssignmentsView(currentEntry: currentEntry, viewModel: viewModel)
                 Divider()
@@ -127,6 +127,7 @@ struct CalendarEntryDetailView: View {
     struct WorkDueView: View {
         let currentEntry: CalendarEntry
         let viewModel: CalendarEntryDetailViewModel
+        @Binding var assignmentStore: AssignmentStore
         
         var body: some View {
             HStack(spacing: 8) {
@@ -157,7 +158,7 @@ struct CalendarEntryDetailView: View {
                             Text(item.name)
                                 .font(.body.weight(.semibold))
                                 .foregroundStyle(Color.accentColor)
-                                .onTapGesture { viewModel.assignmentOutlinePressed(item) }
+                                .onTapGesture { viewModel.assignmentOutlinePressed(assignmentStore.assignments.first(where: { $0.name == item.name }) ?? item) }
                         }
                     }
                 }
